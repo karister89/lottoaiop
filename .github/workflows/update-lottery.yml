@@ -1,0 +1,42 @@
+name: 🚀 Auto Update Lottery Data (Scraper)
+
+on:
+  workflow_dispatch: # ปุ่มสำหรับกดรันเอง
+  schedule:
+    # เวลาสากล (UTC) ช้ากว่าไทย 7 ชม. / รันเฉพาะ จันทร์-ศุกร์ (1-5)
+    - cron: '55 0 * * 1-5'   # 07:55 เวลาไทย
+    - cron: '55 4 * * 1-5'   # 11:55 เวลาไทย
+    - cron: '35 9 * * 1-5'   # 16:35 เวลาไทย
+    - cron: '35 14 * * 1-5'  # 21:35 เวลาไทย
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # ให้สิทธิ์เขียนไฟล์กลับเข้า Repo
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install gspread google-auth
+
+      - name: Run Scraper
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: python scraper.py
+
+      - name: Commit and Push Data
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          # เพิ่มไฟล์ทั้งหมดที่เกี่ยวข้องกับการสรุปผล
+          git add dashboard_data.json lottery-data.json
+          # ตรวจสอบว่ามีการเปลี่ยนแปลงไหม ถ้ามีค่อยบันทึก
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update: SOVEREIGN Data ⚡"
+          git push

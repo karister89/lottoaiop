@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OnePiece5915存在 — Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --ink:#0a0c10;
+      --panel:#13161d;
+      --line:rgba(201,169,110,.14);
+      --line-strong:rgba(201,169,110,.28);
+      --gold:#c9a96e;
+      --gold-2:#e5c97b;
+      --gold-soft:#a98c52;
+      --champagne:#f1e0bd;
+      --ivory:#efe7d3;
+      --muted:#8a8675;
+    }
+    *{ -webkit-font-smoothing:antialiased; }
+    html,body{ background:var(--ink); }
+    body{
+      font-family:'IBM Plex Sans Thai','Inter',sans-serif;
+      color:var(--ivory);
+      min-height:100vh; position:relative; overflow-x:hidden;
+    }
+    .font-display{ font-family:'Cinzel', serif; letter-spacing:.04em; }
+    .font-serif-it{ font-family:'Cormorant Garamond', serif; font-style:italic; }
+    .font-mono{ font-family:'JetBrains Mono', ui-monospace, monospace; }
+    .font-jp{ font-family:'Noto Serif JP', serif; }
+
+    .backdrop{
+      position:fixed; inset:0; z-index:-2;
+      background:
+        radial-gradient(1200px 700px at 50% 38%, rgba(201,169,110,.08), transparent 60%),
+        radial-gradient(1400px 900px at 50% 110%, rgba(60,40,20,.45), transparent 70%),
+        linear-gradient(180deg,#06080c 0%,#0a0c10 45%, #07090d 100%);
+    }
+    .backdrop-art{ position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.32; filter: blur(2px) saturate(.85); }
+    .grain{
+      position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.06;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .9  0 0 0 0 .7  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+    .vignette{
+      position:fixed; inset:0; z-index:-1; pointer-events:none;
+      background: radial-gradient(900px 600px at 50% 30%, transparent 0%, transparent 55%, rgba(0,0,0,.45) 100%);
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(23,27,36,.78) 0%, rgba(15,18,24,.78) 100%);
+      border:1px solid var(--line);
+      border-radius:6px;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 30px 60px -30px rgba(0,0,0,.6);
+    }
+    .gold{ color:var(--gold); }
+    .gold-2{ color:var(--gold-2); }
+    .champ{ color:var(--champagne); }
+    .muted{ color:var(--muted); }
+    .gold-divider{ background: linear-gradient(90deg, transparent, var(--gold-soft), transparent); height:1px; width:100%; }
+    .gold-rule{ background: linear-gradient(90deg, transparent 0%, rgba(201,169,110,.6) 50%, transparent 100%); height:1px; }
+    .num{ font-family:'JetBrains Mono', monospace; font-feature-settings:"tnum"; }
+    .kpi-num{ font-family:'Cinzel', serif; letter-spacing:.02em; }
+
+    .ornament{
+      display:flex; align-items:center; gap:.75rem;
+      color:var(--gold);
+      font-family:'Cinzel',serif; letter-spacing:.28em;
+      font-size:10px; text-transform:uppercase;
+    }
+    .ornament .line{ flex:1; height:1px; background:linear-gradient(90deg, var(--gold-soft), transparent); }
+    .ornament .line.left{ background:linear-gradient(90deg, transparent, var(--gold-soft)); }
+
+    /* sniper target */
+    .target-frame{
+      position:relative; padding:30px 24px;
+      background: radial-gradient(closest-side, rgba(229,201,123,.08), transparent 70%), rgba(0,0,0,.2);
+      border:1px solid var(--line-strong); border-radius:6px;
+      overflow:hidden;
+    }
+    .target-frame::before{
+      content:""; position:absolute; inset:6px;
+      border:1px solid var(--line); border-radius:4px; pointer-events:none;
+    }
+    .corner{ position:absolute; width:14px; height:14px; border-color:var(--gold); }
+    .corner.tl{ top:6px; left:6px; border-top:1px solid; border-left:1px solid; }
+    .corner.tr{ top:6px; right:6px; border-top:1px solid; border-right:1px solid; }
+    .corner.bl{ bottom:6px; left:6px; border-bottom:1px solid; border-left:1px solid; }
+    .corner.br{ bottom:6px; right:6px; border-bottom:1px solid; border-right:1px solid; }
+
+    .door{
+      width:42px; height:42px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(0,0,0,.3);
+      border:1px solid var(--line);
+      border-radius:3px;
+      font-family:'JetBrains Mono', monospace;
+      font-size:13px;
+      color: var(--ivory);
+      transition: all .2s;
+    }
+    .door:hover{ border-color: var(--line-strong); color: var(--gold-2); }
+
+    .badge-sig{
+      font-family:'Cinzel',serif; letter-spacing:.22em; font-size:10px;
+      padding:4px 10px; border-radius:2px;
+      border:1px solid currentColor; background: rgba(255,255,255,.02);
+    }
+
+    .pill{
+      font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.16em;
+      padding:3px 9px; border-radius:999px;
+      border:1px solid var(--line-strong); color:var(--gold-2);
+      background:rgba(201,169,110,.05);
+    }
+    .pill .dot{ display:inline-block; width:6px; height:6px; border-radius:50%; background: var(--gold-2); margin-right:6px; vertical-align:middle; box-shadow: 0 0 6px rgba(229,201,123,.6); animation: pulse 2.4s ease-in-out infinite; }
+    @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.45; } }
+
+    .ledger-row{
+      transition: background .2s, border-color .2s;
+    }
+    .ledger-row:hover{ background: rgba(201,169,110,.04); border-color: var(--line-strong); }
+    .ledger-row.skip{ opacity:.45; }
+
+    .stat-card{ position:relative; }
+    .stat-card .stripe{ position:absolute; top:0; left:0; height:2px; }
+
+    /* login */
+    .login-shell{
+      position:fixed; inset:0; z-index:50;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(6,8,12,.78);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .login-card{
+      width:min(420px, 92vw);
+      padding: 36px 32px;
+      background: linear-gradient(180deg, rgba(23,27,36,.92), rgba(11,14,20,.92));
+      border:1px solid var(--line-strong);
+      border-radius:8px;
+      box-shadow: 0 60px 120px -40px rgba(0,0,0,.8);
+      position:relative; overflow:hidden;
+    }
+    .login-input{ width:100%; padding:12px 14px; background:rgba(0,0,0,.35); border:1px solid var(--line); border-radius:4px; color:var(--ivory); font-family:'JetBrains Mono', monospace; letter-spacing:.04em; }
+    .login-input:focus{ outline:none; border-color: var(--gold-soft); }
+    .gold-btn{ width:100%; padding:12px; font-family:'Cinzel',serif; letter-spacing:.28em; font-size:11px; text-transform:uppercase; color:#1a1408; background: linear-gradient(180deg, #e5c97b, #c9a96e 60%, #a98c52); border:1px solid #b69354; border-radius:4px; cursor:pointer; box-shadow: 0 1px 0 rgba(255,255,255,.4) inset; }
+
+    ::-webkit-scrollbar{ width:10px; height:10px;}
+    ::-webkit-scrollbar-track{ background:transparent; }
+    ::-webkit-scrollbar-thumb{ background:rgba(201,169,110,.18); border-radius:8px; }
+    ::-webkit-scrollbar-thumb:hover{ background:rgba(201,169,110,.32); }
+  </style>
+</head>
+<body>
+
+  <div class="backdrop"></div>
+  <svg class="backdrop-art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="sky2" cx="50%" cy="35%" r="70%">
+        <stop offset="0%" stop-color="#1a1812" stop-opacity=".95"/>
+        <stop offset="55%" stop-color="#0c0e13" stop-opacity=".9"/>
+        <stop offset="100%" stop-color="#06080c" stop-opacity="1"/>
+      </radialGradient>
+      <linearGradient id="rainbow2" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#c9a96e" stop-opacity=".0"/>
+        <stop offset="40%" stop-color="#c9a96e" stop-opacity=".18"/>
+        <stop offset="100%" stop-color="#c9a96e" stop-opacity=".0"/>
+      </linearGradient>
+      <linearGradient id="island2" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#1c1d20"/>
+        <stop offset="100%" stop-color="#0a0c10"/>
+      </linearGradient>
+      <radialGradient id="halo2" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#e5c97b" stop-opacity=".22"/>
+        <stop offset="60%" stop-color="#e5c97b" stop-opacity=".05"/>
+        <stop offset="100%" stop-color="#e5c97b" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1600" height="900" fill="url(#sky2)"/>
+    <ellipse cx="800" cy="520" rx="520" ry="280" fill="url(#halo2)"/>
+    <path d="M 240 560 Q 800 280 1360 560" stroke="url(#rainbow2)" stroke-width="120" fill="none" opacity=".4"/>
+    <ellipse cx="800" cy="600" rx="900" ry="80" fill="#0a0c10" opacity=".55"/>
+    <ellipse cx="800" cy="640" rx="1100" ry="100" fill="#06080c" opacity=".7"/>
+    <path d="M 460 600 C 520 540, 600 520, 660 540 C 700 510, 760 470, 800 460 C 840 470, 900 510, 940 540 C 1000 520, 1080 540, 1140 600 L 1140 660 L 460 660 Z" fill="url(#island2)" opacity=".88"/>
+    <path d="M 760 480 L 800 410 L 840 480 Z" fill="#0a0c10"/>
+    <rect x="0" y="660" width="1600" height="240" fill="#04060a"/>
+    <g stroke="#c9a96e" stroke-opacity=".10" stroke-width="1" fill="none">
+      <path d="M 0 700 Q 400 690 800 700 T 1600 700"/>
+      <path d="M 0 740 Q 400 730 800 740 T 1600 740"/>
+      <path d="M 0 780 Q 400 770 800 780 T 1600 780"/>
+    </g>
+  </svg>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+
+  <!-- LOGIN -->
+  <div id="loginShell" class="login-shell" style="display:none">
+    <form id="loginForm" class="login-card" autocomplete="off">
+      <div class="text-center mb-6">
+        <div class="font-jp text-[11px] tracking-[.4em] gold mb-2">最後の島</div>
+        <h1 class="font-display text-2xl champ font-semibold">OnePiece<span class="gold">5915</span>存在</h1>
+        <div class="gold-rule my-3 mx-auto" style="width:80px"></div>
+      </div>
+      <label class="block text-[10px] tracking-[.28em] gold uppercase mb-1.5 font-display">Username</label>
+      <input id="liUser" class="login-input mb-4" type="text" autocomplete="username">
+      <label class="block text-[10px] tracking-[.28em] gold uppercase mb-1.5 font-display">Password</label>
+      <input id="liPass" class="login-input mb-5" type="password" autocomplete="current-password">
+      <button type="submit" class="gold-btn">Set Sail</button>
+      <div id="liErr" class="text-center text-[11px] mt-4 hidden" style="color:#c97373;font-family:'JetBrains Mono',monospace;">Access denied.</div>
+    </form>
+  </div>
+
+  <!-- APP -->
+  <main id="app" class="hidden relative max-w-7xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6 border-b border-white/5 pb-5">
+      <div>
+        <a href="index.html" class="text-[10px] tracking-[.3em] gold font-display uppercase hover:underline">← Back to Atlas</a>
+        <div class="flex items-end gap-3 mt-2">
+          <h1 id="marketName" class="font-display text-4xl sm:text-5xl champ font-semibold">—</h1>
+          <span id="sigBadge" class="badge-sig mb-2 hidden">—</span>
+        </div>
+        <div class="font-serif-it muted text-[15px] mt-1">Detailed prediction & full log of voyage</div>
+      </div>
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="pill"><span class="dot"></span><span id="forDate">—</span></span>
+        <span class="pill" style="color:#efe7d3"><span class="num" id="latestDate">—</span></span>
+      </div>
+    </div>
+
+    <!-- Prediction -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+      <div class="target-frame">
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        <div class="text-center">
+          <div class="font-display text-[10px] tracking-[.3em] gold uppercase mb-1">Sniper Target</div>
+          <div class="font-serif-it muted text-[14px] mb-3">เด่นบน · Top digit prediction</div>
+          <div id="domTop" class="kpi-num font-semibold leading-none" style="font-size:120px">—</div>
+          <div class="mt-4">
+            <span id="signal" class="badge-sig">—</span>
+          </div>
+          <div class="font-mono text-[10px] muted mt-3 tracking-widest">CHAOS · <span id="chaos">—</span></div>
+        </div>
+      </div>
+
+      <div class="panel p-5 lg:col-span-2">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="text-[10px] tracking-[.3em] gold font-display uppercase">19 Doors</div>
+            <div class="text-[12px] muted mt-0.5 font-serif-it">รูดบน · pairs containing the sniper digit</div>
+          </div>
+          <div class="text-[11px] font-mono muted">RANGE 00–99</div>
+        </div>
+        <div class="gold-divider mb-4"></div>
+        <div id="pairsT" class="flex flex-wrap gap-2"></div>
+      </div>
+    </section>
+
+    <!-- Stats 30/60/90 -->
+    <div class="ornament mb-3">
+      <span class="line left"></span>
+      <span>◆ Backtest Performance</span>
+      <span class="line"></span>
+    </div>
+    <section id="statsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"></section>
+
+    <!-- Charts -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+      <div class="panel p-5 lg:col-span-2">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="text-[10px] tracking-[.3em] gold font-display uppercase">Profit Curve</div>
+            <div class="text-[12px] muted mt-0.5 font-serif-it">Cumulative profit · last 90 days</div>
+          </div>
+        </div>
+        <div class="gold-divider mb-4"></div>
+        <div style="height:260px"><canvas id="curveChart"></canvas></div>
+      </div>
+      <div class="panel p-5">
+        <div class="text-[10px] tracking-[.3em] gold font-display uppercase">Outcome (90D)</div>
+        <div class="text-[12px] muted mt-0.5 font-serif-it">Win · Loss · Skip</div>
+        <div class="gold-divider my-4"></div>
+        <div class="relative" style="height:200px">
+          <canvas id="donut"></canvas>
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <div id="donutCenter" class="kpi-num text-2xl gold-2">—</div>
+            <div class="text-[10px] muted font-mono tracking-widest">WIN-RATE</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+          <div><div class="text-[10px] muted font-display tracking-widest">WINS</div><div id="donWin" class="num font-semibold" style="color:#a3cfa6">—</div></div>
+          <div><div class="text-[10px] muted font-display tracking-widest">LOSS</div><div id="donLoss" class="num font-semibold" style="color:#c97373">—</div></div>
+          <div><div class="text-[10px] muted font-display tracking-widest">SKIP</div><div id="donSkip" class="num font-semibold muted">—</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ledger -->
+    <div class="ornament mb-3">
+      <span class="line left"></span>
+      <span>◆ Captain's Log · 30 Days</span>
+      <span class="line"></span>
+    </div>
+    <section id="ledger" class="space-y-2 mb-12"></section>
+
+    <footer class="text-center pt-6 pb-4 border-t border-white/5">
+      <div class="font-jp text-[11px] tracking-[.5em] gold">最後の島</div>
+      <div class="text-[10px] muted font-mono mt-2 tracking-widest">ONEPIECE5915 · MARKET DETAIL</div>
+    </footer>
+  </main>
+
+  <script>
+  /* ---------- LOGIN ---------- */
+  const LOGIN_CONFIG = {
+    enabled: true,
+    salt: "onepiece5915_salt",
+    validHashes: [
+      "9fc3e3ea882af153d3aa2fcf6ef53273e6ee7ae1f28bdfc718e53444999890b1",
+    ],
+  };
+  async function sha256(str){
+    const buf = new TextEncoder().encode(str);
+    const h = await crypto.subtle.digest("SHA-256", buf);
+    return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+  function ssGet(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } }
+  function ssSet(k,v){ try{ sessionStorage.setItem(k,v); }catch(e){} }
+  function unlock(){
+    document.getElementById("loginShell").style.display = "none";
+    document.getElementById("app").classList.remove("hidden");
+    boot();
+  }
+  (async function setupLogin(){
+    if(!LOGIN_CONFIG.enabled || ssGet("op5915_auth")==="1"){ unlock(); return; }
+    document.getElementById("loginShell").style.display = "flex";
+    document.getElementById("loginForm").addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      const u = document.getElementById("liUser").value.trim();
+      const p = document.getElementById("liPass").value;
+      const h = await sha256(`${u}:${p}:${LOGIN_CONFIG.salt}`);
+      const err = document.getElementById("liErr");
+      if(LOGIN_CONFIG.validHashes.includes(h)){
+        ssSet("op5915_auth","1"); unlock();
+      }else{
+        err.classList.remove("hidden");
+        document.getElementById("liPass").value="";
+      }
+    });
+  })();
+
+  /* ---------- BOOT ---------- */
+  const SIG_COLOR = { GREEN:"#8bc18f", YELLOW:"#d6b06b", RED:"#c97373" };
+  const SIG_LABEL = { GREEN:"Invest", YELLOW:"Caution", RED:"Skip" };
+  const MARKET_LABELS = {
+    nikkei:"Nikkei", china:"China", hangseng:"Hang Seng", taiwan:"Taiwan",
+    india:"India", germany:"Germany", uk:"UK", dow:"Dow"
+  };
+  const fmtNum = n => (n>=0?"+":"")+Number(n).toLocaleString();
+
+  async function boot(){
+    try{
+      const params = new URLSearchParams(location.search);
+      const key = params.get("id") || "nikkei";
+      const res = await fetch("dashboard_data.json?t="+Date.now());
+      if(!res.ok) throw new Error("data fetch failed");
+      const data = await res.json();
+      const m = data.summary[key];
+      if(!m) throw new Error("market not found");
+      render(key, m);
+    }catch(err){
+      document.getElementById("app").innerHTML =
+        `<div class="text-center py-20"><div class="text-[10px] tracking-[.3em] gold font-display uppercase mb-2">ERROR</div><div class="font-serif-it text-2xl champ">${err.message}</div></div>`;
+    }
+  }
+
+  function render(key, m){
+    const sigC = SIG_COLOR[m.sigT];
+
+    // Header
+    document.getElementById("marketName").innerText = MARKET_LABELS[key] || key;
+    const badge = document.getElementById("sigBadge");
+    badge.style.color = sigC;
+    badge.innerText = SIG_LABEL[m.sigT];
+    badge.classList.remove("hidden");
+
+    document.getElementById("forDate").innerText = "FOR " + m.forDate;
+    document.getElementById("latestDate").innerText = "LATEST · " + m.latestDate;
+
+    // Sniper
+    const dom = document.getElementById("domTop");
+    dom.innerText = m.domTop;
+    dom.style.color = sigC;
+    const sig = document.getElementById("signal");
+    sig.innerText = SIG_LABEL[m.sigT];
+    sig.style.color = sigC;
+    document.getElementById("chaos").innerText = (m.chaosIndex || 0) + "%";
+
+    // Pairs
+    const pairs = document.getElementById("pairsT");
+    pairs.innerHTML = "";
+    m.pairsT.forEach(p=>{
+      const d = document.createElement("div");
+      d.className = "door";
+      d.innerText = p;
+      pairs.appendChild(d);
+    });
+
+    // Stats
+    const sc = document.getElementById("statsContainer");
+    sc.innerHTML = "";
+    ["30","60","90"].forEach(d=>{
+      const s = m.stats[d];
+      const wr = parseFloat(s.winrate);
+      const wrColor = wr>=30 ? "#a3cfa6" : wr>=20 ? "#d6b06b" : "#c97373";
+      const pColor = s.profit>=0 ? "#a3cfa6" : "#c97373";
+      sc.innerHTML += `
+        <div class="panel stat-card p-5">
+          <div class="stripe" style="background:${wrColor};width:${Math.min(100,wr*2)}%"></div>
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <span class="text-[10px] tracking-[.3em] gold font-display uppercase">${d} Days</span>
+            <span class="font-mono text-[11px]" style="color:${wrColor}">${s.winrate}%</span>
+          </div>
+          <div class="mt-4 space-y-3">
+            <div class="flex justify-between items-end">
+              <span class="text-[10px] muted font-display tracking-widest uppercase">Net Profit</span>
+              <span class="kpi-num text-2xl" style="color:${pColor}">${fmtNum(s.profit)}</span>
+            </div>
+            <div class="flex justify-between text-[12px]">
+              <span class="muted">Wins / Played</span>
+              <span class="num champ">${s.wins} / ${s.played}</span>
+            </div>
+            <div class="flex justify-between text-[12px]">
+              <span class="muted">Max Win Streak</span>
+              <span class="num gold-2">${s.maxWinStreak} ติด</span>
+            </div>
+            <div class="flex justify-between text-[12px]">
+              <span class="muted">Max Loss Streak</span>
+              <span class="num" style="color:#c97373">${s.maxLossStreak}</span>
+            </div>
+            <div class="flex justify-between text-[12px]">
+              <span class="muted">Avoided Losses</span>
+              <span class="num gold-2">${s.avoidedLosses}</span>
+            </div>
+            <div class="flex justify-between text-[12px]">
+              <span class="muted">Skipped</span>
+              <span class="num muted">${s.skipped}</span>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    // Profit curve (this market, 90D)
+    const ctx = document.getElementById("curveChart").getContext("2d");
+    const ledger90 = m.ledger.slice(0,90).slice().reverse(); // oldest -> newest
+    let cum = 0;
+    const labels = [], values = [];
+    ledger90.forEach(d=>{
+      let delta = 0;
+      if(d.sigT !== "RED"){ delta = d.isWinTop ? 9 : -1; }
+      cum += delta;
+      labels.push(d.date.slice(5));
+      values.push(cum);
+    });
+    const grad = ctx.createLinearGradient(0,0,0,260);
+    grad.addColorStop(0,"rgba(229,201,123,.35)");
+    grad.addColorStop(1,"rgba(229,201,123,0)");
+    new Chart(ctx, {
+      type:"line",
+      data:{ labels, datasets:[{
+        data:values, borderColor:"#e5c97b",
+        backgroundColor:grad, borderWidth:2, fill:true, tension:.32,
+        pointRadius:0, pointHoverRadius:4
+      }]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{ display:false },
+          tooltip:{
+            backgroundColor:"#0a0c10", borderColor:"#c9a96e", borderWidth:1,
+            titleColor:"#e5c97b", bodyColor:"#efe7d3", displayColors:false,
+            callbacks:{ label:(c)=>"Cumulative: "+fmtNum(c.parsed.y)+" THB" }
+          }
+        },
+        scales:{
+          x:{ ticks:{ color:"#5a5547", font:{family:"JetBrains Mono", size:10}, autoSkip:true, maxTicksLimit:10, maxRotation:0 }, grid:{ color:"rgba(255,255,255,.04)" }, border:{ color:"rgba(201,169,110,.18)"}},
+          y:{ ticks:{ color:"#5a5547", font:{family:"JetBrains Mono", size:10}}, grid:{ color:"rgba(255,255,255,.04)" }, border:{ color:"rgba(201,169,110,.18)"}}
+        }
+      }
+    });
+
+    // Donut (90D this market)
+    let win=0, loss=0, skip=0;
+    m.ledger.forEach(d=>{
+      if(d.sigT==="RED") skip++;
+      else if(d.isWinTop) win++;
+      else loss++;
+    });
+    document.getElementById("donWin").innerText = win;
+    document.getElementById("donLoss").innerText = loss;
+    document.getElementById("donSkip").innerText = skip;
+    const totalPlayed = win+loss;
+    document.getElementById("donutCenter").innerText = totalPlayed ? ((win/totalPlayed)*100).toFixed(1)+"%" : "—";
+
+    new Chart(document.getElementById("donut").getContext("2d"), {
+      type:"doughnut",
+      data:{
+        labels:["Win","Loss","Skip"],
+        datasets:[{ data:[win,loss,skip],
+          backgroundColor:["#7fa988","#8a4848","#3a3530"],
+          borderColor:"#0a0c10", borderWidth:2, hoverOffset:6 }]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false, cutout:"72%",
+        plugins:{
+          legend:{display:false},
+          tooltip:{ backgroundColor:"#0a0c10", borderColor:"#c9a96e", borderWidth:1, titleColor:"#e5c97b", bodyColor:"#efe7d3" }
+        }
+      }
+    });
+
+    // Ledger 30
+    const led = document.getElementById("ledger");
+    led.innerHTML = "";
+    m.ledger.slice(0,30).forEach(d=>{
+      const c = SIG_COLOR[d.sigT];
+      const isSkip = d.sigT === "RED";
+      const isWin = d.isWinTop && !isSkip;
+      led.innerHTML += `
+        <div class="ledger-row panel px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${isSkip?'skip':''}">
+          <div class="flex items-center gap-4">
+            <div class="num text-[11px] muted w-24">${d.date.split('-').reverse().join('/')}</div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] muted font-display tracking-widest">เด่น</span>
+              <span class="kpi-num text-2xl" style="color:${c}">${d.domTop}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="text-[12px]">
+              <span class="muted font-display tracking-widest text-[10px]">RESULT</span>
+              <span class="num ml-2 champ">${d.actTop}</span>
+            </div>
+            ${isWin ? '<span class="badge-sig" style="color:#a3cfa6">WINNER</span>' : ''}
+            <span class="font-mono text-[10px] tracking-widest" style="color:${c}">${d.sigT}</span>
+          </div>
+        </div>`;
+    });
+  }
+  </script>
+</body>
+</html>

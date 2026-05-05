@@ -1,0 +1,42 @@
+{
+  "nikkei": {
+    "base_limit": -1,
+    "min_elite": 100,
+    "veto_mult": 1.15
+  },
+  "china": {
+    "base_limit": 40,
+    "min_elite": 14,
+    "veto_mult": 1.15
+  },
+  "hangseng": {
+    "base_limit": 40,
+    "min_elite": 21,
+    "veto_mult": 1.2
+  },
+  "taiwan": {
+    "base_limit": 40,
+    "min_elite": 16,
+    "veto_mult": 1.15
+  },
+  "india": {
+    "base_limit": 40,
+    "min_elite": 10,
+    "veto_mult": 1.15
+  },
+  "germany": {
+    "base_limit": 40,
+    "min_elite": 14,
+    "veto_mult": 1.15
+  },
+  "uk": {
+    "base_limit": 56,
+    "min_elite": 19,
+    "veto_mult": 1.25
+  },
+  "dow": {
+    "base_limit": 41,
+    "min_elite": 13,
+    "veto_mult": 1.35
+  }
+}
