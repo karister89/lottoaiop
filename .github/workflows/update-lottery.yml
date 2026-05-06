@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # สำคัญ: สั่งให้บอทดึงประวัติไฟล์มาทั้งหมด เพื่อให้กันชนได้ 100%
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -35,8 +37,19 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # เพิ่มไฟล์ทั้งหมดที่เกี่ยวข้องกับการสรุปผล
-          git add dashboard_data.json lottery-data.json
-          # ตรวจสอบว่ามีการเปลี่ยนแปลงไหม ถ้ามีค่อยบันทึก
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update: SOVEREIGN Data ⚡"
-          git push
+          
+          # เก็บกวาดไฟล์ทั้งหมดที่มีการอัปเดต (ครอบคลุมทั้ง dashboard_data.json และ lottery-data.json)
+          git add -A
+          
+          # ตรวจสอบว่ามีการเปลี่ยนแปลงไหม ถ้ามีค่อยทำงานต่อ
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-update: SOVEREIGN Data ⚡"
+            
+            # 🌟 จุดสำคัญ: ดึงข้อมูลที่บอทอีกตัวอาจจะเพิ่งอัปเดตไปลงมาก่อนเพื่อป้องกัน Error
+            git pull origin main --rebase
+            
+            # ส่งข้อมูลกลับขึ้น GitHub
+            git push origin main
+          else
+            echo "ไม่มีการเปลี่ยนแปลงไฟล์ ข้ามการ Commit"
+          fi
