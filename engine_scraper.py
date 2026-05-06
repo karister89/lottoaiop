@@ -6,14 +6,14 @@ import math
 from datetime import datetime
 
 # ======================================================================
-# ⚙️ แผงควบคุมหลัก (CONTROL PANEL) - Sovereign Engine V2.5
+# ⚙️ แผงควบคุมหลัก (CONTROL PANEL) - Sovereign Engine V2.5 Full
 # ======================================================================
 
 COST_PER_DIGIT = 19             
 PAYOUT = 100                    
 
-DEFAULT_BASE_LIMIT = 80         
-DEFAULT_MIN_ELITE = 39          
+DEFAULT_BASE_LIMIT = 82         
+DEFAULT_MIN_ELITE = 28          # ปรับเกณฑ์ให้สมดุลเพื่อเริ่มแสดงผล
 DEFAULT_TARGET_DIGITS = 2       
 DEFAULT_YELLOW_RATE = 0.5       
 DEFAULT_HC_MODE = True          
@@ -30,15 +30,17 @@ MARKETS = {
 }
 
 # ======================================================================
-# 🤖 ระบบประมวลผล (Core Logic)
+# 🤖 ระบบประมวลผล (Sovereign Engine Core)
 # ======================================================================
 
 def load_settings():
     try:
-        with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        if os.path.exists(SETTINGS_FILE):
+            with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
     except:
-        return {}
+        pass
+    return {}
 
 def safe_int(v, d=0):
     try: return int(v)
@@ -60,7 +62,7 @@ def get_bots_master():
 def main():
     creds_json = os.environ.get("GCP_CREDENTIALS")
     if not creds_json: 
-        print("❌ Error: ไม่พบ GCP_CREDENTIALS")
+        print("❌ Error: GCP_CREDENTIALS not found")
         return
         
     client = gspread.authorize(Credentials.from_service_account_info(json.loads(creds_json), scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]))
@@ -78,20 +80,18 @@ def main():
     for key, sheet_name in MARKETS.items():
         try:
             ws = sheet.worksheet(sheet_name)
-            all_rows = ws.get_all_values()[2:] # ข้ามหัวตาราง 2 แถว
+            all_rows = ws.get_all_values()[2:] 
             
             draws = []
             for r in all_rows:
                 if not r or not r[0] or len(r) < 4: continue
-                # r[0]=วันที่, r[3]=2ตัวบน
                 draws.append({
                     "date": r[0], 
                     "twoTop": r[3].strip().zfill(2) if r[3] else "",
-                    "open": float(r[1]) if r[1] else 0,
-                    "diff": float(r[2]) if r[2] else 0
+                    "open": r[1], "diff": r[2]
                 })
             
-            # 🌟 จุดสำคัญ: กลับหัวข้อมูลเพื่อให้วันที่ล่าสุด (2026) มาอยู่ตำแหน่งแรก
+            # 🌟 จุดสำคัญ 1: กลับหัวข้อมูลให้วันที่ล่าสุดอยู่ index 0 (Array สายยาว)
             draws.reverse() 
             master_lottery_store[key] = draws
             
@@ -103,14 +103,20 @@ def main():
             min_elite = cfg.get('min_elite', DEFAULT_MIN_ELITE)
             
             ledger = []
-            # คำนวณย้อนหลัง 92 งวด (เริ่มจากปัจจุบันถอยหลังไป)
+            # ประมวลผลย้อนหลัง 92 งวดนับจากปัจจุบัน
             for k in range(min(len(draws)-1, 92)):
                 vote = [0.0]*10
+                
+                # 🌟 จุดสำคัญ 2: Logic แก้ปัญหาความต่อเนื่องข้ามปี
                 for b in BOTS_LIST:
-                    lookback = 60
+                    # เช็คจำนวนข้อมูลที่มีให้ตรวจย้อนหลังจากจุดปัจจุบัน k
+                    available_data = len(draws) - (k + 1)
+                    current_lookback = min(available_data, 60) # ตรวจสอบสูงสุด 60 งวด
+                    
+                    if current_lookback < 5: continue # กันบอททำงานบนข้อมูลที่น้อยเกินไป
+                    
                     hits = 0
-                    # เช็ก Win-rate บอทย้อนหลัง (เลื่อนตามตำแหน่ง k)
-                    for i in range(1, lookback + 1):
+                    for i in range(1, current_lookback + 1):
                         idx = k + i
                         if idx + b['window'] >= len(draws): continue
                         
@@ -125,8 +131,9 @@ def main():
                         top_pred = str(sc.index(max(sc)))
                         if top_pred in draws[idx-1]['twoTop']: hits += 1
                     
-                    wr = (hits/lookback*100) if lookback > 0 else 0
-                    # เฉพาะบอทที่สอบผ่านเกณฑ์ Elite ถึงจะมีสิทธิ์โหวต
+                    # คำนวณ Win-rate จากจำนวนข้อมูลที่มีจริง ณ ขณะนั้น
+                    wr = (hits / current_lookback * 100) if current_lookback > 0 else 0
+                    
                     if wr >= min_elite:
                         sub_now = draws[k+1 : k+1+b['window']]
                         sc_now = [0.0]*10
@@ -142,30 +149,24 @@ def main():
                 fourth_v = ranked_v[3][1] if len(ranked_v) > 3 else 0
                 chaos = (fourth_v / top_v * 100) if top_v > 0 else 100
                 
-                # ตัดเกรดสัญญาณไฟจากพารามิเตอร์ที่ Optimize มาแล้ว
+                # ตัดเกรดสัญญาณไฟ (เขียว/เหลือง/แดง)
                 sig = 'RED' if top_v == 0 else ('YELLOW' if chaos > base_limit else 'GREEN')
                 
                 played = [r[0] for r in ranked_v[:target_d]]
                 win_idx = next((i for i, d in enumerate(played) if d in draws[k]['twoTop']), -1)
                 
                 ledger.append({
-                    "date": draws[k]['date'], 
-                    "sigT": sig, 
-                    "isWinTop": (win_idx != -1), 
-                    "winIndex": win_idx, 
-                    "top_digits": [r[0] for r in ranked_v], 
-                    "domTop": ranked_v[0][0]
+                    "date": draws[k]['date'], "sigT": sig, "isWinTop": (win_idx != -1), 
+                    "winIndex": win_idx, "top_digits": [r[0] for r in ranked_v], "domTop": ranked_v[0][0]
                 })
 
-            # คำนวณสถิติสรุป 30, 60, 90 วัน
+            # คำนวณสถิติสะสม
             stats_p = {}
             for period in [30, 60, 90]:
                 p_net, p_inv, p_wins, p_rounds = 0, 0, 0, 0
-                # ใช้ข้อมูลล่าสุด (ledger index ต้นๆ)
                 for r in ledger[:period]:
                     if r['sigT'] == 'RED': continue
                     p_rounds += 1
-                    # คำนวณต้นทุนแบบ Hardcore Support
                     cost = (COST_PER_DIGIT * 1.0) + (COST_PER_DIGIT * y_rate) if is_hc and r['sigT'] == 'YELLOW' and target_d >= 2 else (COST_PER_DIGIT * target_d * (1.0 if r['sigT'] == 'GREEN' else y_rate))
                     p_inv += cost
                     if r['isWinTop']:
@@ -175,36 +176,30 @@ def main():
                     else: p_net -= cost
                 
                 stats_p[str(period)] = {
-                    "profit": round(p_net, 2), 
-                    "invested": round(p_inv, 2), 
-                    "wins": p_wins, 
-                    "totalRounds": p_rounds, 
-                    "winrate": f"{(p_wins/p_rounds*100 if p_rounds>0 else 0):.1f}"
+                    "profit": round(p_net, 2), "invested": round(p_inv, 2), "wins": p_wins, 
+                    "totalRounds": p_rounds, "winrate": f"{(p_wins/p_rounds*100 if p_rounds>0 else 0):.1f}"
                 }
                 for field in ["profit", "invested", "wins", "totalRounds"]:
                     final_output["overall"][str(period)][field] += stats_p[str(period)][field]
 
             final_output["summary"][key] = {
-                "domTop": ledger[0]['domTop'], 
-                "sigT": ledger[0]['sigT'], 
-                "top_digits": ledger[0]['top_digits'], 
-                "target_digits": target_d,
+                "domTop": ledger[0]['domTop'], "sigT": ledger[0]['sigT'], 
+                "top_digits": ledger[0]['top_digits'], "target_digits": target_d,
                 "pairsT": generate_19_doors(ledger[0]['domTop']) if ledger[0]['sigT'] != 'RED' else [], 
-                "stats": stats_p, 
-                "ledger": ledger[:10] # โชว์ 10 งวดล่าสุดในหน้าเว็บ
+                "stats": stats_p, "ledger": ledger[:10]
             }
             
         except Exception as e:
             print(f"⚠️ Warning {key}: {e}")
 
-    # บันทึกข้อมูล
+    # บันทึกไฟล์ข้อมูล
     with open(RAW_DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump({"lotteries": master_lottery_store}, f, ensure_ascii=False)
     
     with open(DASHBOARD_FILE, 'w', encoding='utf-8') as f:
         json.dump(final_output, f, ensure_ascii=False)
         
-    print(f"✅ Scraper v2.5 Updated: Data sorted by newest date.")
+    print(f"✅ Full Scraper Sync Complete")
 
 if __name__ == "__main__":
     main()
