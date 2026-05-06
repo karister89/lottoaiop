@@ -9,22 +9,22 @@ from datetime import datetime, timedelta
 # ⚙️ แผงควบคุมหลัก (CONTROL PANEL)
 # ======================================================================
 
-# --- 1. ตั้งค่าการเงิน (Financial Settings) ---
+# --- 1. ตั้งค่าพื้นฐาน (ต้องตรงกับ Optimizer เพื่อความแม่นยำ) ---
 COST_PER_DIGIT = 19             
 PAYOUT = 100                    
 
-# --- 2. ค่าเริ่มต้นกรณีหาไฟล์ Config ไม่เจอ (Fallback Defaults) ---
+# --- 2. ค่าเริ่มต้นกรณีหาไฟล์ Config ไม่เจอ ---
 DEFAULT_BASE_LIMIT = 80         
-DEFAULT_MIN_ELITE = 28          
+DEFAULT_MIN_ELITE = 39          
 DEFAULT_TARGET_DIGITS = 2       
 DEFAULT_YELLOW_RATE = 0.5       
-DEFAULT_HC_MODE = False         
+DEFAULT_HC_MODE = True          
 
-# --- 3. ข้อมูลทางเทคนิค (System Config) ---
+# --- 3. ข้อมูลทางเทคนิค ---
 SHEET_ID = "1xc4B2mhrC1VdUfOuZUhVQbDyzbSk0J4jCru9am_iLzA"
-RAW_DATA_FILE = 'data_raw.json'          # ไฟล์ข้อมูลดิบสำหรับ Optimizer
-DASHBOARD_FILE = 'data_dashboard.json'  # ไฟล์สรุปผลสำหรับหน้าเว็บ
-SETTINGS_FILE = 'config_markets.json'    # ไฟล์ตั้งค่าที่ได้จาก Optimizer
+RAW_DATA_FILE = 'data_raw.json'          
+DASHBOARD_FILE = 'data_dashboard.json'  
+SETTINGS_FILE = 'config_markets.json'    
 
 MARKETS = {
     'nikkei': 'NIKKEI', 'china': 'SHE', 'hangseng': 'HANGSENG', 
@@ -33,7 +33,7 @@ MARKETS = {
 }
 
 # ======================================================================
-# 🤖 ระบบประมวลผล (Internal Logic)
+# 🤖 ระบบประมวลผล (Sovereign Engine Full-Sync Logic)
 # ======================================================================
 
 def load_settings():
@@ -43,15 +43,6 @@ def load_settings():
     except:
         return {}
 
-def get_config(settings, key):
-    return settings.get(key, {
-        'base_limit': DEFAULT_BASE_LIMIT, 
-        'min_elite': DEFAULT_MIN_ELITE, 
-        'target_digits': DEFAULT_TARGET_DIGITS, 
-        'yellow_bet_rate': DEFAULT_YELLOW_RATE, 
-        'hardcore_mode': DEFAULT_HC_MODE
-    })
-
 def safe_int(v, d=0):
     try: return int(v)
     except: return d
@@ -60,18 +51,25 @@ def generate_19_doors(digit):
     if not digit or digit == "-": return []
     return sorted(list(set([f"{digit}{i}" for i in range(10)] + [f"{i}{digit}" for i in range(10)])))
 
-def algo_hybrid(s, k):
-    sc = [0.0]*10
-    for i, d in enumerate(s):
-        v = d.get(k, "")
-        if len(v) == 2:
-            w = math.exp(-i/15.0) * 2.0
-            sc[safe_int(v[0])] += w; sc[safe_int(v[1])] += w
-    return sc
-
-def get_top_digits(scores):
-    ranked = sorted([{'d': str(i), 's': scores[i]} for i in range(10)], key=lambda x: x['s'], reverse=True)
-    return [r['d'] for r in ranked]
+# --- ระบบจำลอง Bot Voting ให้เหมือน Optimizer ---
+def get_bots_master():
+    blist = []
+    windows = [10, 18, 28, 50, 80, 130, 190, 250, 350, 500]
+    # อัลกอริทึมที่ใช้โหวต
+    def algo_stat(s):
+        sc = [0.0]*10
+        for i, d in enumerate(s):
+            v = d.get('twoTop', "")
+            if len(v) == 2:
+                w = math.exp(-i/15.0) * 1.5 
+                sc[safe_int(v[0])] += w; sc[safe_int(v[1])] += w
+        return sc
+    
+    bot_id = 1
+    for w in windows:
+        blist.append({'id': f"B{bot_id:03d}", 'window': w})
+        bot_id += 1
+    return blist
 
 def main():
     creds_json = os.environ.get("GCP_CREDENTIALS")
@@ -82,6 +80,7 @@ def main():
     settings = load_settings()
     final_output = {"generatedAt": datetime.utcnow().isoformat() + "Z", "summary": {}, "overall": { d: {"profit": 0, "invested": 0, "wins": 0, "totalRounds": 0} for d in ["30", "60", "90"] }}
     master_lottery_store = {}
+    BOTS_LIST = get_bots_master()
 
     for key, sheet_name in MARKETS.items():
         try:
@@ -98,22 +97,73 @@ def main():
                 })
             
             master_lottery_store[key] = draws
-            cfg = get_config(settings, key)
+            
+            # --- ดึงพารามิเตอร์จริงจาก Optimizer ---
+            cfg = settings.get(key, {})
             target_d = cfg.get('target_digits', DEFAULT_TARGET_DIGITS)
             y_rate = cfg.get('yellow_bet_rate', DEFAULT_YELLOW_RATE)
             is_hc = cfg.get('hardcore_mode', DEFAULT_HC_MODE)
+            base_limit = cfg.get('base_limit', DEFAULT_BASE_LIMIT)
+            min_elite = cfg.get('min_elite', DEFAULT_MIN_ELITE)
             
             ledger = []
+            # คำนวณย้อนหลัง 92 งวด
             for k in range(min(len(draws)-1, 92)):
-                scores = algo_hybrid(draws[k+1:k+31], 'twoTop')
-                top_list = get_top_digits(scores)
-                chaos = (k % 35) + 45 
-                sig = 'GREEN' if chaos < 70 else 'YELLOW'
-                if k % 12 == 0: sig = 'RED'
-                played = top_list[:target_d]
-                win_idx = next((i for i, d in enumerate(played) if d in draws[k]['twoTop']), -1)
-                ledger.append({"date": draws[k]['date'], "sigT": sig, "isWinTop": (win_idx != -1), "winIndex": win_idx, "top_digits": top_list, "domTop": top_list[0]})
+                vote = [0.0]*10
+                # ระบบจำลองการคัดเลือกบอท Elite (เพื่อความแม่นยำ 100%)
+                for b in BOTS_LIST:
+                    lookback = 60
+                    hits = 0
+                    # เช็ก Win-rate ย้อนหลังของบอทตัวนี้
+                    for i in range(1, lookback + 1):
+                        idx = k + i
+                        if idx + b['window'] >= len(draws): continue
+                        # จำลองการทำนายของบอท
+                        sub = draws[idx : idx + b['window']]
+                        sc = [0.0]*10
+                        for si, sd in enumerate(sub):
+                            v = sd.get('twoTop', "")
+                            if len(v) == 2:
+                                w = math.exp(-si/15.0) * 1.5
+                                sc[safe_int(v[0])] += w; sc[safe_int(v[1])] += w
+                        top_pred = str(sc.index(max(sc)))
+                        if top_pred in draws[idx-1]['twoTop']: hits += 1
+                    
+                    wr = (hits/lookback*100) if lookback > 0 else 0
+                    if wr >= min_elite:
+                        # ถ้าผ่านเกณฑ์ Elite ให้มีสิทธิ์โหวต (เลียนแบบ Optimizer)
+                        sub_now = draws[k+1 : k+1+b['window']]
+                        sc_now = [0.0]*10
+                        for si, sd in enumerate(sub_now):
+                            v = sd.get('twoTop', "")
+                            if len(v) == 2:
+                                w = math.exp(-si/15.0) * 1.5
+                                sc_now[safe_int(v[0])] += w; sc_now[safe_int(v[1])] += w
+                        vote[sc_now.index(max(sc_now))] += 3.0 # Weight 3.0 เหมือน Optimizer
 
+                # สรุปผลโหวต
+                ranked_v = sorted([(str(x), v) for x, v in enumerate(vote)], key=lambda x: x[1], reverse=True)
+                top_v = ranked_v[0][1]
+                fourth_v = ranked_v[3][1] if len(ranked_v) > 3 else 0
+                chaos = (fourth_v / top_v * 100) if top_v > 0 else 100
+                
+                # --- ตัดเกรดสัญญาณไฟจากค่าจริง ---
+                sig = 'RED' if top_v == 0 else ('YELLOW' if chaos > base_limit else 'GREEN')
+                if k % 15 == 0 and sig != 'RED': sig = 'RED' # ตัดรอบพักตามสูตร
+
+                played = [r[0] for r in ranked_v[:target_d]]
+                win_idx = next((i for i, d in enumerate(played) if d in draws[k]['twoTop']), -1)
+                
+                ledger.append({
+                    "date": draws[k]['date'], 
+                    "sigT": sig, 
+                    "isWinTop": (win_idx != -1), 
+                    "winIndex": win_idx, 
+                    "top_digits": [r[0] for r in ranked_v], 
+                    "domTop": ranked_v[0][0]
+                })
+
+            # คำนวณ Performance สรุปเข้า Dashboard
             stats_p = {}
             for period in [30, 60, 90]:
                 p_net, p_inv, p_wins, p_rounds = 0, 0, 0, 0
@@ -127,15 +177,32 @@ def main():
                         win_m = (PAYOUT * 1.0) if not is_hc or r['winIndex'] == 0 else (PAYOUT * y_rate)
                         p_net += win_m - cost
                     else: p_net -= cost
+                
                 stats_p[str(period)] = {"profit": p_net, "invested": p_inv, "wins": p_wins, "totalRounds": p_rounds, "winrate": f"{(p_wins/p_rounds*100 if p_rounds>0 else 0):.1f}"}
                 for field in ["profit", "invested", "wins", "totalRounds"]:
                     final_output["overall"][str(period)][field] += stats_p[str(period)][field]
-            final_output["summary"][key] = {"domTop": ledger[0]['domTop'], "sigT": ledger[0]['sigT'], "top_digits": ledger[0]['top_digits'], "pairsT": generate_19_doors(ledger[0]['domTop']) if ledger[0]['sigT'] != 'RED' else [], "stats": stats_p, "ledger": ledger[1:11]}
-        except Exception as e: print(f"⚠️ Warning {key}: {e}")
 
+            final_output["summary"][key] = {
+                "domTop": ledger[0]['domTop'], 
+                "sigT": ledger[0]['sigT'], 
+                "top_digits": ledger[0]['top_digits'], 
+                "target_digits": target_d,
+                "pairsT": generate_19_doors(ledger[0]['domTop']) if ledger[0]['sigT'] != 'RED' else [], 
+                "stats": stats_p, 
+                "ledger": ledger[1:11]
+            }
+            
+        except Exception as e:
+            print(f"⚠️ Warning {key}: {e}")
+
+    # --- 💾 บันทึกไฟล์ทั้งสองระบบ ---
     with open(RAW_DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump({"lotteries": master_lottery_store}, f, ensure_ascii=False)
+    
     with open(DASHBOARD_FILE, 'w', encoding='utf-8') as f:
         json.dump(final_output, f, ensure_ascii=False)
+        
+    print(f"✅ Full-Sync Complete: Data updated using optimized parameters.")
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
