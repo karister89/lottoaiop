@@ -1,0 +1,66 @@
+{
+  "nikkei": {
+    "base_limit": 60,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  },
+  "china": {
+    "base_limit": 75,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  },
+  "hangseng": {
+    "base_limit": 60,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  },
+  "taiwan": {
+    "base_limit": 89,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  },
+  "india": {
+    "base_limit": 65,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  },
+  "germany": {
+    "base_limit": 63,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  },
+  "uk": {
+    "base_limit": 60,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  },
+  "dow": {
+    "base_limit": 72,
+    "min_elite": 39,
+    "veto_mult": 9.99,
+    "target_digits": 2,
+    "yellow_bet_rate": 0.5,
+    "hardcore_mode": true
+  }
+}
