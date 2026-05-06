@@ -2,29 +2,37 @@ import json
 import os
 import math
 
-# ==========================================
-# ⚙️ OPTIMIZER CONFIG (V2.5 HYBRID + HARDCORE SPLIT)
-# ==========================================
+# ======================================================================
+# ⚙️ แผงควบคุมหลัก (CONTROL PANEL) - เปลี่ยนแปลงค่าต่างๆ ได้ที่นี่ที่เดียว!
+# ======================================================================
+
+# --- 1. ตั้งค่าการแทง (Betting Rules) ---
+TARGET_DIGITS = 2               # จำนวนตัวเลขที่จะรูด (ค่าปกติ 2)
+HARDCORE_SPLIT_MODE = True      # เปิดระบบแยกไม้แทง (True = เปิด, False = ปิด)
+YELLOW_BET_RATE = 0.5           # สัดส่วนเงินตอนติดไฟเหลือง (0.5 คือแทงครึ่งราคาสำหรับเบอร์ 2)
+VETO_MULT = 9.99                # ปิดระบบ Veto (ตั้ง 9.99 คือปิดถาวร เพื่อให้กราฟนิ่ง)
+
+# --- 2. ตั้งค่าความละเอียดการค้นหา (Grid Search Tuning) ---
+# ค้นหาจุดตัดไฟแดง (Base Limit)
+LIMIT_START = 60                # เริ่มต้นหาที่ค่า (แนะนำ 70)
+LIMIT_END = 90                  # สิ้นสุดหาที่ค่า (แนะนำ 90)
+LIMIT_STEP = 1                  # ขยับทีละ (แนะนำ 5)
+
+# ค้นหา Win-Rate ของบอทหัวกะทิ (Elite Win-Rate %)
+ELITE_START = 30                # เริ่มต้นหาที่ค่า Win-Rate (แนะนำ 15)
+ELITE_END = 80                  # สิ้นสุดหาที่ค่า Win-Rate (แนะนำ 45)
+ELITE_STEP = 1                  # ขยับทีละ (แนะนำ 2)
+
+# --- 3. ตั้งค่าระบบไฟล์ (System Variables) ---
+BACKTEST_DAYS = 90
 DATA_FILE = 'lottery-data.json'
 OUTPUT_SETTINGS = 'market_settings.json'
-
-BACKTEST_DAYS = 90
-TARGET_DIGITS = 2  
-
-# ---------------------------------------------------------
-# 🔥 กลยุทธ์แยกไม้ (Hardcore Split Mode)
-# ---------------------------------------------------------
-# True = ไฟเหลือง แยกแทง: เบอร์ 1 แทงเต็ม 1.0 / เบอร์ 2 แทงครึ่ง 0.5
-# False = ไฟเหลือง มัดรวม: ลดทุนเหลือ 0.5 เท่ากันทั้งคู่
-HARDCORE_SPLIT_MODE = True
-YELLOW_BET_RATE = 0.5
-# ---------------------------------------------------------
-
-# ปิด Veto เพื่อเน้น Win-Rate สวยๆ
-VETO_MULT = 9.99
-
-COST_UNIT = 19 * TARGET_DIGITS
 PAYOUT = 100
+COST_UNIT = 19 * TARGET_DIGITS
+
+# ======================================================================
+# 🤖 สิ้นสุดเขตแผงควบคุม (ส่วนด้านล่างคือระบบประมวลผล ไม่ต้องแก้ไข)
+# ======================================================================
 
 def safe_int(val, default=0):
     try: return int(val)
@@ -84,8 +92,12 @@ def get_bots_master():
     return blist
 
 def main():
-    if not os.path.exists(DATA_FILE): return
-    with open(DATA_FILE, 'r', encoding='utf-8') as f: master_data = json.load(f)
+    if not os.path.exists(DATA_FILE): 
+        print(f"❌ Error: ไม่พบไฟล์ข้อมูล {DATA_FILE} กรุณารัน Scraper ก่อน")
+        return
+        
+    with open(DATA_FILE, 'r', encoding='utf-8') as f: 
+        master_data = json.load(f)
 
     lotteries = master_data.get('lotteries', {})
     optimized_settings = {}
@@ -93,6 +105,7 @@ def main():
 
     for key, draws in lotteries.items():
         if len(draws) < 50: continue
+        print(f"🔎 ค้นหาค่า Best Parameters สำหรับ: {key} (กำลังสแกนแบบละเอียด...)")
 
         matrix = {b['id']: {} for b in BOTS_LIST}
         for b in BOTS_LIST:
@@ -107,8 +120,11 @@ def main():
         best_profit = -999999
         best_cfg = {'base_limit': 80, 'min_elite': 28, 'veto_mult': VETO_MULT, 'target_digits': TARGET_DIGITS, 'yellow_bet_rate': YELLOW_BET_RATE, 'hardcore_mode': HARDCORE_SPLIT_MODE}
 
-        for base in [75, 80, 85]:
-            for elite in [25, 28, 32]:
+        # ==========================================
+        # 🎯 ระบบ Grid Search (ใช้ค่าจากแผงควบคุมด้านบน)
+        # ==========================================
+        for base in range(LIMIT_START, LIMIT_END + 1, LIMIT_STEP):
+            for elite in range(ELITE_START, ELITE_END + 1, ELITE_STEP):
                 sim_profit = 0
                 for k in range(1, BACKTEST_DAYS + 1):
                     if k >= len(draws): break
@@ -142,7 +158,7 @@ def main():
                     if sig != 'RED':
                         played = [r[0] for r in ranked_v[:TARGET_DIGITS]]
                         # --------------------------------------------
-                        # สูตรคำนวณแยกไม้แทง
+                        # สูตรคำนวณแยกไม้แทง (Hardcore Mode)
                         # --------------------------------------------
                         if HARDCORE_SPLIT_MODE and sig == 'YELLOW' and TARGET_DIGITS >= 2:
                             cost = (19 * 1.0) + (19 * YELLOW_BET_RATE)
@@ -161,8 +177,11 @@ def main():
                     best_cfg = {'base_limit': base, 'min_elite': elite, 'veto_mult': VETO_MULT, 'target_digits': TARGET_DIGITS, 'yellow_bet_rate': YELLOW_BET_RATE, 'hardcore_mode': HARDCORE_SPLIT_MODE}
 
         optimized_settings[key] = best_cfg
-        print(f"✅ {key} -> Limit: {best_cfg['base_limit']}, Elite: {best_cfg['min_elite']}")
+        print(f"✅ {key} -> Limit: {best_cfg['base_limit']}, Elite: {best_cfg['min_elite']} (คาดการณ์กำไรย้อนหลัง: {best_profit})")
 
-    with open(OUTPUT_SETTINGS, 'w', encoding='utf-8') as f: json.dump(optimized_settings, f, ensure_ascii=False, indent=2)
+    with open(OUTPUT_SETTINGS, 'w', encoding='utf-8') as f: 
+        json.dump(optimized_settings, f, ensure_ascii=False, indent=2)
+    print(f"🚀 บันทึกการตั้งค่าลง {OUTPUT_SETTINGS} เรียบร้อย!")
 
-if __name__ == "__main__": main()
+if __name__ == "__main__": 
+    main()
