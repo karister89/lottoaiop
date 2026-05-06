@@ -5,16 +5,52 @@ import os
 import math
 from datetime import datetime, timedelta
 
+# ======================================================================
+# ⚙️ แผงควบคุมหลัก (CONTROL PANEL) - แก้ไขค่าพื้นฐานได้ที่นี่
+# ======================================================================
+
+# --- 1. ตั้งค่าการเงิน (Financial Settings) ---
+COST_PER_DIGIT = 19             # ต้นทุนต่อการรูด 1 ตัวเลข
+PAYOUT = 100                    # เงินรางวัลเมื่อถูกรางวัล
+
+# --- 2. ค่าเริ่มต้นกรณีหาไฟล์ Settings ไม่เจอ (Fallback Defaults) ---
+DEFAULT_BASE_LIMIT = 80         # จุดตัดไฟแดงเริ่มต้น
+DEFAULT_MIN_ELITE = 28          # Win-rate ขั้นต่ำเริ่มต้น
+DEFAULT_TARGET_DIGITS = 2       # จำนวนตัวเลขที่รูดเริ่มต้น
+DEFAULT_YELLOW_RATE = 0.5       # อัตราลดทุนไฟเหลืองเริ่มต้น
+DEFAULT_HC_MODE = False         # ระบบแยกไม้เริ่มต้น (ปิดไว้ก่อน)
+
+# --- 3. ข้อมูลชีทและตลาด (System Config) ---
 SHEET_ID = "1xc4B2mhrC1VdUfOuZUhVQbDyzbSk0J4jCru9am_iLzA"
-MARKETS = {'nikkei': 'NIKKEI', 'china': 'SHE', 'hangseng': 'HANGSENG', 'taiwan': 'TPE', 'india': 'SENSEX', 'germany': 'DAX', 'uk': 'FTSE', 'dow': 'DJI'}
-BET_CONFIG = { "COST_PER_DIGIT": 19, "PAYOUT": 100 } 
+MARKETS = {
+    'nikkei': 'NIKKEI', 
+    'china': 'SHE', 
+    'hangseng': 'HANGSENG', 
+    'taiwan': 'TPE', 
+    'india': 'SENSEX', 
+    'germany': 'DAX', 
+    'uk': 'FTSE', 
+    'dow': 'DJI'
+}
+
+# ======================================================================
+# 🤖 ระบบประมวลผล (Internal Logic) - ไม่แนะนำให้แก้ไขส่วนนี้
+# ======================================================================
+
+BET_CONFIG = { "COST_PER_DIGIT": COST_PER_DIGIT, "PAYOUT": PAYOUT } 
 
 try:
     with open('market_settings.json', 'r', encoding='utf-8') as f: MARKET_SETTINGS = json.load(f)
 except: MARKET_SETTINGS = {}
 
 def get_market_config(key):
-    return MARKET_SETTINGS.get(key, {'base_limit': 80, 'min_elite': 28, 'target_digits': 2, 'yellow_bet_rate': 0.5, 'hardcore_mode': False})
+    return MARKET_SETTINGS.get(key, {
+        'base_limit': DEFAULT_BASE_LIMIT, 
+        'min_elite': DEFAULT_MIN_ELITE, 
+        'target_digits': DEFAULT_TARGET_DIGITS, 
+        'yellow_bet_rate': DEFAULT_YELLOW_RATE, 
+        'hardcore_mode': DEFAULT_HC_MODE
+    })
 
 def safe_int(v, d=0):
     try: return int(v)
@@ -56,9 +92,9 @@ def main():
                 draws.append({"date": r[0], "twoTop": r[3].strip().zfill(2) if r[3] else ""})
             
             cfg = get_market_config(key)
-            target_d = cfg.get('target_digits', 2)
-            y_rate = cfg.get('yellow_bet_rate', 0.5)
-            is_hc = cfg.get('hardcore_mode', False)
+            target_d = cfg.get('target_digits', DEFAULT_TARGET_DIGITS)
+            y_rate = cfg.get('yellow_bet_rate', DEFAULT_YELLOW_RATE)
+            is_hc = cfg.get('hardcore_mode', DEFAULT_HC_MODE)
             
             ledger = []
             for k in range(92):
@@ -66,6 +102,7 @@ def main():
                 scores = algo_hybrid(draws[k+1:k+31], 'twoTop')
                 top_list = get_top_digits(scores)
                 
+                # จำลอง Chaos สำหรับไฟสัญญาณ (ในอนาคตส่วนนี้จะดึงจาก Settings จริง)
                 chaos = (k % 35) + 45 
                 sig = 'GREEN' if chaos < 70 else 'YELLOW'
                 if k % 12 == 0: sig = 'RED'
@@ -91,7 +128,7 @@ def main():
                     rounds += 1
                     
                     if is_hc and r['sigT'] == 'YELLOW' and target_d >= 2:
-                        cost = (19 * 1.0) + (19 * y_rate)
+                        cost = (BET_CONFIG["COST_PER_DIGIT"] * 1.0) + (BET_CONFIG["COST_PER_DIGIT"] * y_rate)
                         net_i += cost
                         if r['isWinTop']:
                             wins += 1
