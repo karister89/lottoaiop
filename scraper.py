@@ -56,8 +56,8 @@ def main():
                 draws.append({"date": r[0], "twoTop": r[3].strip().zfill(2) if r[3] else ""})
             
             cfg = get_market_config(key)
-            target_d = cfg['target_digits']
-            y_rate = cfg['yellow_bet_rate']
+            target_d = cfg.get('target_digits', 2)
+            y_rate = cfg.get('yellow_bet_rate', 0.5)
             is_hc = cfg.get('hardcore_mode', False)
             
             ledger = []
