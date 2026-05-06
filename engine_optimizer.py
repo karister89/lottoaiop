@@ -17,8 +17,8 @@ LIMIT_START = 60
 LIMIT_END = 90           
 LIMIT_STEP = 1               
 
-ELITE_START = 39             
-ELITE_END = 81                  
+ELITE_START = 50         
+ELITE_END = 100        
 ELITE_STEP = 1     
 
 # --- 3. ตั้งค่าระบบไฟล์ (System Variables) ---
