@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # สำคัญ: สั่งให้บอทดึงประวัติไฟล์มาทั้งหมด เพื่อให้กันชนได้ 100%
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -31,7 +33,19 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add market_settings.json
-          # เช็กเฉพาะไฟล์ที่ Add ว่าเปลี่ยนไหม ถ้าเปลี่ยนค่อย Commit
-          git diff --staged --quiet || git commit -m "Auto-tune: Updated Market Settings 🎯"
-          git push
+          
+          # เก็บกวาดไฟล์ทั้งหมดที่มีการอัปเดต (ครอบคลุมทั้ง JSON ทุกตัว)
+          git add -A
+          
+          # ตรวจสอบว่ามีอะไรเปลี่ยนแปลงไหม ถ้ามีค่อยทำงานต่อ
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-tune: Updated Market Settings 🎯"
+            
+            # 🌟 จุดสำคัญ: ดึงข้อมูลที่บอทอีกตัวอาจจะเพิ่งอัปเดตไปลงมาก่อน
+            git pull origin main --rebase
+            
+            # ส่งข้อมูลกลับขึ้น GitHub
+            git push origin main
+          else
+            echo "ไม่มีการเปลี่ยนแปลงไฟล์ ข้ามการ Commit"
+          fi
