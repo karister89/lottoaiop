@@ -1,4 +1,4 @@
-name: 🚀 Auto Update Lottery Data (Scraper)
+name: 🚀 Auto Update Sovereign Data (Engine Scraper)
 
 on:
   workflow_dispatch: # ปุ่มสำหรับกดรันเอง
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # สำคัญ: สั่งให้บอทดึงประวัติไฟล์มาทั้งหมด เพื่อให้กันชนได้ 100%
+          fetch-depth: 0 # ดึงประวัติไฟล์ทั้งหมด เพื่อป้องกัน Conflict เวลา Push
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -28,24 +28,24 @@ jobs:
       - name: Install Dependencies
         run: pip install gspread google-auth
 
-      - name: Run Scraper
+      - name: Run Scraper Engine
         env:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-        run: python scraper.py
+        run: python engine_scraper.py # เปลี่ยนชื่อไฟล์ที่สั่งรันให้ตรงกับของใหม่
 
       - name: Commit and Push Data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # เก็บกวาดไฟล์ทั้งหมดที่มีการอัปเดต (ครอบคลุมทั้ง dashboard_data.json และ lottery-data.json)
+          # ใช้ -A เพื่อเก็บทุกไฟล์ที่มีการเปลี่ยนแปลง (data_raw.json, data_dashboard.json)
           git add -A
           
-          # ตรวจสอบว่ามีการเปลี่ยนแปลงไหม ถ้ามีค่อยทำงานต่อ
+          # ตรวจสอบว่ามีการเปลี่ยนแปลงจริงไหมก่อน Commit
           if ! git diff --staged --quiet; then
-            git commit -m "Auto-update: SOVEREIGN Data ⚡"
+            git commit -m "Auto-update: SOVEREIGN Data Sync ⚡"
             
-            # 🌟 จุดสำคัญ: ดึงข้อมูลที่บอทอีกตัวอาจจะเพิ่งอัปเดตไปลงมาก่อนเพื่อป้องกัน Error
+            # Pull ข้อมูลล่าสุดลงมาก่อนเผื่อมีการทับซ้อน (Rebase เพื่อให้ประวัติสวยงาม)
             git pull origin main --rebase
             
             # ส่งข้อมูลกลับขึ้น GitHub
