@@ -5,114 +5,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sovereign V3 | Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* เอฟเฟกต์ไฟกระพริบเบาๆ ให้ดูเป็นไซไฟ */
-        .glow { box-shadow: 0 0 15px currentColor; }
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid #334155; }
+        .text-neon-green { color: #4ade80; text-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
+        .text-neon-red { color: #f87171; text-shadow: 0 0 10px rgba(248, 113, 113, 0.3); }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4 md:p-8 flex flex-col items-center">
+<body class="p-4 md:p-8 min-h-screen">
 
-    <div class="w-full max-w-3xl text-center mb-8 mt-4">
-        <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-blue-400 mb-2">
-            <i class="fa-solid fa-crosshairs"></i> SOVEREIGN V3
-        </h1>
-        <p class="text-gray-400 text-sm tracking-wide">ALGORITHMIC TRADING COMMAND CENTER</p>
-    </div>
-
-    <div id="dashboard" class="w-full max-w-3xl bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-700 hidden">
-        
-        <div id="statusBar" class="w-full rounded-lg p-3 text-center font-bold text-lg mb-6 tracking-wide transition-colors duration-500">
-            <span id="statusText"><i class="fa-solid fa-spinner fa-spin"></i> กำลังวิเคราะห์สถานะ...</span>
+    <header class="mb-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-white tracking-wider">SOVEREIGN <span class="text-blue-500">V3</span></h1>
+            <p class="text-slate-400 mt-1">Multi-Market Automated Analysis System</p>
         </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            
-            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center justify-center border border-gray-600">
-                <span class="text-gray-400 text-sm mb-1">เป้าหมาย (OP Pair)</span>
-                <span id="targetPair" class="text-5xl font-extrabold text-white tracking-widest">-</span>
-            </div>
-
-            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center justify-center border border-gray-600">
-                <span class="text-gray-400 text-sm mb-1">สัดส่วนลงทุน (Bet Size)</span>
-                <span id="betSize" class="text-4xl font-bold text-blue-300">-</span>
-            </div>
-
-            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center border border-gray-600">
-                <span class="text-gray-400 text-sm mb-1"><i class="fa-solid fa-wallet"></i> กำไรสะสม (30 วัน)</span>
-                <span id="profit" class="text-2xl font-bold text-green-400">-</span>
-            </div>
-
-            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center border border-gray-600">
-                <span class="text-gray-400 text-sm mb-1"><i class="fa-solid fa-chart-line"></i> ความแม่นยำ (Win Rate)</span>
-                <span id="winRate" class="text-2xl font-bold text-purple-400">-</span>
-            </div>
-
+        <div class="mt-4 md:mt-0 text-right">
+            <div id="last-update" class="text-sm text-slate-400">กำลังโหลดข้อมูล...</div>
         </div>
+    </header>
 
-        <div class="text-center text-xs text-gray-500 mt-4">
-            * อัปเดตล่าสุด: <span id="lastUpdate">-</span><br>
-            * ข้อมูลประเมินจากมาตรฐานตลาด P80 (<span id="marketThresh">-</span>)
-        </div>
-    </div>
+    <section class="mb-10">
+        <h2 class="text-xl font-semibold mb-4 border-l-4 border-blue-500 pl-3">ภาพรวมพอร์ตกองทุน (Portfolio)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="portfolio-container">
+            </div>
+    </section>
 
-    <div id="loading" class="flex flex-col items-center justify-center mt-20 text-gray-400">
-        <i class="fa-solid fa-radar fa-spin text-4xl mb-4 text-blue-500"></i>
-        <p>กำลังเชื่อมต่อสัญญาณจาก Core Commander...</p>
-    </div>
+    <section>
+        <h2 class="text-xl font-semibold mb-4 border-l-4 border-indigo-500 pl-3">วิเคราะห์รายตลาด (Market Signals)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="market-container">
+            </div>
+    </section>
 
     <script>
-        // ใช้ Date.now() ต่อท้าย URL เพื่อป้องกันมือถือจำแคช (Cache Busting)
-        const dataUrl = `data/final_synergy.json?t=${Date.now()}`;
+        // ฟังก์ชันจัดฟอร์แมตตัวเลขให้มีคอมม่า (เช่น 1,500)
+        const formatMoney = (num) => {
+            return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(num);
+        };
 
-        fetch(dataUrl)
-            .then(response => {
-                if (!response.ok) throw new Error("หาไฟล์ไม่เจอ (อาจจะยังรันบอทไม่เสร็จ)");
-                return response.json();
-            })
-            .then(data => {
-                // ซ่อน Loading แสดง Dashboard
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
+        const renderPortfolio = (portfolio) => {
+            const container = document.getElementById('portfolio-container');
+            container.innerHTML = '';
+            
+            const periods = [
+                { key: '30d', label: 'ผลประกอบการ 30 วัน' },
+                { key: '60d', label: 'ผลประกอบการ 60 วัน' },
+                { key: '90d', label: 'ผลประกอบการ 90 วัน' }
+            ];
 
-                // ใส่ข้อมูลลงหน้าเว็บ
-                // แปลงรูปแบบอาร์เรย์ ["5", "8"] เป็น 5-8
-                const pairStr = Array.isArray(data.pair) ? data.pair.join(' - ') : data.pair;
-                document.getElementById('targetPair').innerText = pairStr;
-                
-                document.getElementById('betSize').innerText = data.bet_size;
-                
-                // เช็คกำไร ถ้าบวกให้เป็นสีเขียว ถ้าลบให้เป็นสีแดง
-                const profitVal = parseFloat(data.details["30d_profit"]);
-                const profitEl = document.getElementById('profit');
-                profitEl.innerText = (profitVal > 0 ? "+" : "") + profitVal + " ฿";
-                profitEl.className = profitVal > 0 ? "text-2xl font-bold text-green-400" : "text-2xl font-bold text-red-400";
+            periods.forEach(p => {
+                const data = portfolio[p.key] || { profit: 0, invested: 0 };
+                const isProfit = data.profit >= 0;
+                const colorClass = isProfit ? 'text-neon-green' : 'text-neon-red';
+                const sign = isProfit ? '+' : '';
 
-                document.getElementById('winRate').innerText = data.details.win_rate;
-                document.getElementById('marketThresh').innerText = data.details.market_threshold;
-                
-                // จัดการสี Status Bar
-                const statusBar = document.getElementById('statusBar');
-                const statusText = document.getElementById('statusText');
-                
-                if (data.report.includes("GREEN")) {
-                    statusBar.className = "w-full rounded-lg p-3 text-center font-bold text-lg mb-6 bg-green-900/80 text-green-300 border border-green-500 glow text-green-500";
-                    statusText.innerHTML = '<i class="fa-solid fa-circle-check"></i> SYSTEM STABLE: ตลาดเป็นใจ จัดเต็มได้เลย';
-                } else if (data.report.includes("YELLOW")) {
-                    statusBar.className = "w-full rounded-lg p-3 text-center font-bold text-lg mb-6 bg-yellow-900/80 text-yellow-300 border border-yellow-500 glow text-yellow-500";
-                    statusText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> WARNING: ตลาดเริ่มผันผวน ให้ลดไม้ลง';
-                } else {
-                    statusBar.className = "w-full rounded-lg p-3 text-center font-bold text-lg mb-6 bg-red-900/80 text-red-300 border border-red-500 glow text-red-500";
-                    statusText.innerHTML = '<i class="fa-solid fa-skull-crossbones"></i> CRITICAL: อันตราย หยุดการลงทุน';
-                }
-
-                // เวลาอัปเดต
-                const now = new Date();
-                document.getElementById('lastUpdate').innerText = now.toLocaleString('th-TH');
-            })
-            .catch(error => {
-                document.getElementById('loading').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i><p class="text-red-400">ระบบไม่สามารถดึงข้อมูลได้: ${error.message}</p>`;
+                container.innerHTML += `
+                    <div class="glass-panel rounded-xl p-5 shadow-lg">
+                        <div class="text-slate-400 text-sm mb-1">${p.label}</div>
+                        <div class="text-2xl font-bold ${colorClass}">${sign}${formatMoney(data.profit)}</div>
+                        <div class="text-xs text-slate-500 mt-2">ยอดหมุนเวียน: ${formatMoney(data.invested)}</div>
+                    </div>
+                `;
             });
+        };
+
+        const renderMarkets = (markets) => {
+            const container = document.getElementById('market-container');
+            container.innerHTML = '';
+
+            for (const [marketName, data] of Object.entries(markets)) {
+                // เช็คสถานะไฟสัญญาณ
+                let statusColor = "bg-slate-700";
+                let statusText = "WAITING";
+                if (data.report.includes("GREEN")) { statusColor = "bg-green-600"; statusText = "CLEAR TO ENGAGE"; }
+                else if (data.report.includes("YELLOW")) { statusColor = "bg-yellow-500 text-black"; statusText = "CAUTION"; }
+                else if (data.report.includes("RED")) { statusColor = "bg-red-600"; statusText = "DO NOT ENGAGE"; }
+
+                const pairDisplay = data.pair ? `${data.pair[0]} - ${data.pair[1]}` : "N/A";
+                const p30 = data.history["30d"] || { profit: 0, win_rate: 0 };
+                const pProfitClass = p30.profit >= 0 ? 'text-green-400' : 'text-red-400';
+
+                container.innerHTML += `
+                    <div class="glass-panel rounded-xl overflow-hidden shadow-lg flex flex-col hover:border-slate-400 transition duration-300">
+                        <div class="${statusColor} px-4 py-2 flex justify-between items-center font-bold text-sm tracking-wider">
+                            <span>${marketName.toUpperCase()}</span>
+                            <span class="text-xs">${statusText}</span>
+                        </div>
+                        
+                        <div class="p-5 text-center border-b border-slate-700">
+                            <div class="text-slate-400 text-sm mb-2">คู่เลขที่แข็งแกร่งที่สุด</div>
+                            <div class="text-5xl font-black text-white tracking-widest">${pairDisplay}</div>
+                            <div class="mt-3 inline-block bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-600">
+                                ลงเงิน: <span class="font-bold text-white">${data.bet_size}</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-slate-800/50 flex-grow text-sm">
+                            <div class="flex justify-between mb-2">
+                                <span class="text-slate-400">เกณฑ์มาตรฐาน (P80):</span>
+                                <span class="text-white">${data.market_threshold}</span>
+                            </div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-slate-400">Win Rate (30 วัน):</span>
+                                <span class="text-white">${p30.win_rate}%</span>
+                            </div>
+                            <div class="flex justify-between font-bold">
+                                <span>กำไร 30 วัน:</span>
+                                <span class="${pProfitClass}">${p30.profit >= 0 ? '+' : ''}${formatMoney(p30.profit)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        // ฟังก์ชันโหลดข้อมูลจากไฟล์ JSON
+        async function loadDashboardData() {
+            try {
+                // ใส่เวลาต่อท้ายเพื่อป้องกันเบราว์เซอร์จำ Cache เก่า
+                const response = await fetch(`data/final_synergy.json?t=${new Date().getTime()}`);
+                if (!response.ok) throw new Error("ไม่พบไฟล์ข้อมูล");
+                
+                const data = await response.json();
+                
+                renderPortfolio(data.portfolio);
+                renderMarkets(data.markets);
+                
+                // อัปเดตเวลาล่าสุด
+                const now = new Date();
+                document.getElementById('last-update').innerHTML = `อัปเดตล่าสุด: ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH')}`;
+            } catch (error) {
+                console.error("Error loading data:", error);
+                document.getElementById('market-container').innerHTML = `
+                    <div class="col-span-full text-center py-10 text-slate-500">
+                        <p class="text-xl">⚠️ ยังไม่มีข้อมูล หรือบอทยังทำงานไม่เสร็จ</p>
+                        <p class="mt-2 text-sm">กรุณารอระบบ GitHub Actions ประมวลผลและสร้างไฟล์ final_synergy.json</p>
+                    </div>
+                `;
+            }
+        }
+
+        // สั่งให้ทำงานทันทีที่เปิดหน้าเว็บ
+        window.onload = loadDashboardData;
     </script>
 </body>
 </html>
