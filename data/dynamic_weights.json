@@ -1,0 +1,244 @@
+{
+    "markets": {
+        "NIKKEI": {
+            "weights": {
+                "market": 0.1507,
+                "stat": 0.0822,
+                "math": 0.3836,
+                "ai": 0.3836
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "stat": {
+                    "wins": 6,
+                    "win_rate": 20.0,
+                    "status": "YELLOW"
+                },
+                "math": {
+                    "wins": 14,
+                    "win_rate": 46.7,
+                    "status": "GREEN"
+                },
+                "ai": {
+                    "wins": 14,
+                    "win_rate": 46.7,
+                    "status": "GREEN"
+                }
+            }
+        },
+        "FTSE": {
+            "weights": {
+                "market": 0.1429,
+                "stat": 0.5,
+                "math": 0.1607,
+                "ai": 0.1964
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 8,
+                    "win_rate": 26.7,
+                    "status": "YELLOW"
+                },
+                "stat": {
+                    "wins": 14,
+                    "win_rate": 46.7,
+                    "status": "GREEN"
+                },
+                "math": {
+                    "wins": 9,
+                    "win_rate": 30.0,
+                    "status": "YELLOW"
+                },
+                "ai": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                }
+            }
+        },
+        "HANGSENG": {
+            "weights": {
+                "market": 0.1746,
+                "stat": 0.1746,
+                "math": 0.1429,
+                "ai": 0.5079
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "stat": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "math": {
+                    "wins": 9,
+                    "win_rate": 30.0,
+                    "status": "YELLOW"
+                },
+                "ai": {
+                    "wins": 16,
+                    "win_rate": 53.3,
+                    "status": "GREEN"
+                }
+            }
+        },
+        "DAX": {
+            "weights": {
+                "market": 0.2619,
+                "stat": 0.2381,
+                "math": 0.2381,
+                "ai": 0.2619
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "stat": {
+                    "wins": 10,
+                    "win_rate": 33.3,
+                    "status": "YELLOW"
+                },
+                "math": {
+                    "wins": 10,
+                    "win_rate": 33.3,
+                    "status": "YELLOW"
+                },
+                "ai": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                }
+            }
+        },
+        "SENSEX": {
+            "weights": {
+                "market": 0.0,
+                "stat": 0.2444,
+                "math": 0.2222,
+                "ai": 0.5333
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 5,
+                    "win_rate": 16.7,
+                    "status": "RED"
+                },
+                "stat": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "math": {
+                    "wins": 10,
+                    "win_rate": 33.3,
+                    "status": "YELLOW"
+                },
+                "ai": {
+                    "wins": 12,
+                    "win_rate": 40.0,
+                    "status": "GREEN"
+                }
+            }
+        },
+        "TPE": {
+            "weights": {
+                "market": 0.275,
+                "stat": 0.275,
+                "math": 0.175,
+                "ai": 0.275
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "stat": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "math": {
+                    "wins": 7,
+                    "win_rate": 23.3,
+                    "status": "YELLOW"
+                },
+                "ai": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                }
+            }
+        },
+        "DJI": {
+            "weights": {
+                "market": 0.1143,
+                "stat": 0.3429,
+                "math": 0.1429,
+                "ai": 0.4
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 8,
+                    "win_rate": 26.7,
+                    "status": "YELLOW"
+                },
+                "stat": {
+                    "wins": 12,
+                    "win_rate": 40.0,
+                    "status": "GREEN"
+                },
+                "math": {
+                    "wins": 10,
+                    "win_rate": 33.3,
+                    "status": "YELLOW"
+                },
+                "ai": {
+                    "wins": 14,
+                    "win_rate": 46.7,
+                    "status": "GREEN"
+                }
+            }
+        },
+        "SHE": {
+            "weights": {
+                "market": 0.3,
+                "stat": 0.1375,
+                "math": 0.1375,
+                "ai": 0.425
+            },
+            "bot_performance": {
+                "market": {
+                    "wins": 12,
+                    "win_rate": 40.0,
+                    "status": "GREEN"
+                },
+                "stat": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "math": {
+                    "wins": 11,
+                    "win_rate": 36.7,
+                    "status": "YELLOW"
+                },
+                "ai": {
+                    "wins": 17,
+                    "win_rate": 56.7,
+                    "status": "GREEN"
+                }
+            }
+        }
+    }
+}

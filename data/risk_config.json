@@ -1,0 +1,65 @@
+{
+    "backtest_windows": [
+        30,
+        60,
+        90
+    ],
+    "markets": {
+        "NIKKEI": {
+            "dynamic_min_winrate": 43.33,
+            "market_stats": {
+                "mean": 36.59,
+                "sd": 9.36
+            }
+        },
+        "FTSE": {
+            "dynamic_min_winrate": 40.67,
+            "market_stats": {
+                "mean": 34.81,
+                "sd": 8.76
+            }
+        },
+        "HANGSENG": {
+            "dynamic_min_winrate": 44.0,
+            "market_stats": {
+                "mean": 36.0,
+                "sd": 8.6
+            }
+        },
+        "DAX": {
+            "dynamic_min_winrate": 43.33,
+            "market_stats": {
+                "mean": 35.41,
+                "sd": 9.72
+            }
+        },
+        "SENSEX": {
+            "dynamic_min_winrate": 43.33,
+            "market_stats": {
+                "mean": 34.81,
+                "sd": 11.39
+            }
+        },
+        "TPE": {
+            "dynamic_min_winrate": 40.0,
+            "market_stats": {
+                "mean": 36.0,
+                "sd": 7.42
+            }
+        },
+        "DJI": {
+            "dynamic_min_winrate": 43.33,
+            "market_stats": {
+                "mean": 36.0,
+                "sd": 6.43
+            }
+        },
+        "SHE": {
+            "dynamic_min_winrate": 44.0,
+            "market_stats": {
+                "mean": 36.0,
+                "sd": 9.55
+            }
+        }
+    }
+}

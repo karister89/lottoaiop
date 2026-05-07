@@ -1,0 +1,84 @@
+{
+    "markets": {
+        "NIKKEI": {
+            "pair": [
+                "8",
+                "6"
+            ],
+            "profit": 300.0,
+            "win_rate": 43.33,
+            "miss_latest": false,
+            "wins": 13
+        },
+        "FTSE": {
+            "pair": [
+                "6",
+                "9"
+            ],
+            "profit": 390.0,
+            "win_rate": 50.0,
+            "miss_latest": false,
+            "wins": 15
+        },
+        "HANGSENG": {
+            "pair": [
+                "8",
+                "4"
+            ],
+            "profit": 300.0,
+            "win_rate": 46.67,
+            "miss_latest": false,
+            "wins": 14
+        },
+        "DAX": {
+            "pair": [
+                "8",
+                "9"
+            ],
+            "profit": 480.0,
+            "win_rate": 53.33,
+            "miss_latest": false,
+            "wins": 16
+        },
+        "SENSEX": {
+            "pair": [
+                "4",
+                "2"
+            ],
+            "profit": 120.0,
+            "win_rate": 40.0,
+            "miss_latest": false,
+            "wins": 12
+        },
+        "TPE": {
+            "pair": [
+                "2",
+                "1"
+            ],
+            "profit": 300.0,
+            "win_rate": 50.0,
+            "miss_latest": true,
+            "wins": 15
+        },
+        "DJI": {
+            "pair": [
+                "9",
+                "7"
+            ],
+            "profit": 210.0,
+            "win_rate": 46.67,
+            "miss_latest": false,
+            "wins": 14
+        },
+        "SHE": {
+            "pair": [
+                "4",
+                "5"
+            ],
+            "profit": 570.0,
+            "win_rate": 60.0,
+            "miss_latest": true,
+            "wins": 18
+        }
+    }
+}
