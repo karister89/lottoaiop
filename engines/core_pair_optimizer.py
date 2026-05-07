@@ -9,7 +9,7 @@ from itertools import combinations
 DATA_DIR = "../data/"
 WEIGHTS_FILE = "../data/dynamic_weights.json"
 OPTIMIZED_OUT = "../data/optimized_pairs.json"
-PAYOUT_RATE = 90.0
+PAYOUT_RATE = 100.0
 COST_PER_PAIR = 38.0
 
 def main():
