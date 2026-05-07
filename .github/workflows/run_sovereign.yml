@@ -22,43 +22,45 @@ jobs:
           python-version: '3.10'
 
       - name: 📦 Install Dependencies
-        # 🛠️ เจมจัดเต็มไลบรารี Data/AI (numpy, pandas, scipy, scikit-learn) ให้ครบเลย จะได้ไม่ Error อีกครับ
         run: |
           python -m pip install --upgrade pip
           pip install gspread google-auth numpy pandas scipy scikit-learn
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      # ⚠️ สั่งให้บอทเดินเข้าไปในโฟลเดอร์ engines ก่อนรันเสมอ
       - name: 📂 1. Run Data Fetcher (QL)
+        working-directory: ./engines
         env:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-        run: python engines/ql_fetcher.py
+        run: python ql_fetcher.py
 
       - name: ⚖️ 2. Run Risk Tuner (Standard P80)
-        run: python engines/sp_risk_tuner.py
+        working-directory: ./engines
+        run: python sp_risk_tuner.py
 
-      - name: 🧠 3. Run Specialists (SP) แบบคู่ขนาน (Parallel)
+      - name: 🧠 3. Run Specialists (SP) แบบคู่ขนาน
+        working-directory: ./engines
         run: |
-          python engines/sp_market.py &
-          python engines/sp_stat.py &
-          python engines/sp_math.py &
-          python engines/sp_ai.py &
+          python sp_market.py &
+          python sp_stat.py &
+          python sp_math.py &
+          python sp_ai.py &
           wait
 
-
       - name: 👑 4. Run Core Command (CORE)
+        working-directory: ./engines
         run: |
-          python engines/core_weight_eval.py
-          python engines/core_pair_optimizer.py
-          python engines/core_money_commander.py
+          python core_weight_eval.py
+          python core_pair_optimizer.py
+          python core_money_commander.py
 
       - name: 💾 5. Commit & Push Results
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Add เฉพาะโฟลเดอร์ data 
-          git add data/*.json
+          # เปลี่ยนเป็นแอดโฟลเดอร์ data/ ทั้งหมด และใส่ || true ดักไว้ไม่ให้มัน Error ถ้าไฟล์ไม่เปลี่ยน
+          git add data/ || true
           
-          # Commit และ Push กลับเข้า Repo
           git commit -m "🤖 Auto-update Sovereign V3 data" || echo "✅ No data changes to commit"
           git push
