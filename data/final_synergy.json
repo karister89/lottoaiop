@@ -1,13 +1,13 @@
 {
-    "report": "Sovereign V3 - 🟡 YELLOW",
+    "report": "Sovereign V3 - 🔴 RED",
     "pair": [
         "8",
         "6"
     ],
-    "bet_size": "50%",
+    "bet_size": "0%",
     "details": {
         "30d_profit": 210.0,
         "win_rate": "40.0%",
-        "market_threshold": "43.33%"
+        "market_threshold": "70.0%"
     }
 }
