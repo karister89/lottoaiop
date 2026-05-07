@@ -1,65 +1,76 @@
 {
-    "backtest_windows": [
-        30,
-        60,
-        90
-    ],
     "markets": {
         "NIKKEI": {
-            "dynamic_min_winrate": 43.33,
-            "market_stats": {
-                "mean": 36.59,
-                "sd": 9.36
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 43.33,
+                "60d": 43.33,
+                "100d": 41.0
+            },
+            "dynamic_min_winrate": 43.58
         },
         "FTSE": {
-            "dynamic_min_winrate": 40.67,
-            "market_stats": {
-                "mean": 34.81,
-                "sd": 8.76
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 40.67,
+                "60d": 40.0,
+                "100d": 39.0
+            },
+            "dynamic_min_winrate": 41.58
         },
         "HANGSENG": {
-            "dynamic_min_winrate": 44.0,
-            "market_stats": {
-                "mean": 36.0,
-                "sd": 8.6
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 44.0,
+                "60d": 42.0,
+                "100d": 40.0
+            },
+            "dynamic_min_winrate": 43.17
         },
         "DAX": {
-            "dynamic_min_winrate": 43.33,
-            "market_stats": {
-                "mean": 35.41,
-                "sd": 9.72
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 43.33,
+                "60d": 42.0,
+                "100d": 40.0
+            },
+            "dynamic_min_winrate": 43.0
         },
         "SENSEX": {
-            "dynamic_min_winrate": 43.33,
-            "market_stats": {
-                "mean": 34.81,
-                "sd": 11.39
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 43.33,
+                "60d": 42.0,
+                "100d": 39.2
+            },
+            "dynamic_min_winrate": 42.8
         },
         "TPE": {
-            "dynamic_min_winrate": 40.0,
-            "market_stats": {
-                "mean": 36.0,
-                "sd": 7.42
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 40.0,
+                "60d": 40.33,
+                "100d": 40.0
+            },
+            "dynamic_min_winrate": 41.75
         },
         "DJI": {
-            "dynamic_min_winrate": 43.33,
-            "market_stats": {
-                "mean": 36.0,
-                "sd": 6.43
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 43.33,
+                "60d": 41.67,
+                "100d": 40.0
+            },
+            "dynamic_min_winrate": 42.92
         },
         "SHE": {
-            "dynamic_min_winrate": 44.0,
-            "market_stats": {
-                "mean": 36.0,
-                "sd": 9.55
-            }
+            "p80_steps": {
+                "15d": 46.67,
+                "30d": 44.0,
+                "60d": 41.67,
+                "100d": 40.0
+            },
+            "dynamic_min_winrate": 43.08
         }
     }
 }
