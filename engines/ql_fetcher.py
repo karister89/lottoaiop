@@ -4,27 +4,10 @@ import json
 import os
 
 # =====================================================================
-# ⚙️ Configuration - ตั้งค่าทัพหน้า (Multi-Market Data Fetcher)
+# ⚙️ Configuration - ทัพหน้า (Auto-Detect ดึงทุกหุ้นอัตโนมัติ)
 # =====================================================================
 SHEET_ID = "1xc4B2mhrC1VdUfOuZUhVQbDyzbSk0J4jCru9am_iLzA"
 DATA_DIR = "../data/"
-
-# 🗺️ แมพปิ้งชื่อแท็บภาษาไทย -> เป็นชื่อไฟล์ภาษาอังกฤษ (ป้องกัน Error ภาษา)
-# ถ้าพี่นพพลต้องการใช้แค่ 8 หุ้น สามารถลบบรรทัดที่ 9-12 ทิ้งได้เลยครับ
-MARKETS = {
-    "นิคเคอิ": "nikkei",
-    "จีน": "china",
-    "ฮั่งเส็ง": "hangseng",
-    "ไต้หวัน": "taiwan",
-    "เกาหลี": "korea",
-    "สิงคโปร์": "singapore",
-    "อินเดีย": "india",
-    "รัสเซีย": "russia",
-    "เยอรมัน": "germany",
-    "อังกฤษ": "uk",
-    "ดาวโจนส์": "dowjones",
-    "อียิปต์": "egypt"
-}
 
 def main():
     print("⏳ [QL Fetcher] กำลังเชื่อมต่อ Google Sheets API...")
@@ -43,18 +26,21 @@ def main():
         
         os.makedirs(DATA_DIR, exist_ok=True)
         
-        print(f"🎯 เป้าหมาย: ดึงข้อมูลทั้งหมด {len(MARKETS)} หุ้น")
+        # 🌟 จุดสำคัญ: ให้บอทกวาดอ่าน "ชื่อแท็บทั้งหมด" ในไฟล์ด้วยตัวเอง
+        all_worksheets = sheet.worksheets()
+        print(f"🎯 ตรวจพบข้อมูลทั้งหมด {len(all_worksheets)} แท็บ กำลังเริ่มสแกน...")
         
-        # วนลูปดึงข้อมูลตามชื่อแท็บภาษาไทย
-        for th_name, en_name in MARKETS.items():
+        for ws in all_worksheets:
+            market_name = ws.title # ดึงชื่อแท็บของพี่มาใช้ตรงๆ เลย (เช่น "นิคเคอิ")
             try:
-                print(f"กำลังสแกนหุ้น 📊 {th_name}...", end=" ")
-                ws = sheet.worksheet(th_name)
+                print(f"กำลังดึงข้อมูลหุ้น 📊 {market_name}...", end=" ")
                 rows = ws.get_all_values()[2:] # ข้าม Header 2 แถวแรก
                 
                 draws = []
                 for r in rows:
-                    if not r[0] or not r[3]: continue
+                    # ดัก Error กรณีแถวว่าง หรือคอลัมน์ไม่ครบ
+                    if len(r) < 4 or not r[0] or not r[3]: 
+                        continue
                         
                     draws.append({
                         "date": r[0],
@@ -63,10 +49,16 @@ def main():
                         "twoTop": r[3]
                     })
                     
-                draws.reverse() # งวดล่าสุดอยู่บนสุด
+                # ถ้าแท็บไหนว่างเปล่าให้ข้ามไป
+                if not draws:
+                    print("⚠️ ไม่มีข้อมูล (ข้าม)")
+                    continue
+
+                # กลับหัวข้อมูลให้งวดล่าสุดอยู่บนสุด (Index 0)
+                draws.reverse() 
                     
-                # บันทึกเป็นชื่อไฟล์ภาษาอังกฤษ
-                file_name = f"raw_{en_name}.json"
+                # บันทึกเป็นไฟล์ชื่อเดียวกับแท็บเลย เช่น raw_นิคเคอิ.json
+                file_name = f"raw_{market_name}.json"
                 save_path = os.path.join(DATA_DIR, file_name)
                 
                 with open(save_path, 'w', encoding='utf-8') as f:
@@ -74,12 +66,10 @@ def main():
                     
                 print(f"✅ สำเร็จ ({len(draws)} งวด) -> {file_name}")
                 
-            except gspread.exceptions.WorksheetNotFound:
-                print(f"❌ ไม่พบแท็บชื่อ '{th_name}' (ข้ามไปตัวต่อไป)")
             except Exception as e:
-                print(f"❌ Error ดึงข้อมูล {th_name}: {e}")
+                print(f"❌ Error ตอนดึงข้อมูลแท็บ {market_name}: {e}")
 
-        print("🎉 [QL Fetcher] ดึงข้อมูลครบทุกหุ้นแล้วเตรียมส่งต่อให้บอทวิเคราะห์!")
+        print("🎉 [QL Fetcher] ดึงข้อมูลเสร็จสมบูรณ์ เตรียมส่งต่อให้บอทวิเคราะห์!")
 
     except Exception as e:
         print(f"❌ [QL Fetcher] Critical Error ระบบล่ม: {e}")
