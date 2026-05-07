@@ -4,28 +4,31 @@ import json
 import os
 
 # =====================================================================
-# ⚙️ Configuration - ตั้งค่าทัพหน้า (ดึง 8 หุ้น)
+# ⚙️ Configuration - ตั้งค่าทัพหน้า (Multi-Market Data Fetcher)
 # =====================================================================
 SHEET_ID = "1xc4B2mhrC1VdUfOuZUhVQbDyzbSk0J4jCru9am_iLzA"
 DATA_DIR = "../data/"
 
-# ⚠️ พี่นพพลแก้ชื่อในวงเล็บนี้ ให้ตรงกับ "ชื่อแท็บ" ใน Google Sheets แบบเป๊ะๆ นะครับ 
-# (พิมพ์เล็ก/ใหญ่เว้นวรรคต้องตรงกัน) เจมใส่ตัวอย่างชื่อหุ้นยอดฮิตไว้ให้ก่อนครับ
-MARKETS = [
-    "NIKKEI", 
-    "HANGSENG", 
-    "CHINA", 
-    "TAIWAN", 
-    "KOREA", 
-    "SINGAPORE", 
-    "INDIA", 
-    "RUSSIA"
-]
+# 🗺️ แมพปิ้งชื่อแท็บภาษาไทย -> เป็นชื่อไฟล์ภาษาอังกฤษ (ป้องกัน Error ภาษา)
+# ถ้าพี่นพพลต้องการใช้แค่ 8 หุ้น สามารถลบบรรทัดที่ 9-12 ทิ้งได้เลยครับ
+MARKETS = {
+    "นิคเคอิ": "nikkei",
+    "จีน": "china",
+    "ฮั่งเส็ง": "hangseng",
+    "ไต้หวัน": "taiwan",
+    "เกาหลี": "korea",
+    "สิงคโปร์": "singapore",
+    "อินเดีย": "india",
+    "รัสเซีย": "russia",
+    "เยอรมัน": "germany",
+    "อังกฤษ": "uk",
+    "ดาวโจนส์": "dowjones",
+    "อียิปต์": "egypt"
+}
 
 def main():
     print("⏳ [QL Fetcher] กำลังเชื่อมต่อ Google Sheets API...")
     try:
-        # 1. เชื่อมต่อ API
         creds_json = os.environ.get("GCP_CREDENTIALS")
         if not creds_json:
             print("❌ Error: ไม่พบ GCP_CREDENTIALS ใน Environment")
@@ -38,23 +41,20 @@ def main():
         client = gspread.authorize(creds)
         sheet = client.open_by_key(SHEET_ID)
         
-        # สร้างโฟลเดอร์ data เตรียมไว้
         os.makedirs(DATA_DIR, exist_ok=True)
         
-        # 2. วนลูปดึงข้อมูลทีละหุ้น
         print(f"🎯 เป้าหมาย: ดึงข้อมูลทั้งหมด {len(MARKETS)} หุ้น")
         
-        for market in MARKETS:
+        # วนลูปดึงข้อมูลตามชื่อแท็บภาษาไทย
+        for th_name, en_name in MARKETS.items():
             try:
-                print(f"กำลังสแกนหุ้น 📊 {market}...", end=" ")
-                ws = sheet.worksheet(market)
+                print(f"กำลังสแกนหุ้น 📊 {th_name}...", end=" ")
+                ws = sheet.worksheet(th_name)
                 rows = ws.get_all_values()[2:] # ข้าม Header 2 แถวแรก
                 
                 draws = []
                 for r in rows:
-                    # ดักแถวว่าง
-                    if not r[0] or not r[3]: 
-                        continue
+                    if not r[0] or not r[3]: continue
                         
                     draws.append({
                         "date": r[0],
@@ -63,11 +63,10 @@ def main():
                         "twoTop": r[3]
                     })
                     
-                # ⚠️ งวดล่าสุดอยู่บนสุด (Index 0)
-                draws.reverse()
+                draws.reverse() # งวดล่าสุดอยู่บนสุด
                     
-                # 3. บันทึกแยกไฟล์ตามชื่อหุ้น (แปลงชื่อเป็นพิมพ์เล็กเพื่อให้ดูง่าย)
-                file_name = f"raw_{market.lower().replace(' ', '_')}.json"
+                # บันทึกเป็นชื่อไฟล์ภาษาอังกฤษ
+                file_name = f"raw_{en_name}.json"
                 save_path = os.path.join(DATA_DIR, file_name)
                 
                 with open(save_path, 'w', encoding='utf-8') as f:
@@ -76,11 +75,11 @@ def main():
                 print(f"✅ สำเร็จ ({len(draws)} งวด) -> {file_name}")
                 
             except gspread.exceptions.WorksheetNotFound:
-                print(f"❌ ไม่พบแท็บชื่อ '{market}' (ข้ามไปตัวต่อไป)")
+                print(f"❌ ไม่พบแท็บชื่อ '{th_name}' (ข้ามไปตัวต่อไป)")
             except Exception as e:
-                print(f"❌ Error ดึงข้อมูล {market}: {e}")
+                print(f"❌ Error ดึงข้อมูล {th_name}: {e}")
 
-        print("🎉 [QL Fetcher] ดึงข้อมูลครบทุกหุ้นแล้ว!")
+        print("🎉 [QL Fetcher] ดึงข้อมูลครบทุกหุ้นแล้วเตรียมส่งต่อให้บอทวิเคราะห์!")
 
     except Exception as e:
         print(f"❌ [QL Fetcher] Critical Error ระบบล่ม: {e}")
