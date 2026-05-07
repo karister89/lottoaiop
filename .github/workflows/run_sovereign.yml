@@ -1,0 +1,65 @@
+name: Sovereign V3 Engine
+
+# ตั้งค่าให้กดรันเองได้ (workflow_dispatch) และตั้งเวลารันอัตโนมัติ (schedule)
+on:
+  workflow_dispatch:
+  schedule:
+    # รันอัตโนมัติทุกวันจันทร์-ศุกร์ เวลา 14:00 น. (เวลาไทย = 07:00 UTC) 
+    # *ปรับเวลาตรงนี้ได้ตามที่พี่รันปกติเลยครับ*
+    - cron: '0 7 * * 1-5' 
+
+permissions:
+  contents: write
+
+jobs:
+  execute-sovereign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Setup Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install gspread google-auth numpy
+          # ถ้ามีไฟล์ requirements.txt ให้รันคำสั่งด้านล่างด้วย
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: 📂 1. Run Data Fetcher (QL)
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: python engines/ql_fetcher.py
+
+      - name: ⚖️ 2. Run Risk Tuner (Standard P80)
+        run: python engines/sp_risk_tuner.py
+
+      - name: 🧠 3. Run Specialists (SP)
+        run: |
+          python engines/sp_market.py
+          python engines/sp_stat.py
+          python engines/sp_math.py
+          python engines/sp_ai.py
+
+      - name: 👑 4. Run Core Command (CORE)
+        run: |
+          python engines/core_weight_eval.py
+          python engines/core_pair_optimizer.py
+          python engines/core_money_commander.py
+
+      - name: 💾 5. Commit & Push Results
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Add เฉพาะโฟลเดอร์ data ที่เก็บไฟล์ json ของเรา
+          git add data/*.json
+          
+          # ถ้ามีไฟล์อัปเดต ให้ Commit และ Push กลับเข้า Repo
+          git commit -m "🤖 Auto-update Sovereign V3 data" || echo "✅ No data changes to commit"
+          git push
