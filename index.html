@@ -3,125 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovereign Engine V2.5 - Dashboard</title>
+    <title>Sovereign V3 | Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Prompt', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 1rem; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); border-color: #475569; }
-        .sig-GREEN { color: #4ade80; text-shadow: 0 0 10px rgba(74, 222, 128, 0.3); }
-        .sig-YELLOW { color: #facc15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.3); }
-        .sig-RED { color: #f87171; }
-        .btn-view { transition: all 0.2s; background: #334155; }
-        .btn-view:hover { background: #475569; }
-        .profit-pos { color: #4ade80; }
-        .profit-neg { color: #f87171; }
+        /* เอฟเฟกต์ไฟกระพริบเบาๆ ให้ดูเป็นไซไฟ */
+        .glow { box-shadow: 0 0 15px currentColor; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-7xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-6">
-            <div>
-                <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400">
-                    SOVEREIGN ENGINE <span class="text-sm font-normal tracking-widest opacity-70">V2.5</span>
-                </h1>
-                <p class="text-slate-400 text-sm mt-1">อัปเดตล่าสุด: <span id="update-time" class="text-slate-200">-</span></p>
-            </div>
-            <div id="overall-stats" class="flex gap-4">
-                <!-- ข้อมูลสรุปรวมจะแสดงตรงนี้ -->
-            </div>
-        </header>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen p-4 md:p-8 flex flex-col items-center">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="market-grid">
-            <!-- การ์ดแต่ละตลาดจะถูกสร้างที่นี่ -->
+    <div class="w-full max-w-3xl text-center mb-8 mt-4">
+        <h1 class="text-3xl md:text-4xl font-bold tracking-widest text-blue-400 mb-2">
+            <i class="fa-solid fa-crosshairs"></i> SOVEREIGN V3
+        </h1>
+        <p class="text-gray-400 text-sm tracking-wide">ALGORITHMIC TRADING COMMAND CENTER</p>
+    </div>
+
+    <div id="dashboard" class="w-full max-w-3xl bg-gray-800 rounded-xl shadow-2xl p-6 border border-gray-700 hidden">
+        
+        <div id="statusBar" class="w-full rounded-lg p-3 text-center font-bold text-lg mb-6 tracking-wide transition-colors duration-500">
+            <span id="statusText"><i class="fa-solid fa-spinner fa-spin"></i> กำลังวิเคราะห์สถานะ...</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            
+            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center justify-center border border-gray-600">
+                <span class="text-gray-400 text-sm mb-1">เป้าหมาย (OP Pair)</span>
+                <span id="targetPair" class="text-5xl font-extrabold text-white tracking-widest">-</span>
+            </div>
+
+            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center justify-center border border-gray-600">
+                <span class="text-gray-400 text-sm mb-1">สัดส่วนลงทุน (Bet Size)</span>
+                <span id="betSize" class="text-4xl font-bold text-blue-300">-</span>
+            </div>
+
+            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center border border-gray-600">
+                <span class="text-gray-400 text-sm mb-1"><i class="fa-solid fa-wallet"></i> กำไรสะสม (30 วัน)</span>
+                <span id="profit" class="text-2xl font-bold text-green-400">-</span>
+            </div>
+
+            <div class="col-span-2 bg-gray-700/50 rounded-lg p-4 flex flex-col items-center border border-gray-600">
+                <span class="text-gray-400 text-sm mb-1"><i class="fa-solid fa-chart-line"></i> ความแม่นยำ (Win Rate)</span>
+                <span id="winRate" class="text-2xl font-bold text-purple-400">-</span>
+            </div>
+
+        </div>
+
+        <div class="text-center text-xs text-gray-500 mt-4">
+            * อัปเดตล่าสุด: <span id="lastUpdate">-</span><br>
+            * ข้อมูลประเมินจากมาตรฐานตลาด P80 (<span id="marketThresh">-</span>)
         </div>
     </div>
 
+    <div id="loading" class="flex flex-col items-center justify-center mt-20 text-gray-400">
+        <i class="fa-solid fa-radar fa-spin text-4xl mb-4 text-blue-500"></i>
+        <p>กำลังเชื่อมต่อสัญญาณจาก Core Commander...</p>
+    </div>
+
     <script>
-        async function loadData() {
-            try {
-                const res = await fetch('data_dashboard.json');
-                const data = await res.json();
+        // ใช้ Date.now() ต่อท้าย URL เพื่อป้องกันมือถือจำแคช (Cache Busting)
+        const dataUrl = `data/final_synergy.json?t=${Date.now()}`;
+
+        fetch(dataUrl)
+            .then(response => {
+                if (!response.ok) throw new Error("หาไฟล์ไม่เจอ (อาจจะยังรันบอทไม่เสร็จ)");
+                return response.json();
+            })
+            .then(data => {
+                // ซ่อน Loading แสดง Dashboard
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+
+                // ใส่ข้อมูลลงหน้าเว็บ
+                // แปลงรูปแบบอาร์เรย์ ["5", "8"] เป็น 5-8
+                const pairStr = Array.isArray(data.pair) ? data.pair.join(' - ') : data.pair;
+                document.getElementById('targetPair').innerText = pairStr;
                 
-                // อัปเดตเวลา
-                document.getElementById('update-time').innerText = new Date(data.generatedAt).toLocaleString('th-TH');
+                document.getElementById('betSize').innerText = data.bet_size;
+                
+                // เช็คกำไร ถ้าบวกให้เป็นสีเขียว ถ้าลบให้เป็นสีแดง
+                const profitVal = parseFloat(data.details["30d_profit"]);
+                const profitEl = document.getElementById('profit');
+                profitEl.innerText = (profitVal > 0 ? "+" : "") + profitVal + " ฿";
+                profitEl.className = profitVal > 0 ? "text-2xl font-bold text-green-400" : "text-2xl font-bold text-red-400";
 
-                // สรุปยอดรวม 90 วัน (กรองเอาเฉพาะกำไรที่เกิดขึ้นจริง)
-                const over90 = data.overall["90"];
-                const isPos = over90.profit >= 0;
-                document.getElementById('overall-stats').innerHTML = `
-                    <div class="card p-4 text-center min-w-[160px] border-b-4 ${isPos ? 'border-b-emerald-500' : 'border-b-red-500'}">
-                        <div class="text-xs text-slate-400 uppercase tracking-tighter">Net Profit (90D)</div>
-                        <div class="text-2xl font-bold ${isPos ? 'profit-pos' : 'profit-neg'}">
-                            ${isPos ? '+' : ''}${over90.profit.toLocaleString()}
-                        </div>
-                    </div>
-                `;
-
-                const grid = document.getElementById('market-grid');
-                grid.innerHTML = '';
-
-                // วนลูปสร้างการ์ดรายตลาด
-                for (const [key, m] of Object.entries(data.summary)) {
-                    const stats = m.stats["90"];
-                    const profitIsPos = stats.profit >= 0;
-                    
-                    // ดึงเฉพาะจำนวนตัวเลขตามที่ Optimizer หามาได้ (ถ้าไม่มีให้ใช้ 2)
-                    // เราจะไม่โชว์พรวดเดียว 5 ตัวถ้าเราไม่ได้แทง 5 ตัวครับ
-                    const displayCount = m.target_digits || 2; 
-                    const digitsHtml = m.top_digits.slice(0, displayCount).map((d, i) => 
-                        `<div class="flex flex-col items-center">
-                            <span class="text-[10px] text-slate-500 mb-1">ไม้ ${i+1}</span>
-                            <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 border border-slate-700 text-lg font-bold text-blue-400">
-                                ${d}
-                            </span>
-                        </div>`
-                    ).join('');
-
-                    const card = document.createElement('div');
-                    card.className = 'card p-6 flex flex-col justify-between';
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex justify-between items-start mb-6">
-                                <h2 class="text-xl font-bold uppercase tracking-widest text-slate-100">${key}</h2>
-                                <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-${m.sigT === 'GREEN' ? 'emerald' : (m.sigT === 'YELLOW' ? 'yellow' : 'red')}-400 animate-pulse"></span>
-                                    <span class="sig-${m.sigT} text-xs font-bold tracking-widest">${m.sigT}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-8">
-                                <div class="text-[10px] uppercase text-slate-500 mb-3 tracking-widest font-semibold text-center">🎯 ตัวเลขแนะนำวันนี้ (รูด 19 ประตู)</div>
-                                <div class="flex justify-center gap-4 italic">${digitsHtml}</div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4 py-4 border-t border-slate-700/50 text-sm">
-                                <div>
-                                    <div class="text-slate-500 text-[10px] uppercase">Win Rate</div>
-                                    <div class="font-bold text-slate-200">${stats.winrate}%</div>
-                                </div>
-                                <div>
-                                    <div class="text-slate-500 text-[10px] uppercase">Profit (90D)</div>
-                                    <div class="font-bold ${profitIsPos ? 'text-emerald-400' : 'text-red-400'}">
-                                        ${profitIsPos ? '+' : ''}${stats.profit.toLocaleString()}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <a href="detail.html?m=${key}" class="btn-view w-full mt-4 py-3 rounded-xl text-center text-xs font-bold tracking-widest border border-slate-600 hover:border-blue-500/50 transition-all">
-                            เจาะลึกสถิติรายวัน
-                        </a>
-                    `;
-                    grid.appendChild(card);
+                document.getElementById('winRate').innerText = data.details.win_rate;
+                document.getElementById('marketThresh').innerText = data.details.market_threshold;
+                
+                // จัดการสี Status Bar
+                const statusBar = document.getElementById('statusBar');
+                const statusText = document.getElementById('statusText');
+                
+                if (data.report.includes("GREEN")) {
+                    statusBar.className = "w-full rounded-lg p-3 text-center font-bold text-lg mb-6 bg-green-900/80 text-green-300 border border-green-500 glow text-green-500";
+                    statusText.innerHTML = '<i class="fa-solid fa-circle-check"></i> SYSTEM STABLE: ตลาดเป็นใจ จัดเต็มได้เลย';
+                } else if (data.report.includes("YELLOW")) {
+                    statusBar.className = "w-full rounded-lg p-3 text-center font-bold text-lg mb-6 bg-yellow-900/80 text-yellow-300 border border-yellow-500 glow text-yellow-500";
+                    statusText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> WARNING: ตลาดเริ่มผันผวน ให้ลดไม้ลง';
+                } else {
+                    statusBar.className = "w-full rounded-lg p-3 text-center font-bold text-lg mb-6 bg-red-900/80 text-red-300 border border-red-500 glow text-red-500";
+                    statusText.innerHTML = '<i class="fa-solid fa-skull-crossbones"></i> CRITICAL: อันตราย หยุดการลงทุน';
                 }
-            } catch (e) {
-                console.error("Load Error:", e);
-                document.getElementById('market-grid').innerHTML = '<p class="text-red-400 col-span-full text-center">ยังไม่มีข้อมูล กรุณารัน Engine Scraper ก่อนครับ</p>';
-            }
-        }
-        loadData();
+
+                // เวลาอัปเดต
+                const now = new Date();
+                document.getElementById('lastUpdate').innerText = now.toLocaleString('th-TH');
+            })
+            .catch(error => {
+                document.getElementById('loading').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i><p class="text-red-400">ระบบไม่สามารถดึงข้อมูลได้: ${error.message}</p>`;
+            });
     </script>
 </body>
 </html>
