@@ -9,7 +9,7 @@ OPTIMIZED_FILE = "../data/optimized_pairs.json"
 RISK_CONFIG = "../data/risk_config.json"
 FINAL_OUT = "../data/final_synergy.json"
 
-PAYOUT_RATE = 90.0
+PAYOUT_RATE = 100.0
 COST_PER_PAIR = 38.0
 
 def calculate_period_stats(draws, pair, days):
