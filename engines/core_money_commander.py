@@ -2,14 +2,14 @@ import json
 import os
 
 # =====================================================================
-# ⚙️ Configuration - Core Money Commander
+# ⚙️ Configuration - Core Money Commander (Sniper Mode)
 # =====================================================================
 DATA_DIR = "../data/"
 OPTIMIZED_FILE = "../data/optimized_pairs.json"
 RISK_CONFIG = "../data/risk_config.json"
 FINAL_OUT = "../data/final_synergy.json"
 
-PAYOUT_RATE = 100.0
+PAYOUT_RATE = 100.0  # ปรับเรทเป็น 100 ยุติธรรม 100%
 COST_PER_PAIR = 38.0
 
 def calculate_period_stats(draws, pair, days):
@@ -40,7 +40,7 @@ def calculate_period_stats(draws, pair, days):
     }
 
 def main():
-    print("⏳ [Core Money] คำนวณแผนการลงทุนและสรุปพอร์ตรวม 30/60/90 วัน...")
+    print("⏳ [Core Money] คำนวณแผนการลงทุนด้วยโหมด Sniper...")
     
     # โหลดคู่เลขเด็ดและมาตรฐานความเสี่ยง
     if not os.path.exists(OPTIMIZED_FILE) or not os.path.exists(RISK_CONFIG):
@@ -67,7 +67,7 @@ def main():
         pair = market_opt["pair"]
         min_wr = risk_data.get(market_name, {}).get("dynamic_min_winrate", 70.0)
         
-        # 🔻 ลอจิกกฎเหล็กดั้งเดิมของพี่นพพล 🔻
+        # 🔻 ลอจิกกฎเหล็ก + โหมดสไนเปอร์ 🔻
         conf = 100
         if market_opt["profit"] <= 0: 
             conf -= 50
@@ -76,8 +76,13 @@ def main():
         if market_opt.get("miss_latest", False): 
             conf -= 40
         
-        bet_size = max(0, (int(conf) // 10) * 10)
-        status_color = "🟢 GREEN" if bet_size >= 80 else "🟡 YELLOW" if bet_size >= 40 else "🔴 RED"
+        # 🛑 Sniper Filter: ถ้าแต้มตกเกินเกณฑ์ หรือ Win Rate ห่างจาก P80 เกิน 5% สั่งนั่งทับมือ!
+        if conf < 60 or market_opt["win_rate"] < (min_wr - 5):
+            bet_size = 0
+            status_color = "🔴 RED (NO TRADE)"
+        else:
+            bet_size = max(0, (int(conf) // 10) * 10)
+            status_color = "🟢 GREEN" if bet_size >= 80 else "🟡 YELLOW"
         
         # โหลดข้อมูลดิบของตลาดนี้เพื่อทำสถิติ 30/60/90 วัน
         raw_file = os.path.join(DATA_DIR, f"raw_{market_name}.json")
@@ -89,7 +94,7 @@ def main():
             stats["60d"] = calculate_period_stats(draws, pair, 60)
             stats["90d"] = calculate_period_stats(draws, pair, 90)
             
-            # บวกยอดเข้า "พอร์ตกองทุนรวม (Portfolio)"
+            # บวกยอดเข้า "พอร์ตกองทุนรวม (Portfolio)" เฉพาะตัวที่มีการลงทุนจริง
             for period in ["30d", "60d", "90d"]:
                 final_dashboard["portfolio"][period]["profit"] += stats[period]["profit"]
                 final_dashboard["portfolio"][period]["invested"] += stats[period]["invested"]
