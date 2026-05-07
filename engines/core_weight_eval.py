@@ -3,122 +3,115 @@ import os
 import sys
 import glob
 
-# Import บอท 4 สายเข้ามาวัดผล
+# Import บอท 4 สาย
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import sp_market, sp_stat, sp_math, sp_ai
 
 # =====================================================================
-# ⚙️ Configuration - Core Weight (Multi-Market Edition)
+# ⚙️ Configuration - Core Weight (Ultimate Multi-Phase Edition)
 # =====================================================================
 DATA_DIR = "../data/"
 WEIGHTS_OUT = "../data/dynamic_weights.json"
 
-def calculate_dynamic_weights(draws, window, market_name):
-    bot_wins = {"market": 0, "stat": 0, "math": 0, "ai": 0}
+def calculate_ultimate_weights(draws, market_name):
+    # ปรับเพดานสูงสุดที่ 100 วัน เพื่อรองรับบอทสายสถิติ (Stat/Math)
+    max_window = 100
+    actual_window = min(max_window, len(draws) - 1)
     
-    actual_window = min(window, len(draws) - 1)
-    if actual_window < 1:
+    if actual_window < 15:
         return None, None
+
+    bot_hits = {"market": [], "stat": [], "math": [], "ai": []}
+
+    print(f"   🔎 กำลังประเมินผลงานย้อนหลัง {actual_window} งวด (Deep Analysis)...")
 
     for i in range(1, actual_window + 1):
         past_draws = draws[i:]
         actual_result = str(draws[i-1].get('twoTop', '')).zfill(2)
         
-        # ⚡ ปรับสปีด: เรียกบอทให้คำนวณแค่ครั้งเดียวต่องวด
-        scores_mkt = sp_market.analyze_market(past_draws)
-        scores_stat = sp_stat.analyze_statistics(past_draws)
-        scores_math = sp_math.analyze_math(past_draws)
-        scores_ai = sp_ai.analyze_pattern(past_draws)
-        
-        # ดึงเลข Top 2 ของแต่ละบอทออกมา
-        top_mkt = [str(x[0]) for x in sorted(enumerate(scores_mkt), key=lambda x: x[1], reverse=True)[:2]]
-        top_stat = [str(x[0]) for x in sorted(enumerate(scores_stat), key=lambda x: x[1], reverse=True)[:2]]
-        top_math = [str(x[0]) for x in sorted(enumerate(scores_math), key=lambda x: x[1], reverse=True)[:2]]
-        top_ai = [str(x[0]) for x in sorted(enumerate(scores_ai), key=lambda x: x[1], reverse=True)[:2]]
-        
-        # ตรวจคำตอบว่าทายถูกไหม (ถ้ารูดหน้า/หลังเข้า 1 ใน 2 ตัว ถือว่า Win)
-        if any(d in actual_result for d in top_mkt): bot_wins["market"] += 1
-        if any(d in actual_result for d in top_stat): bot_wins["stat"] += 1
-        if any(d in actual_result for d in top_math): bot_wins["math"] += 1
-        if any(d in actual_result for d in top_ai): bot_wins["ai"] += 1
+        # รันบอทวิเคราะห์ทั้ง 4 ตัว
+        def get_top2(scores):
+            return [str(x[0]) for x in sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:2]]
+
+        bot_hits["market"].append(1 if any(d in actual_result for d in get_top2(sp_market.analyze_market(past_draws))) else 0)
+        bot_hits["stat"].append(1 if any(d in actual_result for d in get_top2(sp_stat.analyze_statistics(past_draws))) else 0)
+        bot_hits["math"].append(1 if any(d in actual_result for d in get_top2(sp_math.analyze_math(past_draws))) else 0)
+        bot_hits["ai"].append(1 if any(d in actual_result for d in get_top2(sp_ai.analyze_pattern(past_draws))) else 0)
 
     # ======================================================
-    # 🟨 ระบบแจกใบเหลือง / ใบแดง (Penalty System)
+    # 🧮 คำนวณวินเรทแยกตาม 4 ระยะ (Phase Analysis)
     # ======================================================
     bot_status = {}
     adjusted_scores = {}
     
-    for bot, wins in bot_wins.items():
-        wr = (wins / actual_window) * 100
+    for bot, hits in bot_hits.items():
+        # คิด Win Rate แยกรายระยะ
+        wr_15 = (sum(hits[:15]) / min(15, len(hits))) * 100 if len(hits) >= 1 else 0
+        wr_30 = (sum(hits[:30]) / min(30, len(hits))) * 100 if len(hits) >= 1 else 0
+        wr_60 = (sum(hits[:60]) / min(60, len(hits))) * 100 if len(hits) >= 1 else 0
+        wr_100 = (sum(hits[:100]) / min(100, len(hits))) * 100 if len(hits) >= 1 else 0
         
-        # โอกาสสุ่มเดาเลข 2 ตัวถูกคือ 20% ดังนั้นต้องทำได้ดีกว่านี้
-        if wr >= 40:
-            status = "GREEN"  # ท็อปฟอร์ม
-            adj = wins        # ได้น้ำหนักเต็ม 100%
-        elif wr >= 20:
-            status = "YELLOW" # ฟอร์มตก (ใบเหลือง)
-            adj = wins * 0.5  # ⚠️ โดนหั่นความน่าเชื่อถือลงครึ่งนึง!
+        # 🌟 คะแนนสุทธิแบบถ่วงน้ำหนัก (Composite Win Rate)
+        # ให้ความสำคัญกับความสด (15d) 30%, มาตรฐาน (30d/60d) 40%, และสถิติยาว (100d) 30%
+        composite_wr = (wr_15 * 0.3) + (wr_30 * 0.2) + (wr_60 * 0.2) + (wr_100 * 0.3)
+        
+        # แจกเกรดสถานะบอท
+        if composite_wr >= 40:
+            status = "GREEN"
+            adj = composite_wr
+        elif composite_wr >= 20:
+            status = "YELLOW"
+            adj = composite_wr * 0.5 
         else:
-            status = "RED"    # ฟอร์มแย่กว่าหลับตาแทง (ใบแดง)
-            adj = 0           # 🛑 แบน! ไม่ให้ค่าน้ำหนักเลย
+            status = "RED"
+            adj = 0           
             
         bot_status[bot] = {
-            "wins": wins,
-            "win_rate": round(wr, 1),
+            "wr_15d": round(wr_15, 1),
+            "wr_30d": round(wr_30, 1),
+            "wr_60d": round(wr_60, 1),
+            "wr_100d": round(wr_100, 1),
+            "composite_wr": round(composite_wr, 1),
             "status": status
         }
         adjusted_scores[bot] = adj
 
-    # คำนวณเปอร์เซ็นต์น้ำหนักสุดท้าย (Weight)
+    # คำนวณส่วนแบ่งน้ำหนัก (Weight) ให้บอทแต่ละตัว
     total_adj = sum(adjusted_scores.values())
-    if total_adj > 0:
-        weights = {k: round(v / total_adj, 4) for k, v in adjusted_scores.items()}
-    else:
-        # กรณีวิกฤต: โดนใบแดงยกแก๊ง (แจกน้ำหนักเท่ากันไปก่อน)
-        weights = {k: 0.25 for k in bot_wins.keys()}
+    weights = {k: round(v / total_adj, 4) if total_adj > 0 else 0.25 for k, v in adjusted_scores.items()}
 
     return weights, bot_status
 
 def main():
-    print("⏳ [Core Weight] เริ่มประเมินผลงานบอทย้อนหลัง (Multi-Market)...")
+    print("⏳ [Core Weight] เริ่มประเมินผลงาน 4 ระยะ (15/30/60/100 วัน)...")
     raw_files = glob.glob(os.path.join(DATA_DIR, "raw_*.json"))
     
-    if not raw_files:
-        print("❌ ไม่พบไฟล์ข้อมูลดิบ (raw_*.json)!")
-        return
-
     all_market_weights = {"markets": {}}
-    window = 30 # งวดที่ใช้ประเมินย้อนหลัง
 
     for file_path in raw_files:
         if "raw_excel.json" in file_path: continue
-            
         market_name = os.path.basename(file_path).replace("raw_", "").replace(".json", "")
-        print(f"\n👨‍⚖️ กำลังตัดเกรดบอทในตลาด: {market_name.upper()}")
         
         with open(file_path, 'r', encoding='utf-8') as f:
             draws = json.load(f)
 
-        if not draws: continue
+        if not draws or len(draws) < 15: continue
 
-        weights, status = calculate_dynamic_weights(draws, window, market_name)
+        print(f"\n👨‍⚖️ ตัดเกรดตลาด: {market_name.upper()}")
+        weights, status = calculate_ultimate_weights(draws, market_name)
         
         if weights and status:
             all_market_weights["markets"][market_name] = {
                 "weights": weights,
                 "bot_performance": status
             }
-            
-            # โชว์ผลลัพธ์การแจกใบเหลือง/ใบแดงให้ดูสดๆ
+            # แสดง Report สั้นๆ ใน GitHub Actions
             for b, s in status.items():
-                card = "🟩" if s['status'] == "GREEN" else "🟨" if s['status'] == "YELLOW" else "🟥"
-                print(f"   {card} {b.upper()}: Win {s['win_rate']}% -> ได้น้ำหนัก {weights[b]*100}%")
+                print(f"   [{s['status']}] {b.upper()}: 15d:{s['wr_15d']}% | 100d:{s['wr_100d']}% | Avg:{s['composite_wr']}%")
 
-    # บันทึกสมุดพกรวมทุกตลาดส่งให้กุนซือคนที่ 2
     with open(WEIGHTS_OUT, 'w', encoding='utf-8') as f:
         json.dump(all_market_weights, f, ensure_ascii=False, indent=4)
-        
-    print(f"\n✅ [Core Weight] บันทึกสมุดพกกรรมการครบทุกตลาดแล้ว!")
+    print(f"\n✅ [Core Weight] สรุปคะแนนสะสม 4 ระยะสำเร็จ!")
 
 if __name__ == "__main__":
     main()
