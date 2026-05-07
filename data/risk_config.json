@@ -1,0 +1,9 @@
+{
+    "backtest_window": 30,
+    "dynamic_min_winrate": 43.33,
+    "market_stats": {
+        "mean": 36.59,
+        "sd": 8.53
+    },
+    "status": "success"
+}
