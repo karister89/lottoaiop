@@ -1,19 +1,19 @@
 {
     "portfolio": {
         "30d": {
-            "profit": 3880.0,
+            "profit": 4580.0,
             "invested": 9120.0,
-            "wins": 119
+            "wins": 127
         },
         "60d": {
-            "profit": 4160.0,
+            "profit": 4960.0,
             "invested": 18240.0,
-            "wins": 207
+            "wins": 218
         },
         "90d": {
-            "profit": 3740.0,
+            "profit": 4240.0,
             "invested": 27360.0,
-            "wins": 290
+            "wins": 298
         }
     },
     "markets": {
@@ -134,30 +134,30 @@
             }
         },
         "SENSEX": {
-            "report": "Sovereign V3 - 🔴 RED (NO TRADE)",
+            "report": "Sovereign V3 - 🟢 GREEN",
             "pair": [
-                "0",
+                "5",
                 "9"
             ],
-            "bet_size": "0%",
+            "bet_size": "100%",
             "market_threshold": "43.33%",
             "history": {
                 "30d": {
-                    "profit": -40.0,
-                    "win_rate": 33.33,
-                    "wins": 10,
+                    "profit": 660.0,
+                    "win_rate": 60.0,
+                    "wins": 18,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 420.0,
-                    "win_rate": 40.0,
-                    "wins": 24,
+                    "profit": 1220.0,
+                    "win_rate": 58.33,
+                    "wins": 35,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 80.0,
-                    "win_rate": 35.56,
-                    "wins": 32,
+                    "profit": 580.0,
+                    "win_rate": 44.44,
+                    "wins": 40,
                     "invested": 3420.0
                 }
             }

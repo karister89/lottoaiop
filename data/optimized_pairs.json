@@ -46,13 +46,13 @@
         },
         "SENSEX": {
             "pair": [
-                "0",
+                "5",
                 "9"
             ],
-            "profit": -40.0,
-            "win_rate": 33.33,
-            "miss_latest": true,
-            "wins": 10,
+            "profit": 660.0,
+            "win_rate": 60.0,
+            "miss_latest": false,
+            "wins": 18,
             "consensus_broken": false
         },
         "TPE": {
