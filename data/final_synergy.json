@@ -1,17 +1,17 @@
 {
     "portfolio": {
         "30d": {
-            "profit": 2670.0,
+            "profit": 3980.0,
             "invested": 9120.0,
             "wins": 117
         },
         "60d": {
-            "profit": 1650.0,
+            "profit": 3860.0,
             "invested": 18240.0,
             "wins": 201
         },
         "90d": {
-            "profit": 720.0,
+            "profit": 3840.0,
             "invested": 27360.0,
             "wins": 287
         }
@@ -27,19 +27,19 @@
             "market_threshold": "43.33%",
             "history": {
                 "30d": {
-                    "profit": 300.0,
+                    "profit": 460.0,
                     "win_rate": 43.33,
                     "wins": 13,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 60.0,
+                    "profit": 320.0,
                     "win_rate": 36.67,
                     "wins": 22,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 270.0,
+                    "profit": 680.0,
                     "win_rate": 41.11,
                     "wins": 37,
                     "invested": 3420.0
@@ -56,19 +56,19 @@
             "market_threshold": "40.67%",
             "history": {
                 "30d": {
-                    "profit": 390.0,
+                    "profit": 560.0,
                     "win_rate": 50.0,
                     "wins": 15,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 150.0,
+                    "profit": 420.0,
                     "win_rate": 38.33,
                     "wins": 23,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": -90.0,
+                    "profit": 280.0,
                     "win_rate": 35.56,
                     "wins": 32,
                     "invested": 3420.0
@@ -85,19 +85,19 @@
             "market_threshold": "44.0%",
             "history": {
                 "30d": {
-                    "profit": 300.0,
+                    "profit": 460.0,
                     "win_rate": 46.67,
                     "wins": 14,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 420.0,
+                    "profit": 720.0,
                     "win_rate": 45.0,
                     "wins": 27,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 90.0,
+                    "profit": 480.0,
                     "win_rate": 38.89,
                     "wins": 35,
                     "invested": 3420.0
@@ -114,19 +114,19 @@
             "market_threshold": "43.33%",
             "history": {
                 "30d": {
-                    "profit": 480.0,
+                    "profit": 660.0,
                     "win_rate": 53.33,
                     "wins": 16,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 330.0,
+                    "profit": 620.0,
                     "win_rate": 45.0,
                     "wins": 27,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 0.0,
+                    "profit": 380.0,
                     "win_rate": 38.89,
                     "wins": 35,
                     "invested": 3420.0
@@ -143,19 +143,19 @@
             "market_threshold": "43.33%",
             "history": {
                 "30d": {
-                    "profit": 120.0,
+                    "profit": 260.0,
                     "win_rate": 40.0,
                     "wins": 12,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": -30.0,
+                    "profit": 220.0,
                     "win_rate": 36.67,
                     "wins": 22,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": -90.0,
+                    "profit": 280.0,
                     "win_rate": 36.67,
                     "wins": 33,
                     "invested": 3420.0
@@ -172,19 +172,19 @@
             "market_threshold": "40.0%",
             "history": {
                 "30d": {
-                    "profit": 300.0,
+                    "profit": 460.0,
                     "win_rate": 50.0,
                     "wins": 15,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 240.0,
+                    "profit": 520.0,
                     "win_rate": 45.0,
                     "wins": 27,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 90.0,
+                    "profit": 480.0,
                     "win_rate": 42.22,
                     "wins": 38,
                     "invested": 3420.0
@@ -201,19 +201,19 @@
             "market_threshold": "43.33%",
             "history": {
                 "30d": {
-                    "profit": 210.0,
+                    "profit": 360.0,
                     "win_rate": 46.67,
                     "wins": 14,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 240.0,
+                    "profit": 520.0,
                     "win_rate": 43.33,
                     "wins": 26,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 360.0,
+                    "profit": 780.0,
                     "win_rate": 43.33,
                     "wins": 39,
                     "invested": 3420.0
@@ -230,19 +230,19 @@
             "market_threshold": "44.0%",
             "history": {
                 "30d": {
-                    "profit": 570.0,
+                    "profit": 760.0,
                     "win_rate": 60.0,
                     "wins": 18,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 240.0,
+                    "profit": 520.0,
                     "win_rate": 45.0,
                     "wins": 27,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 90.0,
+                    "profit": 480.0,
                     "win_rate": 42.22,
                     "wins": 38,
                     "invested": 3420.0
