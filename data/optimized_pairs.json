@@ -2,33 +2,36 @@
     "markets": {
         "NIKKEI": {
             "pair": [
-                "8",
-                "6"
+                "2",
+                "8"
             ],
-            "profit": 460.0,
-            "win_rate": 43.33,
+            "profit": 660.0,
+            "win_rate": 56.67,
             "miss_latest": false,
-            "wins": 13
+            "wins": 17,
+            "consensus_broken": false
         },
         "FTSE": {
             "pair": [
-                "6",
-                "9"
+                "9",
+                "6"
             ],
             "profit": 560.0,
             "win_rate": 50.0,
             "miss_latest": false,
-            "wins": 15
+            "wins": 15,
+            "consensus_broken": false
         },
         "HANGSENG": {
             "pair": [
-                "8",
-                "4"
+                "4",
+                "8"
             ],
             "profit": 460.0,
             "win_rate": 46.67,
             "miss_latest": false,
-            "wins": 14
+            "wins": 14,
+            "consensus_broken": false
         },
         "DAX": {
             "pair": [
@@ -38,27 +41,30 @@
             "profit": 660.0,
             "win_rate": 53.33,
             "miss_latest": false,
-            "wins": 16
+            "wins": 16,
+            "consensus_broken": false
         },
         "SENSEX": {
             "pair": [
-                "4",
-                "2"
+                "0",
+                "9"
             ],
-            "profit": 260.0,
-            "win_rate": 40.0,
-            "miss_latest": false,
-            "wins": 12
+            "profit": -40.0,
+            "win_rate": 33.33,
+            "miss_latest": true,
+            "wins": 10,
+            "consensus_broken": false
         },
         "TPE": {
             "pair": [
-                "2",
-                "1"
+                "1",
+                "2"
             ],
             "profit": 460.0,
             "win_rate": 50.0,
             "miss_latest": true,
-            "wins": 15
+            "wins": 15,
+            "consensus_broken": false
         },
         "DJI": {
             "pair": [
@@ -68,17 +74,19 @@
             "profit": 360.0,
             "win_rate": 46.67,
             "miss_latest": false,
-            "wins": 14
+            "wins": 14,
+            "consensus_broken": false
         },
         "SHE": {
             "pair": [
-                "4",
-                "5"
+                "5",
+                "4"
             ],
             "profit": 760.0,
             "win_rate": 60.0,
             "miss_latest": true,
-            "wins": 18
+            "wins": 18,
+            "consensus_broken": false
         }
     }
 }

@@ -1,47 +1,47 @@
 {
     "portfolio": {
         "30d": {
-            "profit": 3980.0,
+            "profit": 3880.0,
             "invested": 9120.0,
-            "wins": 117
+            "wins": 119
         },
         "60d": {
-            "profit": 3860.0,
+            "profit": 4160.0,
             "invested": 18240.0,
-            "wins": 201
+            "wins": 207
         },
         "90d": {
-            "profit": 3840.0,
+            "profit": 3740.0,
             "invested": 27360.0,
-            "wins": 287
+            "wins": 290
         }
     },
     "markets": {
         "NIKKEI": {
             "report": "Sovereign V3 - 🟢 GREEN",
             "pair": [
-                "8",
-                "6"
+                "2",
+                "8"
             ],
             "bet_size": "100%",
             "market_threshold": "43.33%",
             "history": {
                 "30d": {
-                    "profit": 460.0,
-                    "win_rate": 43.33,
-                    "wins": 13,
+                    "profit": 660.0,
+                    "win_rate": 56.67,
+                    "wins": 17,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 320.0,
-                    "win_rate": 36.67,
-                    "wins": 22,
+                    "profit": 420.0,
+                    "win_rate": 43.33,
+                    "wins": 26,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 680.0,
-                    "win_rate": 41.11,
-                    "wins": 37,
+                    "profit": 780.0,
+                    "win_rate": 45.56,
+                    "wins": 41,
                     "invested": 3420.0
                 }
             }
@@ -49,8 +49,8 @@
         "FTSE": {
             "report": "Sovereign V3 - 🟢 GREEN",
             "pair": [
-                "6",
-                "9"
+                "9",
+                "6"
             ],
             "bet_size": "100%",
             "market_threshold": "40.67%",
@@ -78,8 +78,8 @@
         "HANGSENG": {
             "report": "Sovereign V3 - 🟢 GREEN",
             "pair": [
-                "8",
-                "4"
+                "4",
+                "8"
             ],
             "bet_size": "100%",
             "market_threshold": "44.0%",
@@ -134,30 +134,30 @@
             }
         },
         "SENSEX": {
-            "report": "Sovereign V3 - 🟢 GREEN",
+            "report": "Sovereign V3 - 🔴 RED (NO TRADE)",
             "pair": [
-                "4",
-                "2"
+                "0",
+                "9"
             ],
-            "bet_size": "90%",
+            "bet_size": "0%",
             "market_threshold": "43.33%",
             "history": {
                 "30d": {
-                    "profit": 260.0,
-                    "win_rate": 40.0,
-                    "wins": 12,
+                    "profit": -40.0,
+                    "win_rate": 33.33,
+                    "wins": 10,
                     "invested": 1140.0
                 },
                 "60d": {
-                    "profit": 220.0,
-                    "win_rate": 36.67,
-                    "wins": 22,
+                    "profit": 420.0,
+                    "win_rate": 40.0,
+                    "wins": 24,
                     "invested": 2280.0
                 },
                 "90d": {
-                    "profit": 280.0,
-                    "win_rate": 36.67,
-                    "wins": 33,
+                    "profit": 80.0,
+                    "win_rate": 35.56,
+                    "wins": 32,
                     "invested": 3420.0
                 }
             }
@@ -165,8 +165,8 @@
         "TPE": {
             "report": "Sovereign V3 - 🟡 YELLOW",
             "pair": [
-                "2",
-                "1"
+                "1",
+                "2"
             ],
             "bet_size": "60%",
             "market_threshold": "40.0%",
@@ -223,8 +223,8 @@
         "SHE": {
             "report": "Sovereign V3 - 🟡 YELLOW",
             "pair": [
-                "4",
-                "5"
+                "5",
+                "4"
             ],
             "bet_size": "60%",
             "market_threshold": "44.0%",
