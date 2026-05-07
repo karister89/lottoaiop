@@ -10,7 +10,7 @@ DATA_DIR = "../data/"
 WEIGHTS_FILE = "../data/dynamic_weights.json"
 OPTIMIZED_OUT = "../data/optimized_pairs.json"
 PAYOUT_RATE = 100.0
-COST_PER_PAIR = 38.0
+COST_PER_PAIR = 40.0
 
 def main():
     print("⏳ [Core Optimizer] กำลังไขว้คู่หา ROI สูงสุดด้วยระบบโหวตเอกฉันท์ (Consensus)...")
