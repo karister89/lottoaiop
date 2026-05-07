@@ -1,11 +1,8 @@
 name: Sovereign V3 Engine
 
-# ตั้งค่าให้กดรันเองได้ (workflow_dispatch) และตั้งเวลารันอัตโนมัติ (schedule)
 on:
   workflow_dispatch:
   schedule:
-    # รันอัตโนมัติทุกวันจันทร์-ศุกร์ เวลา 14:00 น. (เวลาไทย = 07:00 UTC) 
-    # *ปรับเวลาตรงนี้ได้ตามที่พี่รันปกติเลยครับ*
     - cron: '0 7 * * 1-5' 
 
 permissions:
@@ -25,10 +22,10 @@ jobs:
           python-version: '3.10'
 
       - name: 📦 Install Dependencies
+        # 🛠️ เจมจัดเต็มไลบรารี Data/AI (numpy, pandas, scipy, scikit-learn) ให้ครบเลย จะได้ไม่ Error อีกครับ
         run: |
           python -m pip install --upgrade pip
-          pip install gspread google-auth numpy
-          # ถ้ามีไฟล์ requirements.txt ให้รันคำสั่งด้านล่างด้วย
+          pip install gspread google-auth numpy pandas scipy scikit-learn
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: 📂 1. Run Data Fetcher (QL)
@@ -57,9 +54,9 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Add เฉพาะโฟลเดอร์ data ที่เก็บไฟล์ json ของเรา
+          # Add เฉพาะโฟลเดอร์ data 
           git add data/*.json
           
-          # ถ้ามีไฟล์อัปเดต ให้ Commit และ Push กลับเข้า Repo
+          # Commit และ Push กลับเข้า Repo
           git commit -m "🤖 Auto-update Sovereign V3 data" || echo "✅ No data changes to commit"
           git push
