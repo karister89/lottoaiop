@@ -1,19 +1,19 @@
 {
     "portfolio": {
         "30d": {
-            "profit": 5400.0,
+            "profit": 5500.0,
             "invested": 9600.0,
             "wins": 127
         },
         "60d": {
-            "profit": 5500.0,
+            "profit": 5400.0,
             "invested": 19200.0,
-            "wins": 218
+            "wins": 216
         },
         "90d": {
-            "profit": 4700.0,
+            "profit": 4800.0,
             "invested": 28800.0,
-            "wins": 298
+            "wins": 299
         }
     },
     "markets": {
@@ -47,30 +47,30 @@
             }
         },
         "FTSE": {
-            "report": "Sovereign V3 - 🟢 GREEN",
+            "report": "Sovereign V3 - 🟡 YELLOW",
             "pair": [
                 "9",
-                "6"
+                "1"
             ],
-            "bet_size": "100%",
-            "market_threshold": "41.58%",
+            "bet_size": "60%",
+            "market_threshold": "41.59%",
             "history": {
                 "30d": {
                     "profit": 700.0,
-                    "win_rate": 50.0,
-                    "wins": 15,
+                    "win_rate": 53.33,
+                    "wins": 16,
                     "invested": 1200.0
                 },
                 "60d": {
-                    "profit": 500.0,
-                    "win_rate": 38.33,
-                    "wins": 23,
+                    "profit": 1100.0,
+                    "win_rate": 50.0,
+                    "wins": 30,
                     "invested": 2400.0
                 },
                 "90d": {
-                    "profit": 300.0,
-                    "win_rate": 35.56,
-                    "wins": 32,
+                    "profit": 700.0,
+                    "win_rate": 42.22,
+                    "wins": 38,
                     "invested": 3600.0
                 }
             }
@@ -137,27 +137,27 @@
             "report": "Sovereign V3 - 🟢 GREEN",
             "pair": [
                 "5",
-                "9"
+                "0"
             ],
             "bet_size": "100%",
-            "market_threshold": "42.8%",
+            "market_threshold": "43.5%",
             "history": {
                 "30d": {
-                    "profit": 800.0,
-                    "win_rate": 60.0,
-                    "wins": 18,
+                    "profit": 900.0,
+                    "win_rate": 56.67,
+                    "wins": 17,
                     "invested": 1200.0
                 },
                 "60d": {
-                    "profit": 1300.0,
-                    "win_rate": 58.33,
-                    "wins": 35,
+                    "profit": 600.0,
+                    "win_rate": 43.33,
+                    "wins": 26,
                     "invested": 2400.0
                 },
                 "90d": {
-                    "profit": 600.0,
-                    "win_rate": 44.44,
-                    "wins": 40,
+                    "profit": 300.0,
+                    "win_rate": 38.89,
+                    "wins": 35,
                     "invested": 3600.0
                 }
             }
@@ -227,7 +227,7 @@
                 "4"
             ],
             "bet_size": "60%",
-            "market_threshold": "43.08%",
+            "market_threshold": "43.09%",
             "history": {
                 "30d": {
                     "profit": 900.0,

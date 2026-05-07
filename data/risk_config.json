@@ -7,7 +7,8 @@
                 "60d": 43.33,
                 "100d": 41.0
             },
-            "dynamic_min_winrate": 43.58
+            "dynamic_min_winrate": 43.58,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "FTSE": {
             "p80_steps": {
@@ -16,7 +17,8 @@
                 "60d": 40.0,
                 "100d": 39.0
             },
-            "dynamic_min_winrate": 41.58
+            "dynamic_min_winrate": 41.59,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "HANGSENG": {
             "p80_steps": {
@@ -25,7 +27,8 @@
                 "60d": 42.0,
                 "100d": 40.0
             },
-            "dynamic_min_winrate": 43.17
+            "dynamic_min_winrate": 43.17,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "DAX": {
             "p80_steps": {
@@ -34,16 +37,18 @@
                 "60d": 42.0,
                 "100d": 40.0
             },
-            "dynamic_min_winrate": 43.0
+            "dynamic_min_winrate": 43.0,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "SENSEX": {
             "p80_steps": {
                 "15d": 46.67,
-                "30d": 43.33,
-                "60d": 42.0,
-                "100d": 39.2
+                "30d": 44.0,
+                "60d": 43.33,
+                "100d": 40.0
             },
-            "dynamic_min_winrate": 42.8
+            "dynamic_min_winrate": 43.5,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "TPE": {
             "p80_steps": {
@@ -52,7 +57,8 @@
                 "60d": 40.33,
                 "100d": 40.0
             },
-            "dynamic_min_winrate": 41.75
+            "dynamic_min_winrate": 41.75,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "DJI": {
             "p80_steps": {
@@ -61,7 +67,8 @@
                 "60d": 41.67,
                 "100d": 40.0
             },
-            "dynamic_min_winrate": 42.92
+            "dynamic_min_winrate": 42.92,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "SHE": {
             "p80_steps": {
@@ -70,7 +77,8 @@
                 "60d": 41.67,
                 "100d": 40.0
             },
-            "dynamic_min_winrate": 43.08
+            "dynamic_min_winrate": 43.09,
+            "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         }
     }
 }

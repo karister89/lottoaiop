@@ -170,42 +170,42 @@
         },
         "SENSEX": {
             "weights": {
-                "market": 0.1962,
-                "stat": 0.2641,
-                "math": 0.26,
-                "ai": 0.2796
+                "market": 0.2148,
+                "stat": 0.2682,
+                "math": 0.2403,
+                "ai": 0.2768
             },
             "bot_performance": {
                 "market": {
-                    "wr_15d": 20.0,
-                    "wr_30d": 16.7,
+                    "wr_15d": 26.7,
+                    "wr_30d": 20.0,
                     "wr_60d": 31.7,
                     "wr_100d": 39.0,
-                    "composite_wr": 27.4,
+                    "composite_wr": 30.0,
                     "status": "YELLOW"
                 },
                 "stat": {
                     "wr_15d": 26.7,
-                    "wr_30d": 36.7,
+                    "wr_30d": 40.0,
                     "wr_60d": 40.0,
                     "wr_100d": 45.0,
-                    "composite_wr": 36.8,
+                    "composite_wr": 37.5,
                     "status": "YELLOW"
                 },
                 "math": {
-                    "wr_15d": 46.7,
-                    "wr_30d": 33.3,
+                    "wr_15d": 40.0,
+                    "wr_30d": 30.0,
                     "wr_60d": 30.0,
                     "wr_100d": 32.0,
-                    "composite_wr": 36.3,
+                    "composite_wr": 33.6,
                     "status": "YELLOW"
                 },
                 "ai": {
                     "wr_15d": 40.0,
                     "wr_30d": 40.0,
                     "wr_60d": 35.0,
-                    "wr_100d": 40.0,
-                    "composite_wr": 39.0,
+                    "wr_100d": 39.0,
+                    "composite_wr": 38.7,
                     "status": "YELLOW"
                 }
             }
