@@ -36,12 +36,14 @@ jobs:
       - name: ⚖️ 2. Run Risk Tuner (Standard P80)
         run: python engines/sp_risk_tuner.py
 
-      - name: 🧠 3. Run Specialists (SP)
+      - name: 🧠 3. Run Specialists (SP) แบบคู่ขนาน (Parallel)
         run: |
-          python engines/sp_market.py
-          python engines/sp_stat.py
-          python engines/sp_math.py
-          python engines/sp_ai.py
+          python engines/sp_market.py &
+          python engines/sp_stat.py &
+          python engines/sp_math.py &
+          python engines/sp_ai.py &
+          wait
+
 
       - name: 👑 4. Run Core Command (CORE)
         run: |
