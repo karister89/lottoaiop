@@ -1,10 +1,8 @@
-name: Sovereign V3 Auto-Run Pipeline
+name: Sovereign V3 Auto-Run Pipeline (Clean & Split Edition)
 
 on:
-  # ⏰ 08:15 น. เวลาไทย (01:15 UTC) ทุกวันจันทร์ถึงเสาร์
   schedule:
     - cron: '15 1 * * 1-6'
-  # 🔘 เปิดปุ่มให้กดรันแบบ Manual บน GitHub ได้ตลอดเวลา
   workflow_dispatch: 
 
 permissions:
@@ -28,18 +26,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas numpy gspread oauth2client google-auth
 
-      - name: 🚀 4. Phase 1 - Fetch Data (ทัพหน้า)
+      # 🧹 จุดที่เพิ่มใหม่: ล้างไฟล์เก่าทิ้งก่อนเริ่มรัน
+      - name: 🧼 4. Clear Old Data (Keep .gitkeep)
+        run: |
+          echo "🧹 Cleaning data directory..."
+          # ลบทุกไฟล์ใน data/ ยกเว้น .gitkeep
+          find data/ -type f ! -name '.gitkeep' -delete
+          echo "✅ Data directory is clean!"
+
+      - name: 🚀 5. Phase 1 - Fetch Data (ทัพหน้า)
         working-directory: ./engines
-        # 🔑 เสียบกุญแจให้ทัพหน้าดึงข้อมูลจาก Google Sheets
         env:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
         run: python ql_fetcher.py
 
-      - name: ⚖️ 5. Phase 2 - Risk Tuner (ฝ่ายเสนาธิการ)
+      - name: ⚖️ 6. Phase 2 - Risk Tuner (ฝ่ายเสนาธิการ)
         working-directory: ./engines
         run: python sp_risk_tuner.py
 
-      - name: 🧠 6. Phase 3 - Specialists (4 ทหารเสือวิ่งคู่ขนาน)
+      - name: 🧠 7. Phase 3 - Specialists (4 ทหารเสือ วิเคราะห์แยกตำแหน่ง)
         working-directory: ./engines
         run: |
           python sp_market.py &
@@ -48,17 +53,20 @@ jobs:
           python sp_ai.py &
           wait
 
-      - name: 👑 7. Phase 4 - Core Command (กุนซือใหญ่)
+      - name: 👑 8. Phase 4 - Core Command (รวมผลโหวตและตัดสินใจ)
         working-directory: ./engines
         run: |
-          python core_weight_eval.py
+          # 1. รันตัวรวมคะแนนโหวต (Aggregator) 
+          python core_consensus_aggregator.py 
+          # 2. คัดคู่เลขที่ดีที่สุดแยกหน้า-หลัง
           python core_pair_optimizer.py
+          # 3. คำนวณเงินและแผนการเล่น
           python core_money_commander.py
 
-      - name: 💾 8. Commit and Push Results
+      - name: 💾 9. Commit and Push Results
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data/*.json
-          # เซฟและอัปเดตไฟล์ขึ้น GitHub อัตโนมัติ
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Sovereign V3: Auto-Update (GCP Key Added)" && git push)
+          # ถ้าไม่มีอะไรเปลี่ยนแปลงไม่ต้องทำอะไร แต่ถ้ามีให้ Commit ทันที
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Sovereign V3: Auto-Update (Data Cleared)" && git push)
