@@ -4,7 +4,7 @@ import os
 # =====================================================================
 # ⚙️ Configuration - Core Money Commander (V3 Split - 4 Phases Edition)
 # =====================================================================
-DATA_DIR = "../data/"
+DATA_DIR = "/data/"
 OPTIMIZED_FILE = os.path.join(DATA_DIR, "optimized_pairs.json")
 FINAL_OUT = os.path.join(DATA_DIR, "final_synergy.json")
 
