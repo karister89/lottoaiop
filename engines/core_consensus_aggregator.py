@@ -5,7 +5,7 @@ import glob
 # =====================================================================
 # ⚖️ Configuration - Consensus Aggregator (V3 Split + Dynamic Weights)
 # =====================================================================
-DATA_DIR = "../data/"
+DATA_DIR = "/data/"
 WEIGHTS_FILE = os.path.join(DATA_DIR, "dynamic_weights.json")
 OUTPUT_FILE = os.path.join(DATA_DIR, "bot_consensus_votes.json")
 
