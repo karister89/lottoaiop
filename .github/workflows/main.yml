@@ -2,9 +2,8 @@ name: Sovereign V3 Daily Operation
 
 on:
   schedule:
-    # ⏱️ เวลา 01:15 UTC = 08:15 ตามเวลาประเทศไทย
     - cron: '15 1 * * *' 
-  workflow_dispatch: # ปุ่มกดรันแบบ Manual สำหรับทดสอบ
+  workflow_dispatch: 
 
 jobs:
   run-sovereign-bots:
@@ -24,10 +23,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install numpy pandas gspread oauth2client
 
-      - name: 🧹 0. ล้างโฟลเดอร์ data ทั้งหมด (ยกเว้น .gitkeep)
+      - name: 🧹 0. ล้างและเตรียมโฟลเดอร์ data
         run: |
-          find data/ -type f ! -name '.gitkeep' -delete
-          echo "✅ ล้างโฟลเดอร์ data/ สะอาดเอี่ยม รอรับข้อมูลใหม่ 100%!"
+          rm -rf data/
+          mkdir -p data/
+          touch data/.gitkeep
+          echo "✅ เตรียมโฟลเดอร์ data/ พร้อมรบ!"
 
       - name: 📡 0.5 ดึงข้อมูลดิบชุดใหม่ (Fetch Raw Data)
         run: python engines/ql_fetcher.py 
@@ -58,6 +59,13 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data/*.json
-          git commit -m "🤖 อัปเดตพอร์ต Sovereign V3 (Fix dependencies & Split Pos)" || echo "No changes to commit"
-          git push
+          
+          # เช็คว่ามีไฟล์ .json เกิดขึ้นจริงไหมก่อนจะดันขึ้น GitHub
+          if ls data/*.json 1> /dev/null 2>&1; then
+            git add data/*.json
+            git commit -m "🤖 อัปเดต Sovereign V3 (New Data Structure)"
+            git push
+          else
+            echo "❌ Error: บอทรันจบแต่ไม่มีไฟล์ .json ถูกสร้างขึ้น! ตรวจสอบ Path ในโค้ด Python ด่วน"
+            exit 1
+          fi
