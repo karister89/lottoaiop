@@ -2,8 +2,9 @@ name: Sovereign V3 Daily Operation
 
 on:
   schedule:
-    - cron: '0 0,6,12,18 * * *' 
-  workflow_dispatch: 
+    # ⏱️ เวลา 01:15 UTC = 08:15 ตามเวลาประเทศไทย
+    - cron: '15 1 * * *' 
+  workflow_dispatch: # ปุ่มกดรันแบบ Manual สำหรับทดสอบ
 
 jobs:
   run-sovereign-bots:
@@ -26,11 +27,11 @@ jobs:
       - name: 🧹 0. ล้างโฟลเดอร์ data ทั้งหมด (ยกเว้น .gitkeep)
         run: |
           find data/ -type f ! -name '.gitkeep' -delete
-          echo "✅ ล้างโฟลเดอร์ data/ สะอาดเอี่ยม เหลือแค่ .gitkeep แล้ว!"
+          echo "✅ ล้างโฟลเดอร์ data/ สะอาดเอี่ยม รอรับข้อมูลใหม่ 100%!"
 
-      # ⚠️ คำเตือนจากเจม: เมื่อข้างบนล้าง raw_*.json ทิ้งไปแล้ว สเต็ปนี้ "ต้องทำงาน" เพื่อดึงข้อมูลใหม่มาใส่นะครับ!
-      # - name: 📡 0.5 Fetch Raw Data (ดึงข้อมูลดิบใหม่)
-      #   run: python engines/data_scraper.py
+      # 🔻 จุดที่รวมไฟล์ดึงข้อมูลเข้ามา (แก้ชื่อไฟล์ 'main.py' ให้ตรงกับสคริปต์ดึงข้อมูลของพี่นะครับ) 🔻
+      - name: 📡 0.5 ดึงข้อมูลดิบชุดใหม่ (Fetch Raw Data)
+        run: python main.py 
 
       - name: 🛡️ 1. สร้างไม้บรรทัดความเสี่ยง (Risk Tuner)
         run: python engines/sp_risk_tuner.py
@@ -59,5 +60,5 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add data/*.json
-          git commit -m "🤖 สรุปพอร์ต Sovereign V3 (Clear All & Run ใหม่)" || echo "No changes to commit"
+          git commit -m "🤖 อัปเดตพอร์ต Sovereign V3 ประจำวัน (08:15 THA)" || echo "No changes to commit"
           git push
