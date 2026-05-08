@@ -5,115 +5,141 @@ import numpy as np
 from itertools import combinations
 
 # =====================================================================
-# ⚖️ Configuration - Risk Tuner (Split Front-Back Mode)
+# ⚖️ Configuration - Optimizer (Split Strategy 20/20)
 # =====================================================================
 DATA_DIR = "../data/"
-OUTPUT_FILE = os.path.join(DATA_DIR, "risk_config.json")
+RISK_CONFIG = os.path.join(DATA_DIR, "risk_config.json")
+# ไฟล์รวบรวมคะแนนโหวตจากบอท 4 ตัว (Jinbe, Robin, Law, Katakuri)
+VOTES_FILE = os.path.join(DATA_DIR, "bot_consensus_votes.json")
+FINAL_OUTPUT = os.path.join(DATA_DIR, "optimized_pairs.json")
 
-def calculate_p80_split(draws, all_pairs, window):
-    """ฟังก์ชันหาค่า P80 แยกตามระยะเวลา โดยชำแหละแยก 'หน้า (หลักสิบ)' และ 'หลัง (หลักหน่วย)'"""
-    actual_window = min(window, len(draws))
-    if actual_window < 5: 
-        return 0.0, 0.0
+def calculate_bet_by_confidence(consensus_score, current_wr, p80_value):
+    """สูตรคำนวณเงินเดิมพัน 0-100% ตามความมั่นใจบอทและเกณฑ์ P80"""
+    # 1. ตัวกรองนิรภัย: ถ้าสถิติ (Win Rate) ต่ำกว่าไม้บรรทัด (P80) ให้หยุดทันที
+    if current_wr < p80_value:
+        return 0, "🔴 RED"
     
-    test_draws = draws[:actual_window]
-    wr_front = [] # เก็บวินเรทรูดหน้า
-    wr_back = []  # เก็บวินเรทรูดหลัง
+    # 2. คำนวณน้ำหนักเงินตามจำนวนบอทที่โหวตตรงกัน (เพิ่ม-ลดทีละ 10)
+    if consensus_score >= 4:
+        bet_size = 100
+        status = "🟢 GREEN"
+    elif consensus_score == 3:
+        bet_size = 90
+        status = "🟡 YELLOW"
+    elif consensus_score == 2:
+        bet_size = 60 # เริ่มต้นที่ 60 ตามลอจิกความเสี่ยง
+        status = "🟡 YELLOW"
+    else:
+        bet_size = 0
+        status = "🔴 RED"
+        
+    return bet_size, status
+
+def backtest_position(draws, pair, position='front'):
+    """จำลองการแทงย้อนหลัง 30 งวด เพื่อหาวินเรทและกำไรแยกตำแหน่ง"""
+    wins = 0
+    p0, p1 = str(pair[0]), str(pair[1])
+    test_draws = draws[:30] # ตรวจสอบความสด 30 งวดล่าสุด
     
-    # ดึงเลขรางวัลมาเตรียมไว้ (แยกเป็นหลักสิบและหลักหน่วย)
-    results = []
     for row in test_draws:
         num = str(row.get('twoTop', '')).zfill(2)
-        if num.isdigit():
-            results.append((num[0], num[1])) # (สิบ, หน่วย)
-    
-    for pair in all_pairs:
-        wins_f, wins_b = 0, 0
-        p0, p1 = str(pair[0]), str(pair[1])
+        if not num.isdigit(): continue
         
-        for ten, unit in results:
-            # 🔻 เช็คสมรภูมิหน้า (รูดหน้า 2 เลข) 🔻
-            if p0 == ten or p1 == ten:
-                wins_f += 1
-            # 🔻 เช็คสมรภูมิหลัง (รูดหลัง 2 เลข) 🔻
-            if p0 == unit or p1 == unit:
-                wins_b += 1
-                
-        wr_front.append((wins_f / actual_window) * 100)
-        wr_back.append((wins_b / actual_window) * 100)
+        target = num[0] if position == 'front' else num[1]
+        if p0 == target or p1 == target:
+            wins += 1
+            
+    win_rate = (wins / len(test_draws)) * 100
+    profit = (wins * 90) - (len(test_draws) * 20) # ทุน 20 ต่อรอบ
+    return win_rate, profit
+
+def hunt_best_pair(draws, votes, p80_min, pos='front'):
+    """ลอจิกการหา Top 5 และคัดเลือกคู่เลขที่ดีที่สุดประจำตำแหน่ง"""
+    all_pairs = list(combinations(range(10), 2))
+    candidates = []
+
+    for pair in all_pairs:
+        # ดึงคะแนนความมั่นใจ (จำนวนบอทที่โหวตเลขตัวนี้)
+        v1 = votes.get(str(pair[0]), 0)
+        v2 = votes.get(str(pair[1]), 0)
+        # คะแนนรวม (Consensus Score) เต็ม 4
+        c_score = max(v1, v2) # ใช้ค่าสูงสุดของหนึ่งในคู่เลข หรือปรับตามลอจิกพี่
+
+        wr, profit = backtest_position(draws, pair, pos)
+        
+        # คัดเฉพาะตัวที่ผ่านเกณฑ์ P80
+        if wr >= p80_min:
+            candidates.append({
+                "pair": pair,
+                "score": c_score,
+                "win_rate": wr,
+                "profit": profit
+            })
+
+    # เรียงลำดับคัด Top 5: เน้นคะแนนโหวตนำ (ความมั่นใจ) ตามด้วยกำไรสะสม
+    candidates.sort(key=lambda x: (x['score'], x['profit']), reverse=True)
     
-    # คืนค่า P80 ของทั้งสองตำแหน่ง
-    p80_f = round(float(np.percentile(wr_front, 80)), 2)
-    p80_b = round(float(np.percentile(wr_back, 80)), 2)
-    return p80_f, p80_b
+    if not candidates:
+        return None
+
+    best = candidates[0]
+    # คำนวณ Bet Size และสถานะสี
+    bet, status = calculate_bet_by_confidence(best['score'], best['win_rate'], p80_min)
+    
+    return {
+        "pair": best['pair'],
+        "win_rate": best['win_rate'],
+        "profit": best['profit'],
+        "bet_size": bet,
+        "status": status,
+        "score": best['score']
+    }
 
 def main():
-    print("\n" + "="*75)
-    print("⏳ [Sengoku] เริ่มสร้างไม้บรรทัดแยกส่วน: สมรภูมิหน้า (10) vs สมรภูมิหลัง (1)")
-    print("="*75)
+    print("\n" + "🚀 [Law] อัปเกรดระบบ: แยกสมรภูมิ + เดินเงินตามความมั่นใจ 0-100%")
     
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
+    with open(RISK_CONFIG, 'r', encoding='utf-8') as f:
+        risk_data = json.load(f)
 
-    raw_files = glob.glob(os.path.join(DATA_DIR, "raw_*.json"))
-    all_pairs = list(combinations(range(10), 2))
-    multi_market_config = {"markets": {}}
-    
-    for file_path in raw_files:
-        if "raw_excel.json" in file_path: continue
-        market_name = os.path.basename(file_path).replace("raw_", "").replace(".json", "")
+    # โหลดคะแนนโหวตสะสมจากกุนซือทั้ง 4 (Jinbe, Robin, Law, Katakuri)
+    try:
+        with open(VOTES_FILE, 'r', encoding='utf-8') as f:
+            votes_data = json.load(f)
+    except:
+        votes_data = {} # กรณีหาไฟล์ไม่เจอ
+
+    results = {"markets": {}}
+
+    for market, config in risk_data['markets'].items():
+        raw_file = os.path.join(DATA_DIR, f"raw_{market}.json")
+        if not os.path.exists(raw_file): continue
+
+        with open(raw_file, 'r', encoding='utf-8') as f:
+            draws = json.load(f)
+
+        print(f"🔎 วิเคราะห์ตลาด: {market.upper()}")
+
+        # 🎯 รอบที่ 1: หาตัวเด่นสำหรับ 'รูดหน้า' (หลักสิบ)
+        best_f = hunt_best_pair(draws, votes_data.get(market, {}), config['front']['min_winrate'], 'front')
         
-        try:
-            with open(file_path, 'r', encoding='utf-8') as f:
-                draws = json.load(f)
-            if not draws: continue
-            
-            # คำนวณ P80 แยก หน้า-หลัง ครบทั้ง 4 ระยะ
-            # f = front (หน้า), b = back (หลัง)
-            f15, b15 = calculate_p80_split(draws, all_pairs, 15)
-            f30, b30 = calculate_p80_split(draws, all_pairs, 30)
-            f60, b60 = calculate_p80_split(draws, all_pairs, 60)
-            f100, b100 = calculate_p80_split(draws, all_pairs, 100)
-            
-            # หาเกณฑ์เฉลี่ยแยกตำแหน่ง
-            avg_f = round((f15 + f30 + f60 + f100) / 4, 2)
-            avg_b = round((b15 + b30 + b60 + b100) / 4, 2)
+        # 🎯 รอบที่ 2: หาตัวเด่นสำหรับ 'รูดหลัง' (หลักหน่วย)
+        best_b = hunt_best_pair(draws, votes_data.get(market, {}), config['back']['min_winrate'], 'back')
 
-            # ตรวจสอบ Momentum แยกตำแหน่ง (15d vs 100d)
-            diff_f = f15 - f100
-            diff_b = b15 - b100
-            
-            def get_health(diff):
-                if diff >= 3: return "🟢 GREEN"
-                if diff <= -3: return "🔴 RED"
-                return "🟡 YELLOW"
+        results["markets"][market] = {
+            "front": best_f,
+            "back": best_b,
+            "last_update": "2026-05-08"
+        }
+        
+        # แสดงผล Log ให้พี่ดูหน้าจอ
+        f_info = f"{best_f['pair']} ({best_f['bet_size']}%)" if best_f else "🔴 SKIP"
+        b_info = f"{best_b['pair']} ({best_b['bet_size']}%)" if best_b else "🔴 SKIP"
+        print(f"   [หน้า]: {f_info} | [หลัง]: {b_info}")
 
-            multi_market_config["markets"][market_name] = {
-                "front": {
-                    "p80_steps": {"15d": f15, "30d": f30, "60d": f60, "100d": f100},
-                    "min_winrate": avg_f,
-                    "health": get_health(diff_f)
-                },
-                "back": {
-                    "p80_steps": {"15d": b15, "30d": b30, "60d": b60, "100d": b100},
-                    "min_winrate": avg_b,
-                    "health": get_health(diff_b)
-                }
-            }
-            
-            print(f"🎯 {market_name.upper():<12}")
-            print(f"   [หน้า] เกณฑ์: {avg_f}% | สถานะ: {get_health(diff_f)} (Diff: {diff_f:+.1f}%)")
-            print(f"   [หลัง] เกณฑ์: {avg_b}% | สถานะ: {get_health(diff_b)} (Diff: {diff_b:+.1f}%)")
+    with open(FINAL_OUTPUT, 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=4)
 
-        except Exception as e:
-            print(f"❌ Error {market_name}: {e}")
-
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump(multi_market_config, f, ensure_ascii=False, indent=4)
-    
-    print("="*75)
-    print(f"✅ [Sengoku] บันทึกเกณฑ์แยกส่วนสำเร็จ! พร้อมให้ Optimizer หา Top 5 สองรอบ")
-    print("="*75 + "\n")
+    print("\n✅ วิเคราะห์เสร็จสิ้น! ข้อมูลพร้อมส่งเข้าศูนย์บัญชาการแล้วครับพี่นพพล\n")
 
 if __name__ == "__main__":
     main()
