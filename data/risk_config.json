@@ -13,11 +13,11 @@
         "FTSE": {
             "p80_steps": {
                 "15d": 46.67,
-                "30d": 40.67,
+                "30d": 40.0,
                 "60d": 40.0,
-                "100d": 39.0
+                "100d": 39.2
             },
-            "dynamic_min_winrate": 41.59,
+            "dynamic_min_winrate": 41.47,
             "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "HANGSENG": {
@@ -34,10 +34,10 @@
             "p80_steps": {
                 "15d": 46.67,
                 "30d": 43.33,
-                "60d": 42.0,
-                "100d": 40.0
+                "60d": 41.67,
+                "100d": 40.2
             },
-            "dynamic_min_winrate": 43.0,
+            "dynamic_min_winrate": 42.97,
             "market_health": "🟢 [GREEN] - ตลาดขาขึ้น (Momentum +)"
         },
         "SENSEX": {

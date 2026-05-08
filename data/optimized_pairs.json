@@ -14,11 +14,11 @@
         "FTSE": {
             "pair": [
                 "9",
-                "1"
+                "6"
             ],
-            "profit": 700.0,
+            "profit": 800.0,
             "win_rate": 53.33,
-            "miss_latest": true,
+            "miss_latest": false,
             "wins": 16,
             "consensus_broken": false
         },
@@ -38,10 +38,10 @@
                 "8",
                 "9"
             ],
-            "profit": 800.0,
-            "win_rate": 53.33,
-            "miss_latest": false,
-            "wins": 16,
+            "profit": 700.0,
+            "win_rate": 50.0,
+            "miss_latest": true,
+            "wins": 15,
             "consensus_broken": false
         },
         "SENSEX": {
@@ -71,7 +71,7 @@
                 "9",
                 "7"
             ],
-            "profit": 400.0,
+            "profit": 500.0,
             "win_rate": 46.67,
             "miss_latest": false,
             "wins": 14,

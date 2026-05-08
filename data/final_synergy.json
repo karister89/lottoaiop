@@ -1,19 +1,19 @@
 {
     "portfolio": {
         "30d": {
-            "profit": 5500.0,
+            "profit": 5600.0,
             "invested": 9600.0,
-            "wins": 127
+            "wins": 126
         },
         "60d": {
-            "profit": 5400.0,
+            "profit": 5000.0,
             "invested": 19200.0,
-            "wins": 216
+            "wins": 210
         },
         "90d": {
-            "profit": 4800.0,
+            "profit": 4300.0,
             "invested": 28800.0,
-            "wins": 299
+            "wins": 292
         }
     },
     "markets": {
@@ -47,30 +47,30 @@
             }
         },
         "FTSE": {
-            "report": "Sovereign V3 - 🟡 YELLOW",
+            "report": "Sovereign V3 - 🟢 GREEN",
             "pair": [
                 "9",
-                "1"
+                "6"
             ],
-            "bet_size": "60%",
-            "market_threshold": "41.59%",
+            "bet_size": "100%",
+            "market_threshold": "41.47%",
             "history": {
                 "30d": {
-                    "profit": 700.0,
+                    "profit": 800.0,
                     "win_rate": 53.33,
                     "wins": 16,
                     "invested": 1200.0
                 },
                 "60d": {
-                    "profit": 1100.0,
-                    "win_rate": 50.0,
-                    "wins": 30,
+                    "profit": 600.0,
+                    "win_rate": 40.0,
+                    "wins": 24,
                     "invested": 2400.0
                 },
                 "90d": {
-                    "profit": 700.0,
-                    "win_rate": 42.22,
-                    "wins": 38,
+                    "profit": 300.0,
+                    "win_rate": 35.56,
+                    "wins": 32,
                     "invested": 3600.0
                 }
             }
@@ -105,30 +105,30 @@
             }
         },
         "DAX": {
-            "report": "Sovereign V3 - 🟢 GREEN",
+            "report": "Sovereign V3 - 🟡 YELLOW",
             "pair": [
                 "8",
                 "9"
             ],
-            "bet_size": "100%",
-            "market_threshold": "43.0%",
+            "bet_size": "60%",
+            "market_threshold": "42.97%",
             "history": {
                 "30d": {
-                    "profit": 800.0,
-                    "win_rate": 53.33,
-                    "wins": 16,
+                    "profit": 700.0,
+                    "win_rate": 50.0,
+                    "wins": 15,
                     "invested": 1200.0
                 },
                 "60d": {
-                    "profit": 800.0,
-                    "win_rate": 45.0,
-                    "wins": 27,
+                    "profit": 700.0,
+                    "win_rate": 43.33,
+                    "wins": 26,
                     "invested": 2400.0
                 },
                 "90d": {
-                    "profit": 500.0,
-                    "win_rate": 38.89,
-                    "wins": 35,
+                    "profit": 400.0,
+                    "win_rate": 37.78,
+                    "wins": 34,
                     "invested": 3600.0
                 }
             }
@@ -201,15 +201,15 @@
             "market_threshold": "42.92%",
             "history": {
                 "30d": {
-                    "profit": 400.0,
+                    "profit": 500.0,
                     "win_rate": 46.67,
                     "wins": 14,
                     "invested": 1200.0
                 },
                 "60d": {
-                    "profit": 500.0,
-                    "win_rate": 43.33,
-                    "wins": 26,
+                    "profit": 700.0,
+                    "win_rate": 45.0,
+                    "wins": 27,
                     "invested": 2400.0
                 },
                 "90d": {
