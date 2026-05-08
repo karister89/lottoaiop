@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import sp_market, sp_stat, sp_math, sp_ai
 
 # =====================================================================
-# ⚙️ Configuration - Core Weight (V3 Split Position)
+# ⚙️ Configuration - Core Weight (V3 Split Position - 4 Phases Edition)
 # =====================================================================
 DATA_DIR = "../data/"
 WEIGHTS_OUT = "../data/dynamic_weights.json"
@@ -27,7 +27,7 @@ def calculate_split_weights(draws, market_name):
         "ai":     {"f": [], "b": []}
     }
 
-    print(f"   🔎 กำลังประเมินผลแยกตำแหน่ง {actual_window} งวด...")
+    print(f"   🔎 กำลังประเมินผลแยกตำแหน่ง {actual_window} งวด (15/30/60/100 วัน)...")
 
     for i in range(1, actual_window + 1):
         past_draws = draws[i:]
@@ -62,18 +62,24 @@ def calculate_split_weights(draws, market_name):
         
         for bot_name in bot_hits:
             hits = bot_hits[bot_name][pos]
-            # คำนวณ Win Rate 4 ระยะ
-            wr15 = (sum(hits[:15])/15)*100
-            wr100 = (sum(hits[:100])/len(hits))*100
-            composite = (wr15 * 0.4) + (wr100 * 0.6) # เน้นความสด 40% ความเสถียร 60%
             
-            # ปรับคะแนน (ถ้าเน่าเกินไปให้เป็น 0)
+            # --- คำนวณ Win Rate 4 ระยะ (สูตรเต็มของพี่นพพล) ---
+            wr15 = (sum(hits[:15]) / min(15, len(hits))) * 100 if len(hits) >= 1 else 0
+            wr30 = (sum(hits[:30]) / min(30, len(hits))) * 100 if len(hits) >= 1 else 0
+            wr60 = (sum(hits[:60]) / min(60, len(hits))) * 100 if len(hits) >= 1 else 0
+            wr100 = (sum(hits[:100]) / len(hits)) * 100 if len(hits) >= 1 else 0
+            
+            # 🌟 คะแนนสุทธิแบบถ่วงน้ำหนัก 4 ระยะ (Composite Win Rate)
+            # สด(15) 30% | สั้น(30) 20% | กลาง(60) 20% | ยาว(100) 30%
+            composite = (wr15 * 0.3) + (wr30 * 0.2) + (wr60 * 0.2) + (wr100 * 0.3)
+            
+            # ปรับคะแนน (ถ้าเน่าเกินไปต่ำกว่า 20% ให้เป็น 0 ไปเลย ไม่ต้องเอามาถ่วง)
             adjusted_scores[bot_name] = composite if composite >= 20 else 0
             
             if bot_name not in performance_report: performance_report[bot_name] = {}
             performance_report[bot_name][pos_key] = round(composite, 1)
 
-        # แปลงเป็นน้ำหนัก (Weight) รวมกันได้ 1.0
+        # แปลงเป็นน้ำหนัก (Weight) รวมกันได้ 1.0 (100%)
         total = sum(adjusted_scores.values())
         for bot_name, score in adjusted_scores.items():
             final_weights[pos_key][bot_name] = round(score/total, 4) if total > 0 else 0.25
@@ -81,7 +87,10 @@ def calculate_split_weights(draws, market_name):
     return final_weights, performance_report
 
 def main():
-    print("⏳ [Core Weight V3] เริ่มประเมินผลงานแยกสมรภูมิ...")
+    print("\n" + "="*75)
+    print("⏳ [Core Weight V3] เริ่มประเมินผลงานแยกสมรภูมิ (4 Phases Edition)...")
+    print("="*75)
+    
     raw_files = glob.glob(os.path.join(DATA_DIR, "raw_*.json"))
     all_market_weights = {"markets": {}}
 
@@ -101,10 +110,17 @@ def main():
                 "weights": weights,
                 "performance": perf
             }
+            
+            # ปริ้นท์รายงานให้ดูใน Console
+            for b_name, scores in perf.items():
+                print(f"   [{b_name.upper():<7}] หน้า: {scores.get('front', 0):.1f}% | หลัง: {scores.get('back', 0):.1f}%")
     
     with open(WEIGHTS_OUT, 'w', encoding='utf-8') as f:
         json.dump(all_market_weights, f, indent=4)
-    print(f"\n✅ อัปเกรดระบบ Weight แยกตำแหน่งสำเร็จ!")
+        
+    print("\n" + "="*75)
+    print(f"✅ อัปเกรดระบบ Weight แยกตำแหน่ง (15/30/60/100 วัน) สำเร็จ!")
+    print("="*75 + "\n")
 
 if __name__ == "__main__":
     main()
