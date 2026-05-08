@@ -1,0 +1,58 @@
+name: Sovereign V3 Daily Operation
+
+on:
+  schedule:
+    - cron: '0 0,6,12,18 * * *' # ตั้งเวลารันอัตโนมัติ (ปรับเปลี่ยนได้ตามต้องการ)
+  workflow_dispatch: # ปุ่มกดรันแบบ Manual
+
+jobs:
+  run-sovereign-bots:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🐍 Setup Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas
+
+      # (ถ้าพี่มีไฟล์ดึงข้อมูล raw_*.json จากเว็บ ให้ใส่คำสั่งรันไฟล์นั้นตรงนี้เป็นอันดับแรกสุดครับ)
+      # - name: 📡 0. Fetch Raw Data
+      #   run: python engines/data_scraper.py
+
+      - name: 🛡️ 1. สร้างไม้บรรทัดความเสี่ยง (Risk Tuner)
+        run: python engines/sp_risk_tuner.py
+
+      - name: 🤖 2. รันบอทวิเคราะห์ทั้ง 4 สาย (Analysts)
+        run: |
+          python engines/sp_market.py
+          python engines/sp_stat.py
+          python engines/sp_math.py
+          python engines/sp_ai.py
+
+      - name: ⚖️ 3. ประเมินผลงานและให้คะแนนความเก่ง (Weight Eval)
+        run: python engines/core_weight_eval.py
+
+      - name: 🗳️ 4. รวบรวมผลโหวตตามน้ำหนัก (Consensus Aggregator)
+        run: python engines/core_consensus_aggregator.py
+
+      - name: ⚔️ 5. แม่ทัพคัดเลือกคู่เลข หน้า-หลัง (Pair Optimizer)
+        run: python engines/core_pair_optimizer.py
+
+      - name: 💰 6. กุนซือเงินสรุปบัญชีและจัดพอร์ต (Money Commander)
+        run: python engines/core_money_commander.py
+
+      - name: 💾 7. Commit & Push Data to GitHub
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/*.json
+          git commit -m "🤖 อัปเดตพอร์ต Sovereign V3 (แยกหน้า-หลัง) อัตโนมัติ" || echo "No changes to commit"
+          git push
