@@ -1,185 +1,45 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovereign V3 - Command Center</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #0f172a; color: #f1f5f9; }
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; }
-        .status-green { color: #10b981; }
-        .status-red { color: #ef4444; }
-        .status-yellow { color: #f59e0b; }
-    </style>
-</head>
-<body class="p-4">
-
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-white">Sovereign V3 <span class="text-blue-500">AI</span></h1>
-            <p class="text-slate-400">ระบบจำลองกำไรขาดทุนสไนเปอร์ 40 ชุด</p>
-        </div>
-        <div class="flex bg-slate-800 p-1 rounded-lg border border-slate-700">
-            <button onclick="updateTimeRange('15')" class="time-btn px-4 py-2 rounded-md transition" id="btn-15">15 วัน</button>
-            <button onclick="updateTimeRange('30')" class="time-btn px-4 py-2 rounded-md transition" id="btn-30">30 วัน</button>
-            <button onclick="updateTimeRange('60')" class="time-btn px-4 py-2 rounded-md transition" id="btn-60">60 วัน</button>
-            <button onclick="updateTimeRange('100')" class="time-btn px-4 py-2 rounded-md transition" id="btn-100">100 วัน</button>
-        </div>
+<div id="dashboard-container" class="grid-container">
     </div>
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div class="card p-6 text-center">
-            <p class="text-slate-400 text-sm">NET PROFIT</p>
-            <h2 id="total-profit" class="text-3xl font-bold">0 ฿</h2>
-        </div>
-        <div class="card p-6 text-center">
-            <p class="text-slate-400 text-sm">WIN-RATE</p>
-            <h2 id="total-winrate" class="text-3xl font-bold text-blue-400">0%</h2>
-        </div>
-        <div class="card p-6 text-center">
-            <p class="text-slate-400 text-sm">INVESTED</p>
-            <h2 id="total-invested" class="text-3xl font-bold">0 ฿</h2>
-        </div>
-        <div class="card p-6 text-center">
-            <p class="text-slate-400 text-sm">TOTAL WINS</p>
-            <h2 id="total-wins" class="text-3xl font-bold">0 รอบ</h2>
-        </div>
-    </div>
+<script>
+async function loadDashboard() {
+    const response = await fetch('data/optimized_pairs.json');
+    const data = await response.json();
+    const container = document.getElementById('dashboard-container');
 
-    <div id="market-container" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-        </div>
-
-    <script>
-        // ลำดับหุ้นที่พี่ต้องการ
-        const marketOrder = ["tpe", "nikkei", "she", "hangseng", "sensex", "dax", "ftse", "dji"];
-        let currentRange = "30"; // ค่าเริ่มต้น
-        let dashboardData = null;
-
-        // ฟังก์ชันดึงข้อมูลจากไฟล์ final_synergy.json
-        async function loadData() {
-            try {
-                const response = await fetch('data/final_synergy.json'); // เปลี่ยน path ตามจริง
-                dashboardData = await response.json();
-                renderDashboard();
-            } catch (e) {
-                console.error("โหลดข้อมูลล้มเหลว:", e);
-            }
-        }
-
-        function renderDashboard() {
-            if (!dashboardData) return;
-
-            const container = document.getElementById('market-container');
-            container.innerHTML = '';
-            
-            // อัปเดตเมนูช่วงเวลา
-            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('bg-blue-600', 'text-white'));
-            document.getElementById(`btn-${currentRange}`).classList.add('bg-blue-600', 'text-white');
-
-            let overallProfit = 0;
-            let overallInvested = 0;
-            let overallWins = 0;
-            let totalMarkets = 0;
-
-            marketOrder.forEach(market => {
-                const mData = dashboardData.markets[market];
-                if (!mData) return;
-
-                const history = mData.history[currentRange + "d"] || { profit: 0, win_rate: 0, wins: 0, invested: 0 };
+    for (const [market, config] of Object.entries(data.markets)) {
+        const card = document.createElement('div');
+        card.className = 'market-card';
+        
+        // สร้างเนื้อหาในการ์ดแยก หน้า/หลัง
+        card.innerHTML = `
+            <h3>${market.toUpperCase()}</h3>
+            <div class="split-view">
+                <div class="pos-box ${getStatusClass(config.front.status)}">
+                    <p class="pos-label">หลักหน้า (สิบ)</p>
+                    <p class="bet-value">${config.front.bet_size}%</p>
+                    <p class="pair-nums">เลข: ${config.front.pair.join('-')}</p>
+                    <small>Confidence: ${config.front.score}/4</small>
+                </div>
                 
-                overallProfit += history.profit;
-                overallInvested += history.invested;
-                overallWins += history.wins;
-                totalMarkets++;
+                <div class="pos-box ${getStatusClass(config.back.status)}">
+                    <p class="pos-label">หลักหลัง (หน่วย)</p>
+                    <p class="bet-value">${config.back.bet_size}%</p>
+                    <p class="pair-nums">เลข: ${config.back.pair.join('-')}</p>
+                    <small>Confidence: ${config.back.score}/4</small>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    }
+}
 
-                const marketCard = `
-                    <div class="card p-4 flex flex-col gap-4">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-bold text-blue-400">${market.toUpperCase()}</h3>
-                            <span class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">${mData.report}</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-3 gap-2 text-center text-sm">
-                            <div class="bg-slate-900 p-2 rounded">
-                                <p class="text-slate-500">บอทจับคู่</p>
-                                <p class="font-bold text-white text-lg">${mData.pair.join('-')}</p>
-                            </div>
-                            <div class="bg-slate-900 p-2 rounded">
-                                <p class="text-slate-500">ลงเงิน</p>
-                                <p class="font-bold text-yellow-400 text-lg">${mData.bet_size}</p>
-                            </div>
-                            <div class="bg-slate-900 p-2 rounded">
-                                <p class="text-slate-500">กำไร (${currentRange}d)</p>
-                                <p class="font-bold ${history.profit >= 0 ? 'text-green-400' : 'text-red-400'} text-lg">${history.profit} ฿</p>
-                            </div>
-                        </div>
+// ฟังก์ชันช่วยเลือกสี CSS
+function getStatusClass(status) {
+    if (status.includes("GREEN")) return "status-green";
+    if (status.includes("YELLOW")) return "status-yellow";
+    return "status-red";
+}
 
-                        <div class="flex justify-between text-xs text-slate-400">
-                            <span>Win-Rate: ${history.win_rate}%</span>
-                            <span>Wins: ${history.wins} ครั้ง</span>
-                            <span>ทุน: ${history.invested} ฿</span>
-                        </div>
-
-                        <div class="h-32 w-full">
-                            <canvas id="chart-${market}"></canvas>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += marketCard;
-
-                // วาดกราฟเส้น Equity Curve (จำลองแนวโน้ม)
-                setTimeout(() => createChart(`chart-${market}`, history.profit), 100);
-            });
-
-            // อัปเดต Summary ด้านบน
-            document.getElementById('total-profit').innerText = overallProfit.toLocaleString() + " ฿";
-            document.getElementById('total-profit').className = `text-3xl font-bold ${overallProfit >= 0 ? 'text-green-400' : 'text-red-400'}`;
-            document.getElementById('total-invested').innerText = overallInvested.toLocaleString() + " ฿";
-            document.getElementById('total-wins').innerText = overallWins + " รอบ";
-            document.getElementById('total-winrate').innerText = totalMarkets > 0 ? (overallWins / (totalMarkets * parseInt(currentRange)) * 100).toFixed(1) + "%" : "0%";
-        }
-
-        function createChart(canvasId, profit) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            // จำลองข้อมูลเส้นกราฟโดยใช้กำไรเป็นจุดปลาย
-            const steps = 10;
-            const dataPoints = Array.from({length: steps}, (_, i) => (profit / steps) * i * (Math.random() + 0.5));
-            
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: Array(steps).fill(''),
-                    datasets: [{
-                        data: dataPoints,
-                        borderColor: profit >= 0 ? '#10b981' : '#ef4444',
-                        borderWidth: 2,
-                        pointRadius: 0,
-                        fill: true,
-                        backgroundColor: profit >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { display: false } }
-                }
-            });
-        }
-
-        function updateTimeRange(range) {
-            currentRange = range;
-            renderDashboard();
-        }
-
-        // เริ่มโหลดข้อมูล
-        loadData();
-        // รีเฟรชทุก 1 นาที
-        setInterval(loadData, 60000);
-    </script>
-</body>
-</html>
+loadDashboard();
+</script>
