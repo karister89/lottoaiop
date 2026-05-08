@@ -3,107 +3,108 @@ import os
 import glob
 
 # =====================================================================
-# ⚙️ Configuration - SP Math (Multi-Market Edition)
+# ⚙️ Configuration - SP Math (V3 - Split Position)
 # =====================================================================
 DATA_DIR = "../data/"
 
-def analyze_math(draws):
+def analyze_math_split(draws):
     """
-    🔻 สมการออริจินัลของพี่นพพล (Gap Analysis & Sweet Spot) 🔻
+    🔻 สมการออริจินัล: Gap Analysis & Sweet Spot (แยกหน้า-หลัง) 🔻
     """
-    scores = [0.0] * 10
-    last_seen = {i: 0 for i in range(10)}
-    found = {i: False for i in range(10)}
+    # แยกคะแนนและสถานะ หน้า(f) - หลัง(b)
+    scores_f = [0.0] * 10
+    scores_b = [0.0] * 10
     
-    # 1. หาระยะห่าง (Gap) ของเลขแต่ละตัว
+    last_seen_f = {i: 0 for i in range(10)}
+    last_seen_b = {i: 0 for i in range(10)}
+    found_f = {i: False for i in range(10)}
+    found_b = {i: False for i in range(10)}
+    
+    # 1. หาระยะห่าง (Gap) แยกตามตำแหน่ง
     for gap, row in enumerate(draws):
-        # กันกระแทกกรณีเจอแถวว่าง
         two_top = row.get('twoTop', '')
-        if not two_top:
-            continue
+        if not two_top: continue
             
         num_str = str(two_top).zfill(2)
         if len(num_str) == 2 and num_str.isdigit():
-            d1, d2 = int(num_str[0]), int(num_str[1])
-            if not found[d1]:
-                last_seen[d1] = gap
-                found[d1] = True
-            if not found[d2]:
-                last_seen[d2] = gap
-                found[d2] = True
-        if all(found.values()): break
+            ten, unit = int(num_str[0]), int(num_str[1])
+            
+            # เช็ค Gap หลักสิบ (หน้า)
+            if not found_f[ten]:
+                last_seen_f[ten] = gap
+                found_f[ten] = True
+            
+            # เช็ค Gap หลักหน่วย (หลัง)
+            if not found_b[unit]:
+                last_seen_b[unit] = gap
+                found_b[unit] = True
+                
+        if all(found_f.values()) and all(found_b.values()): 
+            break
 
+    # ให้คะแนนตามความยาวของ Gap (ยิ่งอั้นนาน คะแนนยิ่งสะสม)
     for i in range(10):
-        scores[i] += last_seen[i] * 0.5 
+        scores_f[i] += last_seen_f[i] * 0.5
+        scores_b[i] += last_seen_b[i] * 0.5
 
-    # 2. หาความถี่ในจุดสมดุล (8-12 ครั้ง ใน 50 งวด)
+    # 2. หาความถี่จุดสมดุล (Sweet Spot) แยกตำแหน่ง
+    # เกณฑ์: ใน 50 งวด ถ้าเลขไหนมาในตำแหน่งนั้น 4-6 ครั้ง (ค่าเฉลี่ยคือ 5) จะได้คะแนนพิเศษ
     for i in range(10):
-        counts = 0
+        count_f = 0
+        count_b = 0
         for row in draws[:50]:
-            two_top = row.get('twoTop', '')
-            if not two_top:
-                continue
-            if str(i) in str(two_top).zfill(2):
-                counts += 1
-        if 8 <= counts <= 12: 
-            scores[i] += 10.0
+            num_str = str(row.get('twoTop', '')).zfill(2)
+            if not num_str.isdigit(): continue
+            
+            if int(num_str[0]) == i: count_f += 1
+            if int(num_str[1]) == i: count_b += 1
+            
+        # ถ้าความถี่ตำแหน่งนั้นๆ อยู่ในจุดสมบูรณ์ (ประมาณ 10% ของงวดทั้งหมด)
+        if 4 <= count_f <= 7: scores_f[i] += 10.0
+        if 4 <= count_b <= 7: scores_b[i] += 10.0
 
-    return scores
+    return scores_f, scores_b
 
 def main():
-    print("⏳ [SP Math] เริ่มต้นวิเคราะห์สมการคณิตศาสตร์ (Multi-Market)...")
-    
-    # 🔍 สแกนหาไฟล์ raw_ ทั้งหมด
+    print("⏳ [SP Math] วิเคราะห์สมการคณิตศาสตร์แยกตำแหน่ง (Front-Back)...")
     raw_files = glob.glob(os.path.join(DATA_DIR, "raw_*.json"))
     
-    if not raw_files:
-        print("❌ [SP Math] ไม่พบไฟล์ข้อมูลดิบ (raw_*.json)!")
-        return
-
-    # 🔄 วนลูปอ่านข้อมูลทีละหุ้น
     for file_path in raw_files:
-        
-        # 🛑 ดักจับไฟล์ขยะ!
-        if "raw_excel.json" in file_path:
-            continue
-            
-        # ปอกเปลือกเอาชื่อหุ้นออกมา (เช่น raw_nikkei.json -> nikkei)
+        if "raw_excel.json" in file_path: continue
         market_name = os.path.basename(file_path).replace("raw_", "").replace(".json", "")
         
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 draws = json.load(f)
+            if not draws: continue
 
-            if not draws or len(draws) == 0:
-                print(f"⚠️ ตลาด {market_name} ไม่มีข้อมูล ข้าม...")
-                continue
-
-            print(f"🧮 กำลังคำนวณสูตรหุ้น: {market_name.upper()}")
+            print(f"🧮 คำนวณ Sweet Spot หุ้น: {market_name.upper()}")
             
-            # ส่งข้อมูลไปเข้าสมการของพี่
-            math_scores = analyze_math(draws)
+            # 🎯 คำนวณแยกคะแนน หน้า-หลัง
+            sc_f, sc_b = analyze_math_split(draws)
             
-            # จัดอันดับตัวเลข
-            ranked_digits = sorted([(str(i), s) for i, s in enumerate(math_scores)], key=lambda x: x[1], reverse=True)
+            # จัดอันดับท็อป 5 ของแต่ละตำแหน่ง
+            top_f = sorted(range(10), key=lambda i: sc_f[i], reverse=True)
+            top_b = sorted(range(10), key=lambda i: sc_b[i], reverse=True)
             
-            # จัดเตรียมแพ็กเกจข้อมูล (เพิ่ม field "market" เข้าไป)
             result = {
-                "bot_name": "Math_Probability_V1",
+                "bot_name": "Math_Probability_V3",
                 "market": market_name,
-                "top_digits": [r[0] for r in ranked_digits],
-                "raw_scores": math_scores,
+                "front_scores": sc_f,
+                "back_scores": sc_b,
+                "top_front": top_f[:5],
+                "top_back": top_b[:5],
                 "status": "success"
             }
             
-            # 💾 บันทึกไฟล์แยกตามชื่อหุ้น เช่น result_math_nikkei.json
             out_file = os.path.join(DATA_DIR, f"result_math_{market_name}.json")
             with open(out_file, 'w', encoding='utf-8') as f:
-                json.dump(result, f, ensure_ascii=False, indent=4)
+                json.dump(result, f, indent=4)
                 
-            print(f"  ✅ บันทึกผลสำเร็จ -> result_math_{market_name}.json")
+            print(f"  ✅ บันทึกสำเร็จ -> result_math_{market_name}.json")
             
         except Exception as e:
-            print(f"❌ Error ตอนคำนวณตลาด {market_name}: {e}")
+            print(f"❌ Error {market_name}: {e}")
 
     print("🎉 [SP Math] วิเคราะห์เสร็จสิ้นครบทุกตลาด!")
 
