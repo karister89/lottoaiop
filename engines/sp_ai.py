@@ -3,101 +3,78 @@ import os
 import glob
 import pandas as pd
 
-# =====================================================================
-# ⚙️ Configuration - SP AI (Multi-Market Edition)
-# =====================================================================
 DATA_DIR = "../data/"
 
-def analyze_pattern(draws):
+def analyze_pattern_split(draws):
     """
-    🔻 สมการออริจินัล: AI Pattern Matching (Distance Weighting) 🔻
+    🔻 AI Pattern Matching: แยกน้ำหนักคะแนน หน้า-หลัง 🔻
     """
-    scores = [0.0] * 10
-    df = pd.DataFrame(draws)
+    scores_f = [0.0] * 10 # คะแนนสำหรับหลักสิบ
+    scores_b = [0.0] * 10 # คะแนนสำหรับหลักหน่วย
     
-    # 🛑 ดักกระแทก: ถ้ามีข้อมูลน้อยกว่า 2 งวด จะไม่สามารถเทียบแพทเทิร์นอดีตได้
+    df = pd.DataFrame(draws)
     if df.empty or len(df) < 2:
-        return scores
+        return scores_f, scores_b
         
     df['diff'] = pd.to_numeric(df['diff'], errors='coerce').fillna(0)
     current_diff = df.iloc[0]['diff']
     
-    # คำนวณหาระยะห่าง (ความคล้ายคลึง) แล้วดึง 30 อันดับที่คล้ายวันนี้ที่สุด
     df['distance'] = abs(df['diff'] - current_diff)
     similar_past = df.iloc[1:].sort_values(by='distance').head(30)
     
     for index, row in similar_past.iterrows():
-        # ดักจับกรณีค่าว่าง
         two_top = row.get('twoTop', '')
-        if pd.isna(two_top) or not two_top:
-            continue
+        if pd.isna(two_top) or not two_top: continue
             
         num_str = str(two_top).zfill(2)
-        
         if len(num_str) == 2 and num_str.isdigit():
-            # ยิ่งระยะห่างน้อย (คล้ายมาก) น้ำหนักตัวคูณยิ่งสูง
+            # คำนวณน้ำหนักตามความคล้าย
             weight = 1.0 / (row['distance'] + 0.1) 
-            scores[int(num_str[0])] += weight
-            scores[int(num_str[1])] += weight
+            
+            # 🎯 แยกเก็บคะแนนตามตำแหน่งจริงที่เคยออก
+            scores_f[int(num_str[0])] += weight # ให้คะแนนเลขที่เคยออกหลักสิบ
+            scores_b[int(num_str[1])] += weight # ให้คะแนนเลขที่เคยออกหลักหน่วย
 
-    return scores
+    return scores_f, scores_b
 
 def main():
-    print("⏳ [SP AI] เริ่มต้นวิเคราะห์แพทเทิร์นขั้นสูง (Multi-Market)...")
-    
-    # 🔍 สแกนหาไฟล์ raw_ ทั้งหมด
+    print("⏳ [SP AI] วิเคราะห์แพทเทิร์นแยกตำแหน่ง (Front-Back)...")
     raw_files = glob.glob(os.path.join(DATA_DIR, "raw_*.json"))
     
-    if not raw_files:
-        print("❌ [SP AI] ไม่พบไฟล์ข้อมูลดิบ (raw_*.json)!")
-        return
-
-    # 🔄 วนลูปอ่านข้อมูลทีละหุ้น
     for file_path in raw_files:
-        
-        # 🛑 ดักจับไฟล์ขยะ!
-        if "raw_excel.json" in file_path:
-            continue
-            
-        # ปอกเปลือกเอาชื่อหุ้นออกมา (เช่น raw_nikkei.json -> nikkei)
+        if "raw_excel.json" in file_path: continue
         market_name = os.path.basename(file_path).replace("raw_", "").replace(".json", "")
         
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 draws = json.load(f)
+            if not draws: continue
 
-            if not draws or len(draws) == 0:
-                print(f"⚠️ ตลาด {market_name} ไม่มีข้อมูล ข้าม...")
-                continue
-
-            print(f"🤖 กำลังค้นหาแพทเทิร์นหุ้น: {market_name.upper()}")
+            # 🤖 AI วิเคราะห์แยกคะแนนหน้า-หลัง
+            sc_f, sc_b = analyze_pattern_split(draws)
             
-            # ส่งข้อมูลไปเข้าสมการ AI
-            ai_scores = analyze_pattern(draws)
+            # จัดอันดับท็อปของแต่ละฝั่ง
+            top_f = sorted(range(10), key=lambda i: sc_f[i], reverse=True)
+            top_b = sorted(range(10), key=lambda i: sc_b[i], reverse=True)
             
-            # จัดอันดับตัวเลข
-            ranked_digits = sorted([(str(i), s) for i, s in enumerate(ai_scores)], key=lambda x: x[1], reverse=True)
-            
-            # จัดเตรียมแพ็กเกจข้อมูล (เพิ่ม field "market" เข้าไป)
             result = {
-                "bot_name": "AI_Pattern_V1",
+                "bot_name": "AI_Katakuri_V3",
                 "market": market_name,
-                "top_digits": [r[0] for r in ranked_digits],
-                "raw_scores": ai_scores,
+                "front_scores": sc_f, # ส่งคะแนนหลักสิบไปให้กุนซือใหญ่
+                "back_scores": sc_b,  # ส่งคะแนนหลักหน่วยไปให้กุนซือใหญ่
+                "top_front": top_f[:5],
+                "top_back": top_b[:5],
                 "status": "success"
             }
             
-            # 💾 บันทึกไฟล์แยกตามชื่อหุ้น เช่น result_ai_nikkei.json
             out_file = os.path.join(DATA_DIR, f"result_ai_{market_name}.json")
             with open(out_file, 'w', encoding='utf-8') as f:
-                json.dump(result, f, ensure_ascii=False, indent=4)
+                json.dump(result, f, indent=4)
                 
-            print(f"  ✅ บันทึกผลสำเร็จ -> result_ai_{market_name}.json")
+            print(f"  ✅ {market_name.upper()} -> แยกวิเคราะห์ หน้า/หลัง สำเร็จ")
             
         except Exception as e:
-            print(f"❌ Error ตอนคำนวณตลาด {market_name}: {e}")
-
-    print("🎉 [SP AI] วิเคราะห์แพทเทิร์นเสร็จสิ้นครบทุกตลาด!")
+            print(f"❌ Error {market_name}: {e}")
 
 if __name__ == "__main__":
     main()
