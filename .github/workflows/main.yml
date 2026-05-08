@@ -31,7 +31,7 @@ jobs:
 
       # 🔻 จุดที่รวมไฟล์ดึงข้อมูลเข้ามา (แก้ชื่อไฟล์ 'main.py' ให้ตรงกับสคริปต์ดึงข้อมูลของพี่นะครับ) 🔻
       - name: 📡 0.5 ดึงข้อมูลดิบชุดใหม่ (Fetch Raw Data)
-        run: python main.py 
+        run: python engines/ql_fetcher.py
 
       - name: 🛡️ 1. สร้างไม้บรรทัดความเสี่ยง (Risk Tuner)
         run: python engines/sp_risk_tuner.py
