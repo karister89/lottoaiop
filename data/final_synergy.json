@@ -18,13 +18,13 @@
     },
     "markets": {
         "NIKKEI": {
-            "report": "Sovereign V3 - 🟢 GREEN",
+            "report": "Sovereign V3 - 🟡 YELLOW",
             "pair": [
-                "2",
-                "8"
+                "8",
+                "2"
             ],
-            "bet_size": "100%",
-            "market_threshold": "43.58%",
+            "bet_size": "60%",
+            "market_threshold": "43.75%",
             "history": {
                 "30d": {
                     "profit": 600.0,
@@ -227,7 +227,7 @@
                 "4"
             ],
             "bet_size": "60%",
-            "market_threshold": "43.09%",
+            "market_threshold": "43.08%",
             "history": {
                 "30d": {
                     "profit": 900.0,

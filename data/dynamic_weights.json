@@ -2,42 +2,42 @@
     "markets": {
         "NIKKEI": {
             "weights": {
-                "market": 0.1427,
-                "stat": 0.1057,
-                "math": 0.3672,
-                "ai": 0.3843
+                "market": 0.1448,
+                "stat": 0.1075,
+                "math": 0.3662,
+                "ai": 0.3815
             },
             "bot_performance": {
                 "market": {
                     "wr_15d": 33.3,
-                    "wr_30d": 36.7,
+                    "wr_30d": 33.3,
                     "wr_60d": 33.3,
-                    "wr_100d": 35.0,
-                    "composite_wr": 34.5,
+                    "wr_100d": 34.0,
+                    "composite_wr": 33.5,
                     "status": "YELLOW"
                 },
                 "stat": {
                     "wr_15d": 20.0,
-                    "wr_30d": 20.0,
+                    "wr_30d": 16.7,
                     "wr_60d": 28.3,
                     "wr_100d": 33.0,
-                    "composite_wr": 25.6,
+                    "composite_wr": 24.9,
                     "status": "YELLOW"
                 },
                 "math": {
-                    "wr_15d": 53.3,
+                    "wr_15d": 46.7,
                     "wr_30d": 46.7,
                     "wr_60d": 38.3,
                     "wr_100d": 38.0,
-                    "composite_wr": 44.4,
+                    "composite_wr": 42.4,
                     "status": "GREEN"
                 },
                 "ai": {
-                    "wr_15d": 60.0,
+                    "wr_15d": 53.3,
                     "wr_30d": 46.7,
                     "wr_60d": 41.7,
-                    "wr_100d": 36.0,
-                    "composite_wr": 46.5,
+                    "wr_100d": 35.0,
+                    "composite_wr": 44.2,
                     "status": "GREEN"
                 }
             }

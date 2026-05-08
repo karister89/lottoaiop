@@ -2,12 +2,12 @@
     "markets": {
         "NIKKEI": {
             "pair": [
-                "2",
-                "8"
+                "8",
+                "2"
             ],
             "profit": 600.0,
             "win_rate": 56.67,
-            "miss_latest": false,
+            "miss_latest": true,
             "wins": 17,
             "consensus_broken": false
         },
