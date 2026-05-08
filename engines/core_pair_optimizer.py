@@ -7,7 +7,7 @@ from itertools import combinations
 # =====================================================================
 # ⚖️ Configuration - Optimizer (V3 Weighted Split Strategy 20/20)
 # =====================================================================
-DATA_DIR = "../data/"
+DATA_DIR = "/data/"
 RISK_CONFIG = os.path.join(DATA_DIR, "risk_config.json")
 # ไฟล์รวบรวมคะแนนโหวต (แบบถ่วงน้ำหนักความเก่งแล้ว)
 VOTES_FILE = os.path.join(DATA_DIR, "bot_consensus_votes.json")
