@@ -4,98 +4,92 @@ import glob
 import pandas as pd
 
 # =====================================================================
-# ⚙️ Configuration - SP Market (Multi-Market Edition)
+# ⚙️ Configuration - SP Market (V3 - Split Position)
 # =====================================================================
 DATA_DIR = "../data/"
 
-def analyze_market(draws):
+def analyze_market_split(draws):
     """
-    🔻 สมการออริจินัลของพี่นพพล (ไม่ดัดแปลง) 🔻
+    🔻 สมการออริจินัล: แยกน้ำหนักคะแนน หน้า (หลักสิบ) และ หลัง (หลักหน่วย) 🔻
     """
-    scores = [0.0] * 10
+    scores_f = [0.0] * 10 # คะแนนหลักสิบ
+    scores_b = [0.0] * 10 # คะแนนหลักหน่วย
     df = pd.DataFrame(draws)
     
-    # กันกระแทก: ถ้าไม่มีข้อมูลให้คืนค่าคะแนน 0 กลับไป
     if df.empty: 
-        return scores
+        return scores_f, scores_b
 
     df['diff'] = pd.to_numeric(df['diff'], errors='coerce').fillna(0)
     current_diff = df.iloc[0]['diff'] 
     
+    # แยกกลุ่มข้อมูลตาม Diff (บวก/ลบ) เหมือนสูตรเดิมของพี่
     if current_diff > 0:
         past_matches = df[df['diff'] > 0].head(100)
     else:
         past_matches = df[df['diff'] <= 0].head(100)
 
     for _, row in past_matches.iterrows():
-        # เติม .get() และเช็คความยาวนิดหน่อยเพื่อกัน Error กรณีมีแถวว่างแทรก
         num_str = str(row.get('twoTop', '')).zfill(2)
         if len(num_str) == 2 and num_str.isdigit():
-            scores[int(num_str[0])] += 1.0 
-            scores[int(num_str[1])] += 1.0 
+            # 🎯 จุดเปลี่ยน: บันทึกคะแนนแยกตามตำแหน่งที่เลขนั้นเคยปรากฏ
+            scores_f[int(num_str[0])] += 1.0 # เก็บสถิติเลขที่ชอบมาหลักสิบ
+            scores_b[int(num_str[1])] += 1.0 # เก็บสถิติเลขที่ชอบมาหลักหน่วย
 
+    # วิเคราะห์เลขท้ายราคาเปิด (Open) ตามสูตรของพี่
     current_open_last_digit = str(df.iloc[0]['open'])[-1]
     if current_open_last_digit.isdigit():
-        scores[int(current_open_last_digit)] += 1.5 
+        digit = int(current_open_last_digit)
+        # ให้คะแนนพิเศษทั้งสองตำแหน่ง (เพราะเลขเปิดมีอิทธิพลสูง)
+        scores_f[digit] += 1.5 
+        scores_b[digit] += 1.5 
 
-    return scores
+    return scores_f, scores_b
 
 def main():
-    print("⏳ [SP Market] เริ่มต้นวิเคราะห์แนวโน้มตลาด (Multi-Market)...")
+    print("⏳ [SP Market] วิเคราะห์แนวโน้มตลาดแยกตำแหน่ง (Front-Back)...")
     
-    # 🔍 สแกนหาไฟล์ raw_ ทั้งหมด
     raw_files = glob.glob(os.path.join(DATA_DIR, "raw_*.json"))
     
-    if not raw_files:
-        print("❌ [SP Market] ไม่พบไฟล์ข้อมูลดิบ (raw_*.json)!")
-        return
-
-    # 🔄 วนลูปอ่านข้อมูลทีละหุ้น
     for file_path in raw_files:
-        
-        # 🛑 ดักจับไฟล์ขยะ! ถ้าเจอชื่อ raw_excel.json ให้กระโดดข้ามไปเลย
-        if "raw_excel.json" in file_path:
-            continue
+        if "raw_excel.json" in file_path: continue
             
-        # ปอกเปลือกเอาชื่อหุ้นออกมา (เช่น raw_nikkei.json -> nikkei)
         market_name = os.path.basename(file_path).replace("raw_", "").replace(".json", "")
         
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 draws = json.load(f)
 
-            if not draws or len(draws) == 0:
-                print(f"⚠️ ตลาด {market_name} ไม่มีข้อมูล ข้าม...")
-                continue
+            if not draws: continue
 
-            print(f"🔍 กำลังคำนวณสูตรหุ้น: {market_name.upper()}")
+            print(f"🔍 กำลังคำนวณตลาด: {market_name.upper()}")
             
-            # ส่งข้อมูลไปเข้าสมการของพี่
-            market_scores = analyze_market(draws)
+            # 🎯 เรียกใช้ฟังก์ชันแยกคะแนน หน้า-หลัง
+            sc_f, sc_b = analyze_market_split(draws)
             
-            # จัดอันดับตัวเลข
-            ranked_digits = sorted([(str(i), s) for i, s in enumerate(market_scores)], key=lambda x: x[1], reverse=True)
+            # จัดอันดับท็อป 5 ของแต่ละตำแหน่ง
+            top_f = sorted(range(10), key=lambda i: sc_f[i], reverse=True)
+            top_b = sorted(range(10), key=lambda i: sc_b[i], reverse=True)
             
-            # จัดเตรียมแพ็กเกจข้อมูล (เพิ่ม field "market" เข้าไปด้วย)
             result = {
-                "bot_name": "Market_Whale_V1",
+                "bot_name": "Market_Jinbe_V3",
                 "market": market_name,
-                "top_digits": [r[0] for r in ranked_digits],
-                "raw_scores": market_scores,
+                "front_scores": sc_f, # คะแนนหลักสิบส่งให้แม่ทัพ
+                "back_scores": sc_b,  # คะแนนหลักหน่วยส่งให้แม่ทัพ
+                "top_front": top_f[:5],
+                "top_back": top_b[:5],
                 "status": "success"
             }
             
-            # 💾 บันทึกไฟล์แยกตามชื่อหุ้น เช่น result_market_nikkei.json
             out_file = os.path.join(DATA_DIR, f"result_market_{market_name}.json")
             with open(out_file, 'w', encoding='utf-8') as f:
                 json.dump(result, f, ensure_ascii=False, indent=4)
                 
-            print(f"  ✅ บันทึกผลสำเร็จ -> {out_file}")
+            print(f"  ✅ บันทึกสำเร็จ -> result_market_{market_name}.json")
             
         except Exception as e:
-            print(f"❌ Error ตอนคำนวณตลาด {market_name}: {e}")
+            print(f"❌ Error {market_name}: {e}")
 
-    print("🎉 [SP Market] วิเคราะห์เสร็จสิ้นครบทุกตลาด!")
+    print("🎉 [SP Market] วิเคราะห์แยกตำแหน่งเสร็จสิ้น!")
 
 if __name__ == "__main__":
     main()
