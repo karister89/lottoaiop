@@ -48,12 +48,18 @@
     <script>
         const marketOrder = ["TPE", "NIKKEI", "SHE", "HANGSENG", "SENSEX", "DAX", "FTSE", "DJI"];
 
-        // ฟังก์ชันคำนวณหาวันเปิดตลาด "งวดถัดไป" อิงจากเวลาปัจจุบัน (ข้าม ส.-อา.)
-        function getNextWorkingDate() {
-            let d = new Date();
-            d.setDate(d.getDate() + 1); // บวกไป 1 วันเป็นค่าเริ่มต้น (พรุ่งนี้)
-            if (d.getDay() === 6) d.setDate(d.getDate() + 2); // ถ้าตกวันเสาร์ ให้ไปวันจันทร์
-            if (d.getDay() === 0) d.setDate(d.getDate() + 1); // ถ้าตกวันอาทิตย์ ให้ไปวันจันทร์
+        // 🔻 ฟังก์ชันใหม่: คำนวณวันงวดถัดไป "อิงจากวันที่ล่าสุดของตลาดนั้นๆ" 🔻
+        function getNextWorkingDate(lastDateStr) {
+            // ถ้าไม่มีข้อมูลวันที่ส่งมาจากบอท ให้แสดงข้อความแจ้งเตือน
+            if (!lastDateStr) return "รอข้อมูลวันที่";
+
+            let d = new Date(lastDateStr);
+            if (isNaN(d)) return "รูปแบบวันไม่ถูกต้อง";
+
+            d.setDate(d.getDate() + 1); // บวกไป 1 วันจากผลล่าสุดของหุ้น
+            if (d.getDay() === 6) d.setDate(d.getDate() + 2); // ถ้าบวกแล้วเป็นเสาร์ ให้เด้งไปจันทร์ (+2)
+            if (d.getDay() === 0) d.setDate(d.getDate() + 1); // ถ้าบวกแล้วเป็นอาทิตย์ ให้เด้งไปจันทร์ (+1)
+            
             return d.toLocaleDateString('th-TH', {day:'numeric', month:'short', year:'2-digit'});
         }
 
@@ -95,17 +101,17 @@
                 if(data.portfolio && data.portfolio["30d"]) {
                     document.getElementById('total-profit').innerText = data.portfolio["30d"].profit.toLocaleString() + " ฿";
                     document.getElementById('total-invested').innerText = data.portfolio["30d"].invested.toLocaleString() + " ฿";
-                    // คิดค่า Winrate รวม (79 wins / ... จำนวนที่ลงทุน) จะเอาค่าที่บอทให้มาใช้
                     let totalWins = data.portfolio["30d"].wins;
-                    let avgWinRate = (totalWins / (8 * 2 * 30) * 100).toFixed(1); // หุ้น 8 * 2 ฝั่ง * 30 วัน
+                    let avgWinRate = (totalWins / (8 * 2 * 30) * 100).toFixed(1); 
                     document.getElementById('total-winrate').innerText = avgWinRate + "%";
                 }
                 
-                const nextDate = getNextWorkingDate();
-
                 marketOrder.forEach(mKey => {
                     const m = data.markets[mKey];
                     if (!m) return;
+
+                    // 🔻 ส่งวันที่ล่าวสุดของตลาดนี้ (m.last_date) เข้าไปบวก 1 วัน 🔻
+                    const nextDate = getNextWorkingDate(m.last_date);
 
                     const marketHTML = `
                         <div class="card overflow-hidden">
