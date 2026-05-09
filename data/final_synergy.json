@@ -1,0 +1,25 @@
+{
+    "portfolio": {
+        "15d": {
+            "profit": 0,
+            "invested": 0,
+            "wins": 0
+        },
+        "30d": {
+            "profit": 0,
+            "invested": 0,
+            "wins": 0
+        },
+        "60d": {
+            "profit": 0,
+            "invested": 0,
+            "wins": 0
+        },
+        "100d": {
+            "profit": 0,
+            "invested": 0,
+            "wins": 0
+        }
+    },
+    "markets": {}
+}
