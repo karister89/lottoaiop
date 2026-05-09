@@ -4,76 +4,82 @@
             "front": {
                 "pair": [
                     1,
-                    2
+                    6
                 ],
-                "win_rate": 26.666666666666668,
-                "profit": 120,
+                "win_rate": 30.0,
+                "profit_30d": 300,
+                "streak": 0,
                 "bet_size": 100,
                 "status": "🟢 GREEN",
-                "score": 1.781
+                "score": 1.435
             },
             "back": {
                 "pair": [
-                    6,
+                    2,
                     7
                 ],
-                "win_rate": 26.666666666666668,
-                "profit": 120,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.743
+                "win_rate": 33.33333333333333,
+                "profit_30d": 400,
+                "streak": 2,
+                "bet_size": 50,
+                "status": "🟡 YELLOW",
+                "score": 1.717
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         },
         "FTSE": {
             "front": {
                 "pair": [
                     0,
-                    7
+                    9
                 ],
-                "win_rate": 33.33333333333333,
-                "profit": 300,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.558
+                "win_rate": 40.0,
+                "profit_30d": 600,
+                "streak": 0,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.008
             },
             "back": {
                 "pair": [
-                    1,
+                    8,
                     9
                 ],
-                "win_rate": 33.33333333333333,
-                "profit": 300,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.752
+                "win_rate": 40.0,
+                "profit_30d": 600,
+                "streak": 7,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.26
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         },
         "HANGSENG": {
             "front": {
                 "pair": [
-                    5,
+                    0,
                     7
                 ],
-                "win_rate": 26.666666666666668,
-                "profit": 120,
+                "win_rate": 30.0,
+                "profit_30d": 300,
+                "streak": 0,
                 "bet_size": 100,
                 "status": "🟢 GREEN",
-                "score": 1.498
+                "score": 1.243
             },
             "back": {
                 "pair": [
                     3,
-                    4
+                    8
                 ],
-                "win_rate": 30.0,
-                "profit": 210,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.78
+                "win_rate": 36.666666666666664,
+                "profit_30d": 500,
+                "streak": 1,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.524
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         },
         "DAX": {
             "front": {
@@ -82,10 +88,11 @@
                     9
                 ],
                 "win_rate": 30.0,
-                "profit": 210,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.541
+                "profit_30d": 300,
+                "streak": 4,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.532
             },
             "back": {
                 "pair": [
@@ -93,74 +100,80 @@
                     8
                 ],
                 "win_rate": 30.0,
-                "profit": 210,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.529
+                "profit_30d": 300,
+                "streak": 4,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.528
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         },
         "SENSEX": {
             "front": {
                 "pair": [
                     3,
-                    4
+                    5
                 ],
-                "win_rate": 30.0,
-                "profit": 210,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.48
+                "win_rate": 43.333333333333336,
+                "profit_30d": 700,
+                "streak": 1,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.274
             },
             "back": {
                 "pair": [
                     0,
-                    2
+                    5
                 ],
-                "win_rate": 30.0,
-                "profit": 210,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.71
+                "win_rate": 40.0,
+                "profit_30d": 600,
+                "streak": 4,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.454
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         },
         "TPE": {
             "front": {
                 "pair": [
                     1,
-                    6
+                    8
                 ],
-                "win_rate": 36.666666666666664,
-                "profit": 390,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.775
+                "win_rate": 43.333333333333336,
+                "profit_30d": 700,
+                "streak": 2,
+                "bet_size": 50,
+                "status": "🟡 YELLOW",
+                "score": 1.572
             },
             "back": {
                 "pair": [
-                    3,
-                    9
+                    2,
+                    3
                 ],
-                "win_rate": 30.0,
-                "profit": 210,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.784
+                "win_rate": 33.33333333333333,
+                "profit_30d": 400,
+                "streak": 5,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.266
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         },
         "DJI": {
             "front": {
                 "pair": [
-                    2,
+                    7,
                     9
                 ],
-                "win_rate": 26.666666666666668,
-                "profit": 120,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.678
+                "win_rate": 33.33333333333333,
+                "profit_30d": 400,
+                "streak": 1,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.211
             },
             "back": {
                 "pair": [
@@ -168,24 +181,26 @@
                     7
                 ],
                 "win_rate": 26.666666666666668,
-                "profit": 120,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.309
+                "profit_30d": 200,
+                "streak": 1,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.308
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         },
         "SHE": {
             "front": {
                 "pair": [
                     4,
-                    8
+                    9
                 ],
-                "win_rate": 33.33333333333333,
-                "profit": 300,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.749
+                "win_rate": 36.666666666666664,
+                "profit_30d": 500,
+                "streak": 4,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.506
             },
             "back": {
                 "pair": [
@@ -193,12 +208,13 @@
                     6
                 ],
                 "win_rate": 33.33333333333333,
-                "profit": 300,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.798
+                "profit_30d": 400,
+                "streak": 3,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.796
             },
-            "last_update": "Sovereign-V3-Weights"
+            "last_update": "V3-Streak-Guard"
         }
     }
 }

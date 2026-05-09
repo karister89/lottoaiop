@@ -8,8 +8,8 @@
                     "60d": 23.33,
                     "100d": 23.2
                 },
-                "min_winrate": 25.3,
-                "health": "🟢 GREEN"
+                "min_winrate": 24.76,
+                "health": "🟡 YELLOW"
             },
             "back": {
                 "p80_steps": {
@@ -18,7 +18,7 @@
                     "60d": 25.0,
                     "100d": 24.0
                 },
-                "min_winrate": 24.92,
+                "min_winrate": 24.57,
                 "health": "🟡 YELLOW"
             }
         },
@@ -30,7 +30,7 @@
                     "60d": 25.0,
                     "100d": 23.0
                 },
-                "min_winrate": 26.0,
+                "min_winrate": 25.33,
                 "health": "🟢 GREEN"
             },
             "back": {
@@ -40,7 +40,7 @@
                     "60d": 26.67,
                     "100d": 25.0
                 },
-                "min_winrate": 26.25,
+                "min_winrate": 26.17,
                 "health": "🟡 YELLOW"
             }
         },
@@ -52,8 +52,8 @@
                     "60d": 23.33,
                     "100d": 23.0
                 },
-                "min_winrate": 24.25,
-                "health": "🟢 GREEN"
+                "min_winrate": 23.77,
+                "health": "🟡 YELLOW"
             },
             "back": {
                 "p80_steps": {
@@ -62,7 +62,7 @@
                     "60d": 25.0,
                     "100d": 23.0
                 },
-                "min_winrate": 25.67,
+                "min_winrate": 25.2,
                 "health": "🟢 GREEN"
             }
         },
@@ -74,7 +74,7 @@
                     "60d": 25.0,
                     "100d": 24.2
                 },
-                "min_winrate": 25.64,
+                "min_winrate": 25.43,
                 "health": "🟡 YELLOW"
             },
             "back": {
@@ -84,8 +84,8 @@
                     "60d": 23.33,
                     "100d": 23.2
                 },
-                "min_winrate": 24.3,
-                "health": "🟢 GREEN"
+                "min_winrate": 23.83,
+                "health": "🟡 YELLOW"
             }
         },
         "SENSEX": {
@@ -96,8 +96,8 @@
                     "60d": 23.67,
                     "100d": 24.0
                 },
-                "min_winrate": 26.42,
-                "health": "🟢 GREEN"
+                "min_winrate": 26.1,
+                "health": "🟡 YELLOW"
             },
             "back": {
                 "p80_steps": {
@@ -106,7 +106,7 @@
                     "60d": 25.0,
                     "100d": 23.0
                 },
-                "min_winrate": 25.83,
+                "min_winrate": 25.4,
                 "health": "🟢 GREEN"
             }
         },
@@ -118,8 +118,8 @@
                     "60d": 25.0,
                     "100d": 22.0
                 },
-                "min_winrate": 25.25,
-                "health": "🟢 GREEN"
+                "min_winrate": 24.97,
+                "health": "🟡 YELLOW"
             },
             "back": {
                 "p80_steps": {
@@ -128,8 +128,8 @@
                     "60d": 23.33,
                     "100d": 23.0
                 },
-                "min_winrate": 24.08,
-                "health": "🟢 GREEN"
+                "min_winrate": 23.56,
+                "health": "🟡 YELLOW"
             }
         },
         "DJI": {
@@ -140,8 +140,8 @@
                     "60d": 25.33,
                     "100d": 23.0
                 },
-                "min_winrate": 24.75,
-                "health": "🟢 GREEN"
+                "min_winrate": 24.37,
+                "health": "🟡 YELLOW"
             },
             "back": {
                 "p80_steps": {
@@ -150,8 +150,8 @@
                     "60d": 23.67,
                     "100d": 23.2
                 },
-                "min_winrate": 24.22,
-                "health": "🟢 GREEN"
+                "min_winrate": 23.73,
+                "health": "🟡 YELLOW"
             }
         },
         "SHE": {
@@ -162,8 +162,8 @@
                     "60d": 23.33,
                     "100d": 22.4
                 },
-                "min_winrate": 24.77,
-                "health": "🟢 GREEN"
+                "min_winrate": 24.39,
+                "health": "🟡 YELLOW"
             },
             "back": {
                 "p80_steps": {
@@ -172,7 +172,7 @@
                     "60d": 23.33,
                     "100d": 23.0
                 },
-                "min_winrate": 25.41,
+                "min_winrate": 24.9,
                 "health": "🟢 GREEN"
             }
         }
