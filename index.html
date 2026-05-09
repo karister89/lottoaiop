@@ -48,56 +48,53 @@
     <script>
         const marketOrder = ["TPE", "NIKKEI", "SHE", "HANGSENG", "SENSEX", "DAX", "FTSE", "DJI"];
 
-        // แปลงสีจากสถานะเป็น Class ของ Tailwind
+        // 🔻 ระบบป้ายไฟแบบฟ้อง Error ถ้ารับข้อมูลมาไม่ครบ 🔻
+        function getStatusBadge(status) {
+            if (!status || status === "") {
+                return `<span class="text-white text-[9px] bg-red-600 border border-red-400 px-2 py-0.5 rounded-full shadow-[0_0_8px_rgba(220,38,38,0.8)]">⚠️ ERROR: ข้อมูลขาดหาย</span>`;
+            }
+            
+            const s = status.toUpperCase();
+            if (s.includes("GREEN")) return `<span class="text-green-400 text-[9px] bg-green-900/40 border border-green-500/50 px-2 py-0.5 rounded-full shadow-[0_0_5px_rgba(74,222,128,0.5)]">🟢 ลุยเต็มกำลัง</span>`;
+            if (s.includes("YELLOW")) return `<span class="text-yellow-400 text-[9px] bg-yellow-900/40 border border-yellow-500/50 px-2 py-0.5 rounded-full shadow-[0_0_5px_rgba(250,204,21,0.5)]">🟡 ลดความเสี่ยง</span>`;
+            if (s.includes("RED")) return `<span class="text-red-400 text-[9px] bg-red-900/40 border border-red-500/50 px-2 py-0.5 rounded-full shadow-[0_0_5px_rgba(248,113,113,0.5)]">🔴 หยุดแทง</span>`;
+            
+            return `<span class="text-orange-400 text-[9px] bg-orange-900/40 px-2 py-0.5 rounded-full">❓ ${status}</span>`;
+        }
+
+        // แปลงสีตัวเลข (ถ้า Error ให้เลขกลายเป็นสีเทาไปเลย)
         function getColorClass(status) {
-            if (!status) return "text-white";
+            if (!status || status === "") return "text-slate-600"; 
+            
             const s = status.toUpperCase();
             if (s.includes("GREEN")) return "text-green-400";
             if (s.includes("YELLOW")) return "text-yellow-400";
-            if (s.includes("RED")) return "text-red-400";
+            if (s.includes("RED")) return "text-red-500";
             return "text-white";
         }
 
-        // ฟังก์ชันคำนวณหาวันเปิดตลาดถัดไป (d/m/y)
         function getNextWorkingDate(lastDateStr) {
             if (!lastDateStr) return "รอข้อมูล";
-
-            // รองรับรูปแบบ d/m/y จาก Sheets หรือ y-m-d จาก Python
             let parts = lastDateStr.split(/[-/]/);
-            let d;
-            if (parts[0].length === 4) { // yyyy-mm-dd
-                d = new Date(parts[0], parts[1]-1, parts[2]);
-            } else { // dd/mm/yyyy
-                d = new Date(parts[2], parts[1]-1, parts[0]);
-            }
-
+            let d = parts[0].length === 4 ? new Date(parts[0], parts[1]-1, parts[2]) : new Date(parts[2], parts[1]-1, parts[0]);
             if (isNaN(d)) return lastDateStr;
 
             d.setDate(d.getDate() + 1); 
             if (d.getDay() === 6) d.setDate(d.getDate() + 2); 
             if (d.getDay() === 0) d.setDate(d.getDate() + 1); 
             
-            // ส่งกลับเป็น d/m/y
-            const day = String(d.getDate()).padStart(2, '0');
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const year = d.getFullYear();
-            return `${day}/${month}/${year}`;
+            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
         }
 
         function generateStatTable(history) {
+            if (!history) return "";
             let rows = "";
             ["15d", "30d", "60d", "100d"].forEach(period => {
                 const stat = history[period];
                 if(stat) {
                     const color = stat.profit >= 0 ? "text-green-400" : "text-red-400";
                     const sign = stat.profit > 0 ? "+" : "";
-                    rows += `
-                        <tr>
-                            <td>${period.replace('d', ' วัน')}</td>
-                            <td class="font-bold ${color}">${sign}${stat.profit}฿</td>
-                            <td class="text-blue-300 font-semibold">${stat.win_rate}%</td>
-                        </tr>
-                    `;
+                    rows += `<tr><td>${period.replace('d', ' วัน')}</td><td class="font-bold ${color}">${sign}${stat.profit}฿</td><td class="text-blue-300 font-semibold">${stat.win_rate}%</td></tr>`;
                 }
             });
             return `<table class="stat-table"><thead><tr><th>ระยะ</th><th>กำไร</th><th>โอกาส</th></tr></thead><tbody>${rows}</tbody></table>`;
@@ -130,42 +127,46 @@
                         <div class="card overflow-hidden">
                             <div class="market-header p-3 border-b border-slate-700 flex justify-between items-center">
                                 <span class="text-xl font-black text-white uppercase tracking-wider">${mKey}</span>
-                                <span class="text-xs bg-indigo-600 px-3 py-1 rounded-full text-white font-bold shadow-md">
-                                    งวดถัดไป: ${nextDate}
-                                </span>
+                                <span class="text-xs bg-indigo-600 px-3 py-1 rounded-full text-white font-bold shadow-md">งวดถัดไป: ${nextDate}</span>
                             </div>
                             
                             <div class="grid grid-cols-2 p-3 gap-3">
                                 <div class="side-panel border-t-2 border-t-slate-700">
                                     <div class="flex justify-between items-start mb-2">
                                         <div>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase">รูดหน้า</p>
-                                            <p class="text-3xl font-black ${getColorClass(m.front.status)}">
-                                                ${m.front.pair[0]},${m.front.pair[1]}
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase">รูดหน้า</p>
+                                                ${getStatusBadge(m.front?.status)}
+                                            </div>
+                                            <p class="text-3xl font-black ${getColorClass(m.front?.status)}">
+                                                ${m.front?.pair ? m.front.pair[0]+','+m.front.pair[1] : '--'}
                                             </p>
                                         </div>
                                         <div class="text-right">
                                             <p class="text-[9px] text-slate-500">ลงเงิน</p>
-                                            <p class="text-sm font-bold text-white">${m.front.bet_size}%</p>
+                                            <p class="text-sm font-bold text-white">${m.front?.bet_size ?? 0}%</p>
                                         </div>
                                     </div>
-                                    ${generateStatTable(m.front.history)}
+                                    ${generateStatTable(m.front?.history)}
                                 </div>
 
                                 <div class="side-panel border-t-2 border-t-slate-700">
                                     <div class="flex justify-between items-start mb-2">
                                         <div>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase">รูดหลัง</p>
-                                            <p class="text-3xl font-black ${getColorClass(m.back.status)}">
-                                                ${m.back.pair[0]},${m.back.pair[1]}
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase">รูดหลัง</p>
+                                                ${getStatusBadge(m.back?.status)}
+                                            </div>
+                                            <p class="text-3xl font-black ${getColorClass(m.back?.status)}">
+                                                ${m.back?.pair ? m.back.pair[0]+','+m.back.pair[1] : '--'}
                                             </p>
                                         </div>
                                         <div class="text-right">
                                             <p class="text-[9px] text-slate-500">ลงเงิน</p>
-                                            <p class="text-sm font-bold text-white">${m.back.bet_size}%</p>
+                                            <p class="text-sm font-bold text-white">${m.back?.bet_size ?? 0}%</p>
                                         </div>
                                     </div>
-                                    ${generateStatTable(m.back.history)}
+                                    ${generateStatTable(m.back?.history)}
                                 </div>
                             </div>
                         </div>
@@ -173,15 +174,13 @@
                     container.innerHTML += marketHTML;
                 });
 
-                // แสดงผล Last Sync แบบ วัน/เดือน/ปี เวลา:นาที:วินาที
                 const now = new Date();
-                const dSync = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
-                const tSync = now.toLocaleTimeString('th-TH', { hour12: false });
-                document.getElementById('last-sync').innerText = dSync + " " + tSync;
+                document.getElementById('last-sync').innerText = 
+                    `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${now.toLocaleTimeString('th-TH', { hour12: false })}`;
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('market-list').innerHTML = `<div class="col-span-full text-center p-4 text-red-500">Error: ไม่พบข้อมูลหรือไฟล์พัง</div>`;
+                document.getElementById('market-list').innerHTML = `<div class="col-span-full text-center p-4 text-red-500">⚠️ Error: โหลดข้อมูลไม่สำเร็จ หรือไฟล์ JSON ภายในระบบมีปัญหา</div>`;
             }
         }
 
