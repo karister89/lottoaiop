@@ -7,7 +7,7 @@ import os
 # ⚙️ Configuration - ทัพหน้า (Auto-Detect ดึงทุกหุ้นอัตโนมัติ)
 # =====================================================================
 SHEET_ID = "1xc4B2mhrC1VdUfOuZUhVQbDyzbSk0J4jCru9am_iLzA"
-DATA_DIR = "../data/"
+DATA_DIR = "data"
 
 def main():
     print("⏳ [QL Fetcher] กำลังเชื่อมต่อ Google Sheets API...")
