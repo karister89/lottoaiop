@@ -303,6 +303,28 @@ body::before{
   color:rgba(212,175,55,.5); z-index:5;
 }
 
+/* NEXT BET bar — featured card */
+.featured .next-bet-bar{
+  display:flex; align-items:center; justify-content:space-between;
+  margin:10px 0 4px;
+  padding:8px 12px;
+  border-radius:5px;
+  background:linear-gradient(90deg, rgba(212,175,55,.20), rgba(212,175,55,.06));
+  border:1px solid rgba(212,175,55,.45);
+  position:relative; z-index:4;
+}
+.featured .next-bet-bar .nb-tag{
+  font-weight:700; font-size:.66rem; letter-spacing:.18em;
+  color:var(--gold-1);
+  text-transform:uppercase;
+}
+.featured .next-bet-bar .nb-date{
+  font-family:var(--mono);
+  font-weight:700; font-size:.92rem;
+  color:#fff7d6;
+  letter-spacing:.04em;
+}
+
 /* SIDEBAR */
 .side{ display:flex; flex-direction:column; gap:18px; }
 
@@ -414,7 +436,18 @@ body::before{
   gap:22px; margin-bottom:22px;
 }
 @media (max-width:880px){ .charts-grid{ grid-template-columns:1fr; }}
-.chart-wrap{ position:relative; height:280px;}
+.chart-wrap{
+  position:relative;
+  width:100%;
+  height:280px;
+}
+.chart-wrap > canvas{
+  position:absolute !important;
+  inset:0;
+  width:100% !important;
+  height:100% !important;
+  display:block;
+}
 
 /* HEATMAP */
 .heatmap{
@@ -532,6 +565,10 @@ footer .anchor{
         <div class="status-line" id="f-back-status">—</div>
       </div>
     </div>
+    <div class="next-bet-bar">
+      <span class="nb-tag">⚡ NEXT BET</span>
+      <span class="nb-date" id="f-next-date">—</span>
+    </div>
     <div class="meta">
       <span id="f-serial">Nº ---</span>
       <span id="f-date">—</span>
@@ -637,15 +674,37 @@ const MARKET_NAME = params.get('m');
 const fmtMoney = n => (Number(n)||0).toLocaleString('en-US',{maximumFractionDigits:0});
 const fmtPct   = n => (Number(n)||0).toFixed(1)+'%';
 
-function statusKey(s){
-  if(!s) return 'red';
-  if(s.includes('GREEN'))  return 'green';
-  if(s.includes('YELLOW')) return 'yellow';
-  return 'red';
+/* NEXT BET DATE — last_date + 1 day, skip Sat/Sun */
+function nextBetDate(lastDate){
+  if(!lastDate) return '—';
+  const parts = String(lastDate).split('/');
+  if(parts.length !== 3) return '—';
+  const d = parseInt(parts[0],10);
+  const m = parseInt(parts[1],10);
+  const y = parseInt(parts[2],10);
+  if(!d||!m||!y) return '—';
+  const dt = new Date(y, m-1, d);
+  if(isNaN(dt.getTime())) return '—';
+  dt.setDate(dt.getDate() + 1);
+  while(dt.getDay()===0 || dt.getDay()===6){
+    dt.setDate(dt.getDate() + 1);
+  }
+  return `${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`;
 }
-function rarityOf(m){
-  const f = statusKey(m.front?.status);
-  const b = statusKey(m.back?.status);
+
+/* STATUS / RARITY — by win_rate thresholds:
+   < 25 = red · < 40 = yellow · >= 40 = green */
+function statusKey(wr){
+  const v = Number(wr) || 0;
+  if(v < 25)  return 'red';
+  if(v < 40)  return 'yellow';
+  return 'green';
+}
+function rarityOf(market, period){
+  const fWR = market.front?.history?.[period]?.win_rate || 0;
+  const bWR = market.back?.history?.[period]?.win_rate  || 0;
+  const f = statusKey(fWR);
+  const b = statusKey(bWR);
   if(f==='green'  && b==='green')  return 'p-sec';
   if((f==='green' && b==='yellow') || (f==='yellow' && b==='green')) return 'p-sr';
   if((f==='green' && b==='red')    || (f==='red'    && b==='green')) return 'sr';
@@ -653,6 +712,12 @@ function rarityOf(m){
   if((f==='yellow'&& b==='red')    || (f==='red'    && b==='yellow')) return 'uc';
   return 'c';
 }
+/* Display label for status */
+const STATUS_LABEL = {
+  green:  '🟢 GREEN',
+  yellow: '🟡 YELLOW',
+  red:    '🔴 RED'
+};
 const RARITY_LABEL = {'p-sec':'P-SEC','p-sr':'P-SR','sr':'SR','r':'R','uc':'UC','c':'C'};
 
 async function loadAll(){
@@ -688,42 +753,30 @@ async function fetchRaw(name){
 
 function renderAll(){
   const m = STATE.market;
-  const r = rarityOf(m);
-  const fStatus = statusKey(m.front?.status);
-  const bStatus = statusKey(m.back?.status);
 
   document.getElementById('market-crumb').textContent = MARKET_NAME;
   document.title = `⚓ ${MARKET_NAME} — Sovereign V3`;
 
-  // featured card
-  const f = document.getElementById('featured');
-  f.dataset.rarity = r;
+  // STATIC (period-independent): name, pair numbers, dates, serial
   document.getElementById('f-name').textContent = MARKET_NAME;
-  document.getElementById('f-rarity').textContent = RARITY_LABEL[r];
-
-  // front block — pair, bet pill, status
-  const fBlock = document.getElementById('f-front-block');
-  fBlock.dataset.status = fStatus;
   document.getElementById('f-front').textContent = (m.front?.pair||['?','?']).join(' · ');
-  document.getElementById('f-front-status').textContent = m.front?.status || '—';
-
-  // back block
-  const bBlock = document.getElementById('f-back-block');
-  bBlock.dataset.status = bStatus;
   document.getElementById('f-back').textContent  = (m.back?.pair ||['?','?']).join(' · ');
-  document.getElementById('f-back-status').textContent  = m.back?.status  || '—';
 
-  // bet pills (now placed inside each pair-block, right under the numbers)
+  // bet pills (depend on bet_size from m.front/back, not on period)
   const fBet = m.front?.bet_size||0;
   const bBet = m.back?.bet_size||0;
   document.getElementById('f-front-bet').textContent = fBet>0 ? 'BET '+fBet+'%' : 'SKIP';
   document.getElementById('f-back-bet').textContent  = bBet>0 ? 'BET '+bBet+'%' : 'SKIP';
 
-  document.getElementById('f-date').textContent = m.last_date || '—';
+  // dates
+  document.getElementById('f-date').textContent = 'last · '+(m.last_date||'—');
+  document.getElementById('f-next-date').textContent = nextBetDate(m.last_date);
+
   const idx = Object.keys(STATE.synergy.markets).indexOf(MARKET_NAME)+1;
   const total = Object.keys(STATE.synergy.markets).length;
   document.getElementById('f-serial').textContent = `Nº ${String(idx).padStart(3,'0')}/${String(total).padStart(3,'0')}`;
 
+  // PERIOD-DEPENDENT: rarity, status colors/labels, KPIs, charts
   renderForPeriod();
   renderCharts();
   renderHeatmap();
@@ -734,15 +787,29 @@ function renderForPeriod(){
   const m = STATE.market;
   const fH = m.front?.history?.[STATE.period] || {profit:0,win_rate:0,wins:0,invested:0};
   const bH = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0,wins:0,invested:0};
-  const fStatus = statusKey(m.front?.status);
-  const bStatus = statusKey(m.back?.status);
+
+  // STATUS computed from current period's win_rate
+  const fStatus = statusKey(fH.win_rate);
+  const bStatus = statusKey(bH.win_rate);
+  const r = rarityOf(m, STATE.period);
+
   const fBet = m.front?.bet_size||0;
   const bBet = m.back?.bet_size||0;
+
+  // === Update featured card visuals (period-dependent) ===
+  document.getElementById('featured').dataset.rarity = r;
+  document.getElementById('f-rarity').textContent = RARITY_LABEL[r];
+  document.getElementById('f-front-block').dataset.status = fStatus;
+  document.getElementById('f-back-block').dataset.status  = bStatus;
+  document.getElementById('f-front-status').textContent = STATUS_LABEL[fStatus] +
+    ' · WR ' + fmtPct(fH.win_rate||0);
+  document.getElementById('f-back-status').textContent  = STATUS_LABEL[bStatus] +
+    ' · WR ' + fmtPct(bH.win_rate||0);
 
   const cls = v => v>0?'up':v<0?'down':'';
   const sign = v => v>=0?'+':'';
 
-  // Per-side metrics
+  // Per-side metrics for KPIs
   const sideStats = (h, status, bet) => {
     const profit = h.profit||0;
     const inv = h.invested||0;
@@ -755,7 +822,7 @@ function renderForPeriod(){
   const F = sideStats(fH, fStatus, fBet);
   const B = sideStats(bH, bStatus, bBet);
 
-  const renderCol = (label, side, S) => `
+  const renderCol = (label, S) => `
     <div class="kpi-col" data-status="${S.status}">
       <span class="corner tl"></span><span class="corner br"></span>
       <div class="col-tag">${label}</div>
@@ -771,24 +838,19 @@ function renderForPeriod(){
         <span class="v ${cls(S.roi)}">${S.roi.toFixed(2)}%</span></div>
       <div class="row"><span class="k">Allocation</span>
         <span class="v">${S.bet>0 ? S.bet+'%' : 'SKIP'}</span></div>
-      <div class="status-line">${m[side]?.status||'—'}</div>
+      <div class="status-line">${STATUS_LABEL[S.status]}</div>
     </div>
   `;
 
   document.getElementById('kpis').innerHTML =
-    renderCol('⚔ Front', 'front', F) + renderCol('⚓ Back', 'back', B);
+    renderCol('⚔ Front', F) + renderCol('⚓ Back', B);
 
-  drawFB(fH.profit, bH.profit);
+  drawFB(fH.profit, bH.profit, fStatus, bStatus);
 }
 
-function drawFB(fProfit, bProfit){
+function drawFB(fProfit, bProfit, fSt, bSt){
   const ctx = document.getElementById('chartFB');
   if(CHARTS.fb) CHARTS.fb.destroy();
-
-  // colors based on per-side status
-  const m = STATE.market;
-  const fSt = statusKey(m.front?.status);
-  const bSt = statusKey(m.back?.status);
   const colorMap = {
     green:  'rgba(110,231,183,.85)',
     yellow: 'rgba(251,191,36,.85)',
@@ -838,9 +900,9 @@ function renderCharts(){
   const fWR      = periods.map(p => m.front?.history?.[p]?.win_rate||0);
   const bWR      = periods.map(p => m.back?.history?.[p]?.win_rate||0);
 
-  // Determine colors based on status
-  const fSt = statusKey(m.front?.status);
-  const bSt = statusKey(m.back?.status);
+  // Determine colors from current period's win_rate
+  const fSt = statusKey(m.front?.history?.[STATE.period]?.win_rate);
+  const bSt = statusKey(m.back?.history?.[STATE.period]?.win_rate);
   const colorMap = { green:'#6ee7b7', yellow:'#fbbf24', red:'#fca5a5' };
   const fillMap  = { green:'rgba(110,231,183,.1)', yellow:'rgba(251,191,36,.1)', red:'rgba(252,165,165,.08)' };
 
