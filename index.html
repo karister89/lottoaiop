@@ -774,6 +774,18 @@ function statusKey(wr){
   if(v < 40)  return 'yellow';
   return 'green';
 }
+
+/* BET STATUS — for per-side number/pill colors (based on bet_size, NOT win_rate)
+   bet 0     → red    (skip)
+   bet > 0   → yellow (50, 80 = cautious)
+   bet ≥ 100 → green  (full confidence) */
+function betStatusKey(bet){
+  const v = Number(bet) || 0;
+  if(v <= 0)   return 'red';
+  if(v >= 100) return 'green';
+  return 'yellow';
+}
+
 function rarityOf(market, period){
   const fWR = market.front?.history?.[period]?.win_rate || 0;
   const bWR = market.back?.history?.[period]?.win_rate  || 0;
@@ -897,13 +909,15 @@ function renderCards(){
   const items = sortedEntries.map(([name,m],i)=>{
     const fHist = m.front?.history?.[STATE.period] || {profit:0,win_rate:0,wins:0,invested:0};
     const bHist = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0,wins:0,invested:0};
-    const fStatus = statusKey(fHist.win_rate);
-    const bStatus = statusKey(bHist.win_rate);
+    const fBet = m.front?.bet_size||0;
+    const bBet = m.back?.bet_size||0;
+    /* Per-side coloring follows bet_size (not win_rate) */
+    const fStatus = betStatusKey(fBet);
+    const bStatus = betStatusKey(bBet);
+    /* Rarity (frame color) still follows win_rate */
     const r = rarityOf(m, STATE.period);
     const fPair = (m.front?.pair||['?','?']).join(' · ');
     const bPair = (m.back?.pair ||['?','?']).join(' · ');
-    const fBet = m.front?.bet_size||0;
-    const bBet = m.back?.bet_size||0;
     const serial = String(i+1).padStart(3,'0')+'/'+String(total).padStart(3,'0');
     const next = nextBetDate(m.last_date);
 
