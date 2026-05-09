@@ -8,7 +8,7 @@ DATA_DIR = "data"
 OPTIMIZED_FILE = os.path.join(DATA_DIR, "optimized_pairs.json")
 FINAL_OUT = os.path.join(DATA_DIR, "final_synergy.json")
 
-PAYOUT_RATE = 90.0  # เรทจ่าย (บาท)
+PAYOUT_RATE = 100.0  # เรทจ่าย (บาท)
 COST_PER_POS = 20.0 # ทุนแยกฝั่งละ 20 บาท (รูดหน้า 2 เลข / รูดหลัง 2 เลข)
 
 def calculate_period_stats_split(draws, pair, position, days):
