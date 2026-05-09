@@ -1,59 +1,115 @@
-<div class="dashboard-container">
-    <div class="header-section">
-        <h2>🚀 Sovereign Portfolio Command Center</h2>
-        <div class="time-tabs">
-            <button class="tab-btn active" onclick="updateView('30d')">30 Days</button>
-            <button class="tab-btn" onclick="updateView('60d')">60 Days</button>
-            <button class="tab-btn" onclick="updateView('90d')">90 Days</button>
-        </div>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign V3 - Command Center</title>
+    <style>
+        :root { --primary: #2563eb; --success: #22c55e; --danger: #ef4444; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        
+        /* Dashboard Header */
+        .dashboard-header { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+        .stat-card .label { font-size: 0.85rem; color: #64748b; display: block; margin-bottom: 5px; }
+        .stat-card .value { font-size: 1.5rem; font-weight: bold; color: #1e293b; }
+        
+        /* Time Tabs */
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 8px 16px; border: none; background: #e2e8f0; border-radius: 20px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        /* Market List (แบบเดิมที่คุ้นเคย) */
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .market-item { background: white; border-radius: 12px; padding: 15px; border-left: 5px solid #cbd5e1; transition: 0.2s; cursor: pointer; }
+        .market-item:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .market-item.green { border-left-color: var(--success); }
+        .market-item.red { border-left-color: var(--danger); opacity: 0.8; }
+        
+        .market-name { font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; }
+        .pair-display { margin-top: 10px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
+        .mini-stats { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.85rem; color: #64748b; }
+        
+        .profit-plus { color: var(--success); }
+        .profit-minus { color: var(--danger); }
+    </style>
+</head>
+<body>
+
+    <div class="tabs">
+        <button class="tab-btn" onclick="render('15d')">15 วัน</button>
+        <button class="tab-btn active" onclick="render('30d')">30 วัน</button>
+        <button class="tab-btn" onclick="render('60d')">60 วัน</button>
+        <button class="tab-btn" onclick="render('90d')">90 วัน</button>
+        <button class="tab-btn" onclick="render('100d')">100 วัน</button>
     </div>
 
-    <div class="summary-grid">
-        <div class="card profit">
+    <div class="dashboard-header">
+        <div class="stat-card">
             <span class="label">NET PROFIT</span>
-            <span id="total-profit" class="value">0.00 ฿</span>
+            <div id="total-profit" class="value">0.00</div>
         </div>
-        <div class="card invested">
+        <div class="stat-card">
             <span class="label">INVESTED</span>
-            <span id="total-invested" class="value">0.00 ฿</span>
+            <div id="total-invest" class="value">0.00</div>
         </div>
-        <div class="card wins">
-            <span class="label">TOTAL WINS</span>
-            <span id="total-wins" class="value">0</span>
-        </div>
-        <div class="card winrate">
-            <span class="label">WIN-RATE</span>
-            <span id="avg-winrate" class="value">0%</span>
+        <div class="stat-card">
+            <span class="label">WIN RATE</span>
+            <div id="total-wr" class="value">0%</div>
         </div>
     </div>
-</div>
 
-<script>
-let dashboardData = {};
+    <div id="market-list" class="market-grid">
+        </div>
 
-async function initDashboard() {
-    const response = await fetch('data/final_synergy.json');
-    dashboardData = await response.json();
-    updateView('30d'); // เริ่มต้นที่ 30 วัน
-}
+    <script>
+        let data = {};
 
-function updateView(period) {
-    // อัปเดตปุ่ม Active
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+        async function loadData() {
+            const res = await fetch('data/final_synergy.json');
+            data = await res.json();
+            render('30d'); // เริ่มต้นที่ 30 วัน
+        }
 
-    const summary = dashboardData.portfolio[period];
-    const winRate = (summary.wins / (summary.invested / 20) * 100).toFixed(2);
+        function render(period) {
+            // อัปเดตสถานะปุ่ม
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.toggle('active', b.innerText.includes(period.replace('d','')));
+            });
 
-    // แสดงผลข้อมูลรวม
-    document.getElementById('total-profit').innerText = summary.profit.toLocaleString() + " ฿";
-    document.getElementById('total-invested').innerText = summary.invested.toLocaleString() + " ฿";
-    document.getElementById('total-wins').innerText = summary.wins;
-    document.getElementById('avg-winrate').innerText = winRate + "%";
-    
-    // อัปเดตรายชื่อตลาด (วนลูปสร้างตลาดตามข้อมูลที่มีใน dashboardData.markets)
-    renderMarketCards(period);
-}
-// เรียกใช้เมื่อโหลดหน้า
-initDashboard();
-</script>
+            // อัปเดต Dashboard
+            const portfolio = data.portfolio[period];
+            document.getElementById('total-profit').innerText = portfolio.profit.toLocaleString() + " ฿";
+            document.getElementById('total-invest').innerText = portfolio.invested.toLocaleString() + " ฿";
+            const wr = (portfolio.wins / (portfolio.invested / 20) * 100 || 0).toFixed(1);
+            document.getElementById('total-wr').innerText = wr + "%";
+
+            // อัปเดตรายการตลาด
+            let html = '';
+            for (let [name, m] of Object.entries(data.markets)) {
+                const f = m.front.history[period];
+                const b = m.back.history[period];
+                const statusClass = (m.front.bet_size > 0 || m.back.bet_size > 0) ? 'green' : 'red';
+                
+                html += `
+                <div class="market-item ${statusClass}" onclick="location.href='detail.html?m=${name}'">
+                    <div class="market-name">
+                        <span>${name.toUpperCase()}</span>
+                        <small>${m.last_date}</small>
+                    </div>
+                    <div class="pair-display">
+                        หน้า: ${m.front.pair.join(',')} | หลัง: ${m.back.pair.join(',')}
+                    </div>
+                    <div class="mini-stats">
+                        <span>กำไร: <b class="${f.profit + b.profit >= 0 ? 'profit-plus' : 'profit-minus'}">${(f.profit + b.profit).toLocaleString()}</b></span>
+                        <span>WinRate: ${( (f.win_rate + b.win_rate)/2 ).toFixed(1)}%</span>
+                    </div>
+                </div>`;
+            }
+            document.getElementById('market-list').innerHTML = html;
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
