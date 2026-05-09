@@ -12,7 +12,7 @@ PAYOUT_RATE = 100.0
 COST_PER_POS = 20.0 
 
 def calculate_period_stats_split(draws, pair, position, days):
-    """ฟังก์ชันคำนวณกำไร-ขาดทุนย้อนหลังแยกช่วงเวลา 30/60/90 วัน"""
+    """คำนวณสถิติกำไร-ขาดทุนย้อนหลังแยกช่วงเวลา 30/60/90 วัน"""
     subset = draws[:days]
     if not subset or not pair: 
         return {"profit": 0, "win_rate": 0, "wins": 0, "invested": 0}
@@ -42,17 +42,21 @@ def calculate_period_stats_split(draws, pair, position, days):
 
 def main():
     print("\n" + "="*75)
-    print("💰 [Core Money V3] กำลังสรุปบัญชีสำหรับ Dashboard (30/60/90 วัน)...")
+    print("💰 [Core Money V3] กำลังสร้างไฟล์สรุปบัญชี (30/60/90 วัน)...")
     print("="*75)
     
+    # สร้างโฟลเดอร์ data หากไม่มี
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
+        print(f"📁 สร้างโฟลเดอร์ {DATA_DIR} เรียบร้อย")
+
     if not os.path.exists(OPTIMIZED_FILE):
-        print("❌ Error: ไม่พบไฟล์ optimized_pairs.json")
+        print(f"❌ Error: ไม่พบไฟล์ {OPTIMIZED_FILE} (กรุณารัน Optimizer ก่อน)")
         return
         
     with open(OPTIMIZED_FILE, 'r', encoding='utf-8') as f: 
         opt_data = json.load(f).get("markets", {})
     
-    # ปรับช่วงเวลาเป็น 30d, 60d, 90d ตามที่ต้องการ
     final_dashboard = {
         "portfolio": {
             "30d": {"profit": 0, "invested": 0, "wins": 0},
@@ -72,10 +76,9 @@ def main():
             draws = json.load(f)
 
         latest_date = draws[0].get('date', '') if draws else ""
-
         market_result = {"last_date": latest_date, "front": {}, "back": {}}
 
-        # คำนวณฝั่งหน้า
+        # ประมวลผลฝั่งหน้า (Front)
         if data.get("front"):
             f_pair = data["front"]["pair"]
             f_bet = data["front"]["bet_size"]
@@ -87,7 +90,7 @@ def main():
                     final_dashboard["portfolio"][p]["invested"] += f_stats[p]["invested"]
                     final_dashboard["portfolio"][p]["wins"] += f_stats[p]["wins"]
 
-        # คำนวณฝั่งหลัง
+        # ประมวลผลฝั่งหลัง (Back)
         if data.get("back"):
             b_pair = data["back"]["pair"]
             b_bet = data["back"]["bet_size"]
@@ -104,4 +107,8 @@ def main():
     with open(FINAL_OUT, 'w', encoding='utf-8') as f:
         json.dump(final_dashboard, f, ensure_ascii=False, indent=4)
         
-    print(f"✅ บันทึกข้อมูลสำเร็จ! พร้อมแสดงผลกำรวมสะสม 90 วัน")
+    print(f"✅ บันทึกไฟล์สำเร็จ -> {FINAL_OUT}")
+    print("="*75 + "\n")
+
+if __name__ == "__main__":
+    main()
