@@ -5,18 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>⚓ Sovereign V3 — Captain's Treasure Vault</title>
 
-<!-- Premium Fonts -->
+<!-- Clean fonts: Sarabun + Mono -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <style>
-/* =========================================================
-   ROOT TOKENS — Premium TCG Treasure Vault
-   ========================================================= */
 :root{
   /* Surface */
   --abyss:        #05080f;
@@ -24,32 +20,38 @@
   --midnight:     #111a2e;
   --parchment:    #f4e9c8;
 
-  /* Gold Leaf (24K) */
+  /* Gold (chrome only) */
   --gold-1:       #f8e9a1;
   --gold-2:       #d4af37;
   --gold-3:       #b8941e;
-  --gold-4:       #8b6914;
-  --gold-soft:    rgba(212,175,55,.15);
 
-  /* Rarity */
-  --sr-gold:      #ffcd3c;     /* Super Rare → GREEN */
-  --r-silver:     #c9d1d9;     /* Rare → YELLOW */
-  --c-bronze:     #b87333;     /* Common → RED */
+  /* RARITY COLORS — user-defined 6-tier */
+  --p-sec:  #ff6b35;   /* Green + Green */
+  --p-sr:   #ffd60a;   /* Green + Yellow */
+  --sr:     #f59e0b;   /* Green + Red */
+  --r:      #818cf8;   /* Yellow + Yellow */
+  --uc:     #22c55e;   /* Yellow + Red */
+  --c:      #94a3b8;   /* Red + Red */
 
-  /* Semantic */
-  --emerald:      #10b981;
-  --emerald-glow: rgba(16,185,129,.45);
-  --crimson:      #dc2626;
-  --crimson-glow: rgba(220,38,38,.45);
-  --amber:        #f59e0b;
+  /* STATUS COLORS — for per-side number/bet pills */
+  --st-green-1:  #d8ffe8;
+  --st-green-2:  #6ee7b7;
+  --st-green-3:  #047857;
+  --st-yellow-1: #fef9c3;
+  --st-yellow-2: #fbbf24;
+  --st-yellow-3: #b45309;
+  --st-red-1:    #fee2e2;
+  --st-red-2:    #fca5a5;
+  --st-red-3:    #991b1b;
 
-  /* Type */
-  --display: 'Cinzel Decorative', serif;
-  --serif:   'Cormorant Garamond', serif;
-  --thai:    'Sarabun', sans-serif;
-  --num:     'Cinzel', serif;
+  --emerald-glow: rgba(16,185,129,.4);
+  --amber-glow:   rgba(251,191,36,.35);
+  --crimson-glow: rgba(220,38,38,.3);
 
-  /* Effects */
+  /* Type — clean & readable */
+  --font: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+
   --foil: linear-gradient(125deg,
     transparent 0%, transparent 30%,
     rgba(255,255,255,.08) 38%,
@@ -60,201 +62,150 @@
     transparent 70%, transparent 100%);
 }
 
-/* =========================================================
-   GLOBAL
-   ========================================================= */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%}
 
 body{
-  font-family: var(--thai);
+  font-family: var(--font);
   color: var(--parchment);
   background:
     radial-gradient(ellipse at 20% 10%, rgba(180,120,40,.08), transparent 55%),
     radial-gradient(ellipse at 80% 90%, rgba(40,80,160,.10), transparent 55%),
-    linear-gradient(180deg, var(--abyss) 0%, var(--deepsea) 50%, var(--abyss) 100%);
+    linear-gradient(180deg, var(--abyss), var(--deepsea) 50%, var(--abyss));
   background-attachment: fixed;
   overflow-x: hidden;
   position: relative;
 }
-
-/* Treasure-map noise + compass texture overlay */
 body::before{
-  content:"";
-  position: fixed; inset:0;
-  pointer-events:none; z-index:0;
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
   background-image:
     radial-gradient(circle at 50% 50%, rgba(212,175,55,.05) 0%, transparent 70%),
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='.9'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .4  0 0 0 0 .2  0 0 0 .08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: .6;
-  mix-blend-mode: overlay;
+  opacity:.6; mix-blend-mode:overlay;
 }
-
-/* faint compass rose top-right */
 body::after{
-  content:"";
-  position: fixed; top:-160px; right:-160px;
-  width:520px; height:520px;
-  pointer-events:none; z-index:0;
+  content:""; position:fixed; top:-160px; right:-160px;
+  width:520px; height:520px; pointer-events:none; z-index:0;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='none' stroke='%23d4af37' stroke-width='.3' opacity='.5'><circle cx='100' cy='100' r='90'/><circle cx='100' cy='100' r='70'/><circle cx='100' cy='100' r='50'/><circle cx='100' cy='100' r='30'/><path d='M100 10 L100 190 M10 100 L190 100 M30 30 L170 170 M170 30 L30 170'/><path d='M100 10 L110 100 L100 190 L90 100 Z' fill='%23d4af37' opacity='.3'/><path d='M10 100 L100 90 L190 100 L100 110 Z' fill='%23d4af37' opacity='.3'/></g></svg>");
-  background-size: contain;
-  opacity:.18;
+  background-size:contain; opacity:.18;
   animation: spin 240s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .wrap{
-  position: relative; z-index: 1;
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 32px clamp(16px, 3vw, 48px) 80px;
+  position:relative; z-index:1;
+  max-width:1320px; margin:0 auto;
+  padding:32px clamp(16px, 3vw, 48px) 80px;
 }
 
-/* =========================================================
-   HEADER — Treasure Vault Banner
-   ========================================================= */
+/* HEADER */
 .banner{
-  position: relative;
-  text-align: center;
-  padding: 28px 24px 36px;
-  margin-bottom: 36px;
-  border-top: 1px solid var(--gold-3);
-  border-bottom: 1px solid var(--gold-3);
-  background:
-    linear-gradient(180deg, transparent, rgba(212,175,55,.05), transparent);
+  position:relative; text-align:center;
+  padding:28px 24px 36px;
+  margin-bottom:36px;
+  border-top:1px solid var(--gold-3);
+  border-bottom:1px solid var(--gold-3);
+  background:linear-gradient(180deg, transparent, rgba(212,175,55,.05), transparent);
 }
 .banner::before, .banner::after{
   content:""; position:absolute; left:0; right:0; height:1px;
-  background: linear-gradient(90deg, transparent, var(--gold-2), transparent);
+  background:linear-gradient(90deg, transparent, var(--gold-2), transparent);
 }
 .banner::before{ top:5px; }
 .banner::after { bottom:5px; }
 
 .crest{
   display:inline-flex; align-items:center; gap:14px;
-  font-family: var(--display);
-  letter-spacing:.18em;
-  color: var(--gold-1);
-  font-size: clamp(.7rem, 1.4vw, .85rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-  text-shadow: 0 0 18px rgba(212,175,55,.4);
+  font-weight:700; letter-spacing:.18em;
+  color:var(--gold-1);
+  font-size:clamp(.7rem, 1.4vw, .82rem);
+  text-transform:uppercase;
+  margin-bottom:14px;
+  text-shadow:0 0 18px rgba(212,175,55,.4);
 }
-.crest .skull{ font-size:1.4em; filter: drop-shadow(0 0 6px rgba(255,210,100,.5));}
+.crest .skull{ font-size:1.4em; filter:drop-shadow(0 0 6px rgba(255,210,100,.5));}
 
 h1.title{
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: clamp(2rem, 5.5vw, 3.6rem);
-  line-height: 1;
-  letter-spacing: .04em;
-  background: linear-gradient(180deg, #fff7d6 0%, var(--gold-1) 35%, var(--gold-2) 60%, var(--gold-4) 100%);
-  -webkit-background-clip: text; background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 2px 0 rgba(0,0,0,.5)) drop-shadow(0 0 24px rgba(212,175,55,.25));
-  margin-bottom: 8px;
+  font-weight:800;
+  font-size:clamp(2rem, 5.5vw, 3.6rem);
+  line-height:1; letter-spacing:.02em;
+  background:linear-gradient(180deg, #fff7d6, var(--gold-1) 35%, var(--gold-2) 60%, var(--gold-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.5)) drop-shadow(0 0 24px rgba(212,175,55,.25));
+  margin-bottom:8px;
 }
 .subtitle{
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(.95rem, 1.6vw, 1.15rem);
-  color: rgba(244,233,200,.7);
-  letter-spacing: .04em;
+  font-size:clamp(.95rem, 1.6vw, 1.1rem);
+  color:rgba(244,233,200,.7); letter-spacing:.04em; font-weight:400;
 }
 .live-pill{
   display:inline-flex; align-items:center; gap:8px;
-  margin-top: 14px;
-  padding: 6px 14px;
-  border: 1px solid var(--gold-3);
-  border-radius: 999px;
-  font-size: .78rem;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--gold-1);
-  background: rgba(212,175,55,.06);
+  margin-top:14px; padding:6px 14px;
+  border:1px solid var(--gold-3); border-radius:999px;
+  font-size:.78rem; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--gold-1);
+  background:rgba(212,175,55,.06);
 }
 .live-pill .dot{
   width:8px; height:8px; border-radius:50%;
-  background: var(--emerald);
-  box-shadow: 0 0 10px var(--emerald-glow);
-  animation: pulse 1.6s ease-in-out infinite;
+  background:var(--st-green-2);
+  box-shadow:0 0 10px var(--emerald-glow);
+  animation:pulse 1.6s ease-in-out infinite;
 }
 @keyframes pulse{50%{opacity:.4; transform:scale(.8)}}
 
-/* =========================================================
-   PERIOD SELECTOR — Wax Seal Tabs
-   ========================================================= */
+/* TABS */
 .tabs{
   display:flex; justify-content:center; gap:14px;
-  margin: 0 0 32px;
-  flex-wrap: wrap;
+  margin:0 0 32px; flex-wrap:wrap;
 }
 .tab{
-  position: relative;
-  font-family: var(--display);
-  font-weight: 700;
-  letter-spacing: .14em;
-  font-size: .82rem;
-  padding: 12px 26px;
-  border: 1px solid rgba(212,175,55,.35);
-  border-radius: 4px;
-  background: linear-gradient(180deg, rgba(20,28,48,.7), rgba(10,14,26,.9));
-  color: rgba(244,233,200,.6);
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all .35s cubic-bezier(.2,.8,.2,1);
-  backdrop-filter: blur(4px);
+  font-family:var(--font); font-weight:700; letter-spacing:.14em;
+  font-size:.78rem; padding:11px 24px;
+  border:1px solid rgba(212,175,55,.35); border-radius:4px;
+  background:linear-gradient(180deg, rgba(20,28,48,.7), rgba(10,14,26,.9));
+  color:rgba(244,233,200,.65);
+  cursor:pointer; text-transform:uppercase;
+  transition:all .35s cubic-bezier(.2,.8,.2,1);
+  backdrop-filter:blur(4px);
 }
 .tab:hover{
-  color: var(--gold-1);
-  border-color: var(--gold-2);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px -4px rgba(212,175,55,.25);
+  color:var(--gold-1); border-color:var(--gold-2);
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px -4px rgba(212,175,55,.25);
 }
 .tab.active{
-  color: var(--abyss);
-  background: linear-gradient(180deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
-  border-color: var(--gold-1);
-  box-shadow:
-    0 0 0 1px var(--gold-4),
-    0 6px 22px -4px rgba(212,175,55,.55),
-    inset 0 1px 0 rgba(255,255,255,.5);
+  color:var(--abyss);
+  background:linear-gradient(180deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
+  border-color:var(--gold-1);
+  box-shadow:0 0 0 1px var(--gold-3),
+             0 6px 22px -4px rgba(212,175,55,.55),
+             inset 0 1px 0 rgba(255,255,255,.5);
 }
 
-/* =========================================================
-   PORTFOLIO HERO — Open Treasure Chest
-   ========================================================= */
+/* HERO STATS */
 .hero{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-  margin-bottom: 36px;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:18px; margin-bottom:36px;
 }
 .hero-card{
-  position: relative;
-  padding: 22px 24px 24px;
-  border: 1px solid rgba(212,175,55,.3);
-  background:
-    linear-gradient(180deg, rgba(20,28,48,.85), rgba(10,14,26,.95));
-  overflow: hidden;
-  transition: transform .3s ease;
+  position:relative; padding:22px 24px 24px;
+  border:1px solid rgba(212,175,55,.3);
+  background:linear-gradient(180deg, rgba(20,28,48,.85), rgba(10,14,26,.95));
+  overflow:hidden; transition:transform .3s ease;
 }
 .hero-card::before{
   content:""; position:absolute; inset:0;
-  background: var(--foil);
-  background-size: 200% 200%;
-  opacity:0; transition: opacity .6s, background-position .8s;
-  pointer-events:none;
+  background:var(--foil); background-size:200% 200%;
+  opacity:0; transition:opacity .6s, background-position .8s; pointer-events:none;
 }
-.hero-card:hover{ transform: translateY(-3px); }
-.hero-card:hover::before{ opacity:.6; background-position: 0% 100%; }
+.hero-card:hover{ transform:translateY(-3px);}
+.hero-card:hover::before{ opacity:.6; background-position:0% 100%;}
 
-/* corner ornaments */
 .hero-card .corner{
   position:absolute; width:16px; height:16px;
-  border: 1px solid var(--gold-2);
+  border:1px solid var(--gold-2);
 }
 .hero-card .corner.tl{ top:6px; left:6px; border-right:none; border-bottom:none;}
 .hero-card .corner.tr{ top:6px; right:6px; border-left:none; border-bottom:none;}
@@ -262,364 +213,362 @@ h1.title{
 .hero-card .corner.br{ bottom:6px; right:6px; border-left:none; border-top:none;}
 
 .hero-card .lbl{
-  font-family: var(--display);
-  font-size: .68rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--gold-1);
-  opacity:.85;
-  margin-bottom: 10px;
+  font-weight:600; font-size:.72rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--gold-1); opacity:.85;
+  margin-bottom:10px;
   display:flex; align-items:center; gap:8px;
 }
-.hero-card .lbl::before{
-  content:""; width:14px; height:1px; background: var(--gold-2);
-}
+.hero-card .lbl::before{ content:""; width:14px; height:1px; background:var(--gold-2);}
 .hero-card .val{
-  font-family: var(--num);
-  font-weight: 900;
-  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
-  line-height: 1;
-  background: linear-gradient(180deg, #fff7d6, var(--gold-1) 50%, var(--gold-3));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 0 14px rgba(212,175,55,.2));
+  font-weight:800;
+  font-size:clamp(1.7rem, 3.2vw, 2.4rem);
+  line-height:1;
+  background:linear-gradient(180deg, #fff7d6, var(--gold-1) 50%, var(--gold-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 14px rgba(212,175,55,.2));
 }
 .hero-card .val.profit-plus{
-  background: linear-gradient(180deg, #d8ffe8, #6ee7b7 50%, #047857);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 0 14px var(--emerald-glow));
+  background:linear-gradient(180deg, var(--st-green-1), var(--st-green-2) 50%, var(--st-green-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 14px var(--emerald-glow));
 }
 .hero-card .val.profit-minus{
-  background: linear-gradient(180deg, #ffe1e1, #fca5a5 50%, #991b1b);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 0 14px var(--crimson-glow));
+  background:linear-gradient(180deg, var(--st-red-1), var(--st-red-2) 50%, var(--st-red-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 14px var(--crimson-glow));
 }
 .hero-card .sub{
-  margin-top: 8px;
-  font-size: .8rem;
-  color: rgba(244,233,200,.55);
-  font-family: var(--serif); font-style: italic;
+  margin-top:8px; font-size:.82rem;
+  color:rgba(244,233,200,.55); font-style:italic;
 }
 
-/* =========================================================
-   ANALYTICS PANELS
-   ========================================================= */
+/* ANALYTICS */
 .analytics{
-  display:grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 22px;
-  margin-bottom: 44px;
+  display:grid; grid-template-columns:1.3fr 1fr;
+  gap:22px; margin-bottom:44px;
 }
-@media (max-width: 880px){ .analytics{ grid-template-columns:1fr; } }
+@media (max-width:880px){ .analytics{ grid-template-columns:1fr; } }
 
 .panel{
-  position: relative;
-  padding: 22px 24px 18px;
-  background:
-    linear-gradient(180deg, rgba(20,28,48,.85), rgba(8,12,22,.95));
-  border: 1px solid rgba(212,175,55,.25);
-  overflow: hidden;
+  position:relative; padding:22px 24px 18px;
+  background:linear-gradient(180deg, rgba(20,28,48,.85), rgba(8,12,22,.95));
+  border:1px solid rgba(212,175,55,.25);
+  overflow:hidden;
 }
 .panel-title{
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: .85rem;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--gold-1);
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(212,175,55,.2);
+  font-weight:700; font-size:.88rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--gold-1);
+  margin-bottom:14px; padding-bottom:12px;
+  border-bottom:1px solid rgba(212,175,55,.2);
   display:flex; justify-content:space-between; align-items:center;
 }
 .panel-title .ornament{
-  font-size:.7rem; opacity:.6; letter-spacing:.05em;
-  font-family: var(--serif); font-style: italic;
+  font-size:.78rem; opacity:.65; letter-spacing:.04em;
+  font-style:italic; text-transform:none; font-weight:400;
 }
-.chart-wrap{ position:relative; height: 280px; }
+.chart-wrap{ position:relative; height:280px; }
 
-/* =========================================================
-   MARKET CARDS — TCG SHOWCASE GRID
-   ========================================================= */
+/* COLLECTION */
 .section-head{
   display:flex; justify-content:space-between; align-items:flex-end;
-  margin-bottom: 22px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(212,175,55,.2);
+  margin-bottom:22px; padding-bottom:14px;
+  border-bottom:1px solid rgba(212,175,55,.2);
+  gap:14px; flex-wrap:wrap;
 }
 .section-head h2{
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
-  letter-spacing: .05em;
-  background: linear-gradient(180deg, #fff7d6, var(--gold-2));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  font-weight:800; font-size:clamp(1.3rem, 2.6vw, 1.8rem);
+  letter-spacing:.03em;
+  background:linear-gradient(180deg, #fff7d6, var(--gold-2));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.section-head .legend{ display:flex; gap:14px; font-size:.78rem; color: rgba(244,233,200,.65);}
-.section-head .legend span{ display:inline-flex; align-items:center; gap:6px;}
-.section-head .legend .dot{ width:8px; height:8px; border-radius:2px; }
-.legend .sr{ background: var(--sr-gold);}
-.legend .r{  background: var(--r-silver);}
-.legend .c{  background: var(--c-bronze);}
+.legend{
+  display:flex; gap:10px; flex-wrap:wrap;
+  font-size:.74rem; color:rgba(244,233,200,.7);
+}
+.legend span{
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 9px; border-radius:3px;
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(212,175,55,.15);
+  font-weight:600; letter-spacing:.08em;
+}
+.legend .dot{ width:8px; height:8px; border-radius:2px; }
+.legend .dot.p-sec { background:var(--p-sec); box-shadow:0 0 6px var(--p-sec);}
+.legend .dot.p-sr  { background:var(--p-sr);  box-shadow:0 0 6px var(--p-sr);}
+.legend .dot.sr    { background:var(--sr);    box-shadow:0 0 6px var(--sr);}
+.legend .dot.r     { background:var(--r);     box-shadow:0 0 6px var(--r);}
+.legend .dot.uc    { background:var(--uc);    box-shadow:0 0 6px var(--uc);}
+.legend .dot.c     { background:var(--c);     box-shadow:0 0 6px var(--c);}
 
 .grid{
   display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 26px;
+  grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));
+  gap:26px;
 }
 
-/* ---- THE CARD ITSELF ---------------------------------- */
+/* CARD */
 .card{
-  position: relative;
-  aspect-ratio: 5 / 7.2;
-  border-radius: 14px;
-  cursor: pointer;
-  isolation: isolate;
-  transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s;
-  perspective: 1200px;
-  background: var(--midnight);
+  position:relative; aspect-ratio:5 / 7.4;
+  border-radius:14px; cursor:pointer;
+  isolation:isolate;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  perspective:1200px;
+  background:var(--midnight);
 }
 .card:hover{
-  transform: translateY(-8px) rotateX(2deg) rotateY(-2deg) scale(1.02);
-  z-index: 2;
+  transform:translateY(-8px) rotateX(2deg) rotateY(-2deg) scale(1.02);
+  z-index:2;
 }
 
-/* OUTER GOLD LEAF FRAME */
 .card .frame{
-  position: absolute; inset: 0;
-  padding: 4px;
-  border-radius: 14px;
-  background: linear-gradient(135deg,
-    var(--gold-4) 0%, var(--gold-2) 25%, var(--gold-1) 50%,
-    var(--gold-2) 75%, var(--gold-4) 100%);
-  z-index:1;
+  position:absolute; inset:0; padding:4px;
+  border-radius:14px; z-index:1;
+  background:linear-gradient(135deg, #555, #aaa 50%, #555);
+}
+.card[data-rarity="p-sec"] .frame{
+  background:linear-gradient(135deg, #5a1f08 0%, var(--p-sec) 25%, #ffd0b3 50%, var(--p-sec) 75%, #5a1f08 100%);
+}
+.card[data-rarity="p-sr"] .frame{
+  background:linear-gradient(135deg, #5a4400 0%, var(--p-sr) 25%, #fff7a8 50%, var(--p-sr) 75%, #5a4400 100%);
+}
+.card[data-rarity="sr"] .frame{
+  background:linear-gradient(135deg, #533200 0%, var(--sr) 25%, #ffd590 50%, var(--sr) 75%, #533200 100%);
+}
+.card[data-rarity="r"] .frame{
+  background:linear-gradient(135deg, #1e2059 0%, var(--r) 25%, #c4caff 50%, var(--r) 75%, #1e2059 100%);
+}
+.card[data-rarity="uc"] .frame{
+  background:linear-gradient(135deg, #064521 0%, var(--uc) 25%, #b6f0c8 50%, var(--uc) 75%, #064521 100%);
+}
+.card[data-rarity="c"] .frame{
+  background:linear-gradient(135deg, #2d3540 0%, var(--c) 50%, #2d3540 100%);
+  opacity:.85;
 }
 
-/* RARITY VARIANTS */
-.card[data-rarity="r"]    .frame{ background: linear-gradient(135deg,#5b6471,#cdd2da 50%,#5b6471);}
-.card[data-rarity="c"]    .frame{ background: linear-gradient(135deg,#5a3414,var(--c-bronze) 50%,#5a3414); opacity:.85;}
-
-/* INNER BODY */
 .card .inner{
-  position: relative;
-  height: 100%;
-  border-radius: 10px;
-  padding: 14px 14px 12px;
+  position:relative; height:100%;
+  border-radius:10px; padding:14px 14px 12px;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(212,175,55,.18), transparent 55%),
     linear-gradient(180deg, #1a2342 0%, #0c1224 60%, #060a18 100%);
-  display: flex; flex-direction: column;
-  overflow: hidden;
-  z-index:2;
+  display:flex; flex-direction:column;
+  overflow:hidden; z-index:2;
+}
+.card[data-rarity="p-sec"] .inner{
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,107,53,.20), transparent 55%),
+    linear-gradient(180deg, #2a1810, #0c1224 60%, #060a18);
+}
+.card[data-rarity="p-sr"] .inner{
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,214,10,.18), transparent 55%),
+    linear-gradient(180deg, #2a2410, #0c1224 60%, #060a18);
+}
+.card[data-rarity="sr"] .inner{
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(245,158,11,.18), transparent 55%),
+    linear-gradient(180deg, #2a1f0e, #0c1224 60%, #060a18);
 }
 .card[data-rarity="r"] .inner{
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(180,200,220,.18), transparent 55%),
-    linear-gradient(180deg, #20283a 0%, #0c1224 60%, #060a18 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(129,140,248,.18), transparent 55%),
+    linear-gradient(180deg, #1a1d3a, #0c1224 60%, #060a18);
+}
+.card[data-rarity="uc"] .inner{
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(34,197,94,.18), transparent 55%),
+    linear-gradient(180deg, #0e2a1a, #0c1224 60%, #060a18);
 }
 .card[data-rarity="c"] .inner{
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(184,115,51,.15), transparent 55%),
-    linear-gradient(180deg, #2a1c12 0%, #1a0f08 60%, #0a0604 100%);
-  filter: saturate(.85);
+    radial-gradient(ellipse at 50% 0%, rgba(148,163,184,.10), transparent 55%),
+    linear-gradient(180deg, #1a1d24, #0c1018 60%, #060a18);
+  filter:saturate(.7);
 }
 
-/* HOLOGRAPHIC FOIL OVERLAY */
 .card .foil{
-  position:absolute; inset:0;
-  border-radius: 10px;
-  background: var(--foil);
-  background-size: 220% 220%;
-  background-position: 100% 0%;
-  mix-blend-mode: screen;
-  opacity: .35;
-  pointer-events: none;
-  transition: background-position .8s, opacity .4s;
-  z-index: 3;
-}
-.card:hover .foil{ background-position: 0% 100%; opacity:.7;}
-
-/* RAINBOW HOLO for SR (green status) */
-.card[data-rarity="sr"] .holo{
-  position:absolute; inset:0;
-  border-radius: 10px;
-  background: conic-gradient(from 30deg,
-    rgba(255,0,150,.18), rgba(255,200,0,.18), rgba(0,255,150,.18),
-    rgba(0,180,255,.18), rgba(180,0,255,.18), rgba(255,0,150,.18));
-  mix-blend-mode: color-dodge;
-  opacity: 0;
-  transition: opacity .5s;
+  position:absolute; inset:0; border-radius:10px;
+  background:var(--foil); background-size:220% 220%;
+  background-position:100% 0%;
+  mix-blend-mode:screen; opacity:.35;
   pointer-events:none;
+  transition:background-position .8s, opacity .4s;
   z-index:3;
 }
-.card[data-rarity="sr"]:hover .holo{ opacity:.55;}
+.card:hover .foil{ background-position:0% 100%; opacity:.7;}
 
-/* CARD HEADER STRIP */
+/* Holo only on the two premium tiers */
+.card .holo{
+  position:absolute; inset:0; border-radius:10px;
+  background:conic-gradient(from 30deg,
+    rgba(255,0,150,.18), rgba(255,200,0,.18), rgba(0,255,150,.18),
+    rgba(0,180,255,.18), rgba(180,0,255,.18), rgba(255,0,150,.18));
+  mix-blend-mode:color-dodge;
+  opacity:0; transition:opacity .5s;
+  pointer-events:none; z-index:3;
+}
+.card[data-rarity="p-sec"]:hover .holo{ opacity:.6;}
+.card[data-rarity="p-sr"]:hover .holo{ opacity:.5;}
+
+/* HEADER */
 .card .header{
   display:flex; align-items:center; justify-content:space-between;
-  padding: 4px 6px 8px;
-  border-bottom: 1px solid rgba(212,175,55,.25);
-  position: relative; z-index:4;
+  padding:4px 6px 8px;
+  border-bottom:1px solid rgba(212,175,55,.25);
+  position:relative; z-index:4;
 }
 .card .market-name{
-  font-family: var(--display);
-  font-weight: 900;
-  font-size: 1.05rem;
-  letter-spacing: .06em;
-  color: var(--gold-1);
-  text-shadow: 0 0 10px rgba(212,175,55,.4), 0 1px 0 #000;
+  font-weight:800; font-size:1.05rem; letter-spacing:.04em;
+  color:var(--gold-1);
+  text-shadow:0 0 10px rgba(212,175,55,.4), 0 1px 0 #000;
 }
-.card[data-rarity="r"] .market-name{ color:#e8edf3; text-shadow: 0 0 10px rgba(220,230,240,.3), 0 1px 0 #000;}
-.card[data-rarity="c"] .market-name{ color:#ffd6a8; text-shadow: 0 0 10px rgba(184,115,51,.4), 0 1px 0 #000;}
-
 .card .rarity-badge{
-  font-family: var(--display);
-  font-size: .68rem;
-  font-weight: 700;
-  letter-spacing: .15em;
-  padding: 3px 8px;
-  border: 1px solid currentColor;
-  border-radius: 3px;
-  background: rgba(0,0,0,.4);
+  font-weight:700; font-size:.7rem; letter-spacing:.12em;
+  padding:3px 9px; border:1px solid currentColor; border-radius:3px;
+  background:rgba(0,0,0,.45);
 }
-.card[data-rarity="sr"] .rarity-badge{ color: var(--sr-gold);}
-.card[data-rarity="r"]  .rarity-badge{ color: var(--r-silver);}
-.card[data-rarity="c"]  .rarity-badge{ color: var(--c-bronze);}
+.card[data-rarity="p-sec"] .rarity-badge{ color:var(--p-sec); text-shadow:0 0 8px rgba(255,107,53,.5);}
+.card[data-rarity="p-sr"]  .rarity-badge{ color:var(--p-sr);  text-shadow:0 0 8px rgba(255,214,10,.5);}
+.card[data-rarity="sr"]    .rarity-badge{ color:var(--sr);    text-shadow:0 0 8px rgba(245,158,11,.5);}
+.card[data-rarity="r"]     .rarity-badge{ color:var(--r);     text-shadow:0 0 8px rgba(129,140,248,.5);}
+.card[data-rarity="uc"]    .rarity-badge{ color:var(--uc);    text-shadow:0 0 8px rgba(34,197,94,.5);}
+.card[data-rarity="c"]     .rarity-badge{ color:var(--c);}
 
-/* CARD ART — THE NUMBERS */
+/* PAIR ART */
 .card .art{
-  flex: 1;
-  display:flex; flex-direction:column;
-  justify-content: center; align-items:center;
-  position: relative; z-index:4;
-  padding: 8px 0;
+  flex:1; display:flex; flex-direction:column;
+  justify-content:center;
+  position:relative; z-index:4;
+  padding:10px 0;
 }
-.card .pair-section{
-  text-align:center;
-  width: 100%;
+.pair-section{
+  text-align:center; width:100%; padding:6px 4px;
 }
-.card .pair-section + .pair-section{ margin-top: 8px; padding-top: 8px; border-top: 1px dashed rgba(212,175,55,.18);}
-.card .pair-label{
-  font-family: var(--display);
-  font-size: .62rem;
-  letter-spacing: .25em;
-  color: rgba(244,233,200,.65);
-  margin-bottom: 4px;
-  text-transform: uppercase;
+.pair-section + .pair-section{
+  margin-top:8px; padding-top:12px;
+  border-top:1px dashed rgba(212,175,55,.18);
 }
-.card .pair-numbers{
-  font-family: var(--num);
-  font-weight: 900;
-  font-size: clamp(2.2rem, 5vw, 2.8rem);
-  line-height: 1;
-  letter-spacing: .14em;
-  background: linear-gradient(180deg, #fff7d6, var(--gold-1) 45%, var(--gold-3) 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 16px rgba(212,175,55,.3));
+.pair-label{
+  font-weight:600; font-size:.66rem; letter-spacing:.22em;
+  margin-bottom:4px; text-transform:uppercase;
 }
-.card[data-rarity="c"] .pair-numbers{
-  background: linear-gradient(180deg, #ffd6a8, #b87333 60%, #5a3414);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 2px 0 rgba(0,0,0,.6));
+.pair-numbers{
+  font-weight:800;
+  font-size:clamp(2rem, 4.6vw, 2.6rem);
+  line-height:1; letter-spacing:.12em;
 }
 
-/* CARD STATS FOOTER */
+/* PER-STATUS COLOR (pair numbers + label) */
+.pair-section[data-status="green"] .pair-label{ color:rgba(110,231,183,.9);}
+.pair-section[data-status="green"] .pair-numbers{
+  background:linear-gradient(180deg, var(--st-green-1), var(--st-green-2) 50%, var(--st-green-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 14px var(--emerald-glow));
+}
+.pair-section[data-status="yellow"] .pair-label{ color:rgba(251,191,36,.9);}
+.pair-section[data-status="yellow"] .pair-numbers{
+  background:linear-gradient(180deg, var(--st-yellow-1), var(--st-yellow-2) 50%, var(--st-yellow-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 14px var(--amber-glow));
+}
+.pair-section[data-status="red"] .pair-label{ color:rgba(252,165,165,.75);}
+.pair-section[data-status="red"] .pair-numbers{
+  background:linear-gradient(180deg, var(--st-red-1), var(--st-red-2) 50%, var(--st-red-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  opacity:.7;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.6));
+}
+
+/* STATS */
 .card .stats{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  padding: 8px 4px 4px;
-  border-top: 1px solid rgba(212,175,55,.25);
-  position: relative; z-index:4;
+  display:grid; grid-template-columns:1fr 1fr; gap:6px;
+  padding:8px 4px 4px;
+  border-top:1px solid rgba(212,175,55,.25);
+  position:relative; z-index:4;
 }
 .card .stat{
-  text-align:center;
-  padding: 4px 2px;
-  background: rgba(0,0,0,.35);
-  border-radius: 4px;
+  text-align:center; padding:5px 2px;
+  background:rgba(0,0,0,.35); border-radius:4px;
 }
 .card .stat .k{
-  font-family: var(--display);
-  font-size: .55rem;
-  letter-spacing: .15em;
-  color: rgba(244,233,200,.55);
-  text-transform: uppercase;
+  font-weight:600; font-size:.58rem; letter-spacing:.15em;
+  color:rgba(244,233,200,.55); text-transform:uppercase;
 }
 .card .stat .v{
-  font-family: var(--num);
-  font-weight: 700;
-  font-size: 1rem;
-  margin-top: 2px;
-  color: var(--gold-1);
+  font-weight:700; font-size:1rem;
+  margin-top:2px; color:var(--gold-1);
 }
-.card .stat .v.up{ color: #6ee7b7;}
-.card .stat .v.down{ color: #fca5a5;}
+.card .stat .v.up   { color:var(--st-green-2);}
+.card .stat .v.down { color:var(--st-red-2);}
 
+/* META — bet pills per side */
 .card .meta{
-  display:flex; justify-content:space-between;
-  margin-top: 6px;
-  font-size: .65rem;
-  font-family: var(--serif); font-style: italic;
-  color: rgba(244,233,200,.5);
-  position: relative; z-index:4;
+  display:flex; gap:6px; margin-top:8px;
+  position:relative; z-index:4;
 }
-.card .bet-pill{
-  font-family: var(--display);
-  font-style:normal;
-  font-size: .62rem;
-  font-weight: 700;
-  letter-spacing: .1em;
-  padding: 2px 7px;
-  border-radius: 3px;
-  background: rgba(212,175,55,.15);
-  border: 1px solid rgba(212,175,55,.4);
-  color: var(--gold-1);
+.bet-pill{
+  flex:1; text-align:center;
+  font-weight:700; font-size:.66rem; letter-spacing:.08em;
+  padding:5px 6px; border-radius:3px;
+  border:1px solid; text-transform:uppercase;
 }
-.card[data-rarity="c"] .bet-pill{
-  background: rgba(220,38,38,.12);
-  border-color: rgba(220,38,38,.5);
-  color: #fca5a5;
+.bet-pill .side-tag{
+  display:inline-block; font-size:.92em;
+  margin-right:4px; opacity:.7; font-weight:800;
+}
+.bet-pill[data-status="green"]{
+  background:rgba(34,197,94,.12);
+  border-color:rgba(110,231,183,.6);
+  color:var(--st-green-2);
+}
+.bet-pill[data-status="yellow"]{
+  background:rgba(251,191,36,.12);
+  border-color:rgba(251,191,36,.6);
+  color:var(--st-yellow-2);
+}
+.bet-pill[data-status="red"]{
+  background:rgba(220,38,38,.10);
+  border-color:rgba(252,165,165,.45);
+  color:var(--st-red-2);
 }
 
-/* corner serial marks */
+.card .footer-row{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:8px;
+  font-size:.68rem; color:rgba(244,233,200,.5);
+  font-style:italic;
+  position:relative; z-index:4;
+}
 .card .serial{
-  position: absolute; bottom: 6px; left: 12px;
-  font-family: 'Courier New', monospace;
-  font-size: .55rem;
-  letter-spacing: .15em;
-  color: rgba(212,175,55,.45);
-  z-index:5;
+  font-family:var(--mono); font-style:normal;
+  font-size:.58rem; letter-spacing:.12em;
+  color:rgba(212,175,55,.55);
 }
 
-/* loading state */
 .loading{
-  text-align:center; padding: 80px 20px;
-  font-family: var(--display);
-  letter-spacing: .25em;
-  color: var(--gold-2);
-  font-size: .9rem;
+  text-align:center; padding:80px 20px;
+  font-weight:600; letter-spacing:.25em;
+  color:var(--gold-2); font-size:.9rem;
+  text-transform:uppercase;
 }
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
 footer{
-  margin-top: 60px;
-  text-align:center;
-  padding-top: 24px;
-  border-top: 1px solid rgba(212,175,55,.2);
-  font-family: var(--serif); font-style: italic;
-  color: rgba(244,233,200,.45);
-  font-size: .85rem;
+  margin-top:60px; text-align:center;
+  padding-top:24px;
+  border-top:1px solid rgba(212,175,55,.2);
+  font-style:italic; color:rgba(244,233,200,.45);
+  font-size:.85rem;
 }
-footer .anchor{ font-family: var(--display); color: var(--gold-1); letter-spacing:.2em;}
-
+footer .anchor{
+  font-style:normal; font-weight:700;
+  color:var(--gold-1); letter-spacing:.2em;
+}
 </style>
 </head>
 <body>
 
 <div class="wrap">
 
-  <!-- BANNER -->
   <header class="banner">
     <div class="crest">
       <span class="skull">☠</span>
@@ -631,19 +580,14 @@ footer .anchor{ font-family: var(--display); color: var(--gold-1); letter-spacin
     <div class="live-pill"><span class="dot"></span><span id="last-date">LOADING DATA</span></div>
   </header>
 
-  <!-- TIME PERIOD TABS -->
   <nav class="tabs" id="tabs">
     <button class="tab" data-period="30d">30 Days</button>
     <button class="tab active" data-period="60d">60 Days</button>
     <button class="tab" data-period="90d">90 Days</button>
   </nav>
 
-  <!-- PORTFOLIO HERO STATS -->
-  <section class="hero" id="hero">
-    <!-- populated by JS -->
-  </section>
+  <section class="hero" id="hero"></section>
 
-  <!-- ANALYTICS -->
   <section class="analytics">
     <div class="panel">
       <div class="panel-title">
@@ -661,14 +605,16 @@ footer .anchor{ font-family: var(--display); color: var(--gold-1); letter-spacin
     </div>
   </section>
 
-  <!-- MARKET CARDS GRID -->
   <section>
     <div class="section-head">
       <h2>The Collection</h2>
       <div class="legend">
-        <span><span class="dot sr"></span> SR · GREEN</span>
-        <span><span class="dot r"></span> R · YELLOW</span>
-        <span><span class="dot c"></span> C · RED</span>
+        <span><span class="dot p-sec"></span> P-SEC</span>
+        <span><span class="dot p-sr"></span> P-SR</span>
+        <span><span class="dot sr"></span> SR</span>
+        <span><span class="dot r"></span> R</span>
+        <span><span class="dot uc"></span> UC</span>
+        <span><span class="dot c"></span> C</span>
       </div>
     </div>
     <div class="grid" id="grid">
@@ -684,34 +630,36 @@ footer .anchor{ font-family: var(--display); color: var(--gold-1); letter-spacin
 </div>
 
 <script>
-/* ============================================================
-   SOVEREIGN V3 — TREASURE VAULT FRONTEND
-   ============================================================ */
-const STATE = { data: null, period: '60d' };
-
+const STATE = { data:null, period:'60d' };
 const DATA_URL = 'data/final_synergy.json';
-const CHARTS = { profit: null, status: null };
+const CHARTS = { profit:null, status:null };
 
-const fmtMoney = n => (Number(n)||0).toLocaleString('en-US', {maximumFractionDigits:0});
+const fmtMoney = n => (Number(n)||0).toLocaleString('en-US',{maximumFractionDigits:0});
 const fmtPct   = n => (Number(n)||0).toFixed(1) + '%';
 
-/* ---------- RARITY MAPPING ---------- */
-function rarityOf(market){
-  // Both sides RED → Common ; All GREEN → SR ; otherwise R
-  const fGreen = (market.front?.status||'').includes('GREEN');
-  const bGreen = (market.back?.status ||'').includes('GREEN');
-  const fRed   = (market.front?.status||'').includes('RED');
-  const bRed   = (market.back?.status ||'').includes('RED');
-  if (fGreen && bGreen) return 'sr';
-  if (fRed   && bRed)   return 'c';
-  return 'r';
+/* STATUS / RARITY */
+function statusKey(s){
+  if(!s) return 'red';
+  if(s.includes('GREEN'))  return 'green';
+  if(s.includes('YELLOW')) return 'yellow';
+  return 'red';
 }
-const RARITY_LABEL = { sr: '★★★ SR', r: '★★ R', c: '★ C' };
+function rarityOf(m){
+  const f = statusKey(m.front?.status);
+  const b = statusKey(m.back?.status);
+  if(f==='green'  && b==='green')  return 'p-sec';
+  if((f==='green' && b==='yellow') || (f==='yellow' && b==='green')) return 'p-sr';
+  if((f==='green' && b==='red')    || (f==='red'    && b==='green')) return 'sr';
+  if(f==='yellow' && b==='yellow') return 'r';
+  if((f==='yellow'&& b==='red')    || (f==='red'    && b==='yellow')) return 'uc';
+  return 'c';  /* red+red */
+}
+const RARITY_LABEL = {'p-sec':'P-SEC','p-sr':'P-SR','sr':'SR','r':'R','uc':'UC','c':'C'};
+const RARITY_COLOR = {'p-sec':'#ff6b35','p-sr':'#ffd60a','sr':'#f59e0b','r':'#818cf8','uc':'#22c55e','c':'#94a3b8'};
 
-/* ---------- FETCH ---------- */
 async function loadData(){
   try{
-    const r = await fetch(DATA_URL, {cache:'no-store'});
+    const r = await fetch(DATA_URL,{cache:'no-store'});
     if(!r.ok) throw new Error('cannot load '+DATA_URL);
     STATE.data = await r.json();
   }catch(e){
@@ -720,14 +668,12 @@ async function loadData(){
       '<div class="loading" style="color:#fca5a5">⚠ ไม่พบ data/final_synergy.json</div>';
     return;
   }
-  // Show last_date from any market
-  const firstMarket = Object.values(STATE.data.markets||{})[0];
+  const fm = Object.values(STATE.data.markets||{})[0];
   document.getElementById('last-date').textContent =
-    'LIVE · LAST DRAW ' + (firstMarket?.last_date || '—');
+    'LIVE · LAST DRAW ' + (fm?.last_date || '—');
   renderAll();
 }
 
-/* ---------- RENDER ALL ---------- */
 function renderAll(){
   renderHero();
   renderCards();
@@ -735,23 +681,21 @@ function renderAll(){
   renderStatusChart();
 }
 
-/* ---------- HERO STATS ---------- */
 function renderHero(){
-  const p = STATE.data.portfolio[STATE.period] || {profit:0, invested:0, wins:0};
-  const roi = p.invested>0 ? (p.profit / p.invested * 100) : 0;
-  const draws = p.invested>0 ? (p.invested / 20) : 0; // each pos costs 20
-  const wr = draws>0 ? (p.wins / draws * 100) : 0;
-
-  const cls = (n) => n>0 ? 'profit-plus' : (n<0 ? 'profit-minus' : '');
+  const p = STATE.data.portfolio[STATE.period] || {profit:0,invested:0,wins:0};
+  const roi = p.invested>0 ? (p.profit/p.invested*100) : 0;
+  const draws = p.invested>0 ? (p.invested/20) : 0;
+  const wr = draws>0 ? (p.wins/draws*100) : 0;
+  const cls = n => n>0?'profit-plus':n<0?'profit-minus':'';
 
   const cards = [
-    { lbl:'Net Profit',     val: fmtMoney(p.profit) + ' ฿', sub: 'Period · '+STATE.period.toUpperCase(), cls: cls(p.profit) },
-    { lbl:'Capital Deployed', val: fmtMoney(p.invested) + ' ฿', sub:'Total invested', cls:'' },
-    { lbl:'Win Rate',       val: fmtPct(wr),    sub: p.wins+' wins / '+Math.round(draws)+' positions', cls:'' },
-    { lbl:'ROI',            val: roi.toFixed(2) + '%', sub:'Return on capital', cls: cls(roi) }
+    {lbl:'Net Profit',       val:fmtMoney(p.profit)+' ฿',  sub:'Period · '+STATE.period.toUpperCase(), cls:cls(p.profit)},
+    {lbl:'Capital Deployed', val:fmtMoney(p.invested)+' ฿', sub:'Total invested', cls:''},
+    {lbl:'Win Rate',         val:fmtPct(wr),                sub:p.wins+' wins / '+Math.round(draws)+' positions', cls:''},
+    {lbl:'ROI',              val:roi.toFixed(2)+'%',        sub:'Return on capital', cls:cls(roi)}
   ];
 
-  document.getElementById('hero').innerHTML = cards.map(c => `
+  document.getElementById('hero').innerHTML = cards.map(c=>`
     <div class="hero-card">
       <span class="corner tl"></span><span class="corner tr"></span>
       <span class="corner bl"></span><span class="corner br"></span>
@@ -762,19 +706,22 @@ function renderHero(){
   `).join('');
 }
 
-/* ---------- MARKET CARDS GRID ---------- */
 function renderCards(){
   const markets = STATE.data.markets || {};
-  const items = Object.entries(markets).map(([name, m], i) => {
-    const fHist = m.front?.history?.[STATE.period] || {profit:0, win_rate:0};
-    const bHist = m.back?.history?.[STATE.period]  || {profit:0, win_rate:0};
-    const totalProfit = (fHist.profit||0) + (bHist.profit||0);
-    const avgWR = ((fHist.win_rate||0) + (bHist.win_rate||0)) / 2;
+  const total = Object.keys(markets).length;
+  const items = Object.entries(markets).map(([name,m],i)=>{
+    const fHist = m.front?.history?.[STATE.period] || {profit:0,win_rate:0};
+    const bHist = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0};
+    const totalProfit = (fHist.profit||0)+(bHist.profit||0);
+    const avgWR = ((fHist.win_rate||0)+(bHist.win_rate||0))/2;
     const r = rarityOf(m);
+    const fStatus = statusKey(m.front?.status);
+    const bStatus = statusKey(m.back?.status);
     const fPair = (m.front?.pair||['?','?']).join(' · ');
     const bPair = (m.back?.pair ||['?','?']).join(' · ');
-    const totalBet = (m.front?.bet_size||0) + (m.back?.bet_size||0);
-    const serial = String(i+1).padStart(3,'0') + '/' + String(Object.keys(markets).length).padStart(3,'0');
+    const fBet = m.front?.bet_size||0;
+    const bBet = m.back?.bet_size||0;
+    const serial = String(i+1).padStart(3,'0')+'/'+String(total).padStart(3,'0');
 
     return `
       <div class="card" data-rarity="${r}" onclick="location.href='detail.html?m=${encodeURIComponent(name)}'">
@@ -786,11 +733,11 @@ function renderCards(){
           </div>
 
           <div class="art">
-            <div class="pair-section">
+            <div class="pair-section" data-status="${fStatus}">
               <div class="pair-label">⚔ Front Pair</div>
               <div class="pair-numbers">${fPair}</div>
             </div>
-            <div class="pair-section">
+            <div class="pair-section" data-status="${bStatus}">
               <div class="pair-label">⚓ Back Pair</div>
               <div class="pair-numbers">${bPair}</div>
             </div>
@@ -804,17 +751,24 @@ function renderCards(){
               </div>
             </div>
             <div class="stat">
-              <div class="k">Win Rate</div>
+              <div class="k">Avg Win Rate</div>
               <div class="v">${fmtPct(avgWR)}</div>
             </div>
           </div>
 
           <div class="meta">
-            <span>last · ${m.last_date||'—'}</span>
-            <span class="bet-pill">${totalBet>0 ? 'BET '+totalBet+'%' : 'SKIP'}</span>
+            <span class="bet-pill" data-status="${fStatus}">
+              <span class="side-tag">F</span>${fBet>0 ? 'BET '+fBet+'%' : 'SKIP'}
+            </span>
+            <span class="bet-pill" data-status="${bStatus}">
+              <span class="side-tag">B</span>${bBet>0 ? 'BET '+bBet+'%' : 'SKIP'}
+            </span>
           </div>
 
-          <div class="serial">Nº ${serial}</div>
+          <div class="footer-row">
+            <span>last · ${m.last_date||'—'}</span>
+            <span class="serial">Nº ${serial}</span>
+          </div>
         </div>
         <div class="foil"></div>
         <div class="holo"></div>
@@ -824,11 +778,10 @@ function renderCards(){
   document.getElementById('grid').innerHTML = items.join('');
 }
 
-/* ---------- CHART: PROFIT BY MARKET ---------- */
 function renderProfitChart(){
   const markets = STATE.data.markets || {};
   const labels = Object.keys(markets);
-  const data = labels.map(k => {
+  const data = labels.map(k=>{
     const m = markets[k];
     const f = m.front?.history?.[STATE.period]?.profit||0;
     const b = m.back?.history?.[STATE.period]?.profit||0;
@@ -836,99 +789,73 @@ function renderProfitChart(){
   });
 
   const ctx = document.getElementById('chartProfit');
-  const grd = ctx.getContext('2d').createLinearGradient(0,0,0,260);
-  grd.addColorStop(0,'rgba(248,233,161,.95)');
-  grd.addColorStop(1,'rgba(184,148,30,.55)');
-
+  const grdPos = ctx.getContext('2d').createLinearGradient(0,0,0,260);
+  grdPos.addColorStop(0,'rgba(248,233,161,.95)');
+  grdPos.addColorStop(1,'rgba(184,148,30,.55)');
   const grdNeg = ctx.getContext('2d').createLinearGradient(0,0,0,260);
   grdNeg.addColorStop(0,'rgba(252,165,165,.85)');
   grdNeg.addColorStop(1,'rgba(127,29,29,.55)');
 
   if(CHARTS.profit) CHARTS.profit.destroy();
-
-  CHARTS.profit = new Chart(ctx, {
+  CHARTS.profit = new Chart(ctx,{
     type:'bar',
-    data:{
-      labels,
-      datasets:[{
-        label:'Net Profit',
-        data,
-        backgroundColor: data.map(v => v>=0 ? grd : grdNeg),
-        borderColor: data.map(v => v>=0 ? '#f8e9a1' : '#fca5a5'),
-        borderWidth: 1,
-        borderRadius: 4
-      }]
-    },
+    data:{labels, datasets:[{
+      label:'Net Profit', data,
+      backgroundColor: data.map(v=>v>=0?grdPos:grdNeg),
+      borderColor: data.map(v=>v>=0?'#f8e9a1':'#fca5a5'),
+      borderWidth:1, borderRadius:4
+    }]},
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{
         legend:{display:false},
         tooltip:{
-          backgroundColor:'#0a1020',
-          borderColor:'#d4af37', borderWidth:1,
-          titleFont:{family:'Cinzel', weight:'700'},
+          backgroundColor:'#0a1020', borderColor:'#d4af37', borderWidth:1,
+          titleFont:{family:'Sarabun',weight:'700'},
           bodyFont:{family:'Sarabun'},
-          callbacks:{ label: c => ' '+fmtMoney(c.parsed.y)+' ฿' }
+          callbacks:{ label:c=>' '+fmtMoney(c.parsed.y)+' ฿' }
         }
       },
       scales:{
-        x:{
-          grid:{color:'rgba(212,175,55,.07)'},
-          ticks:{color:'rgba(244,233,200,.7)', font:{family:'Cinzel', size:10}}
-        },
-        y:{
-          grid:{color:'rgba(212,175,55,.07)'},
-          ticks:{color:'rgba(244,233,200,.6)', font:{family:'Cinzel', size:10},
-                 callback: v => fmtMoney(v)}
-        }
+        x:{grid:{color:'rgba(212,175,55,.07)'},
+           ticks:{color:'rgba(244,233,200,.7)',font:{family:'Sarabun',size:10,weight:'600'}}},
+        y:{grid:{color:'rgba(212,175,55,.07)'},
+           ticks:{color:'rgba(244,233,200,.6)',font:{family:'Sarabun',size:10},
+                  callback:v=>fmtMoney(v)}}
       }
     }
   });
 }
 
-/* ---------- CHART: STATUS DISTRIBUTION ---------- */
 function renderStatusChart(){
   const markets = STATE.data.markets || {};
-  let sr=0, r=0, c=0;
-  Object.values(markets).forEach(m=>{
-    const x = rarityOf(m);
-    if(x==='sr') sr++; else if(x==='r') r++; else c++;
-  });
+  const counts = {'p-sec':0,'p-sr':0,'sr':0,'r':0,'uc':0,'c':0};
+  Object.values(markets).forEach(m=> counts[rarityOf(m)]++ );
+  const labels = Object.keys(counts).map(k=>RARITY_LABEL[k]);
+  const data = Object.values(counts);
+  const colors = Object.keys(counts).map(k=>RARITY_COLOR[k]);
 
   const ctx = document.getElementById('chartStatus');
   if(CHARTS.status) CHARTS.status.destroy();
-  CHARTS.status = new Chart(ctx, {
+  CHARTS.status = new Chart(ctx,{
     type:'doughnut',
-    data:{
-      labels:['SR · GREEN','R · YELLOW','C · RED'],
-      datasets:[{
-        data:[sr, r, c],
-        backgroundColor:['#ffcd3c','#c9d1d9','#b87333'],
-        borderColor:'#0a1020',
-        borderWidth:3,
-        hoverOffset: 14
-      }]
-    },
+    data:{ labels, datasets:[{
+      data, backgroundColor:colors,
+      borderColor:'#0a1020', borderWidth:3, hoverOffset:14
+    }]},
     options:{
       responsive:true, maintainAspectRatio:false,
       cutout:'62%',
       plugins:{
-        legend:{
-          position:'bottom',
-          labels:{color:'rgba(244,233,200,.8)', font:{family:'Cinzel', size:11}, padding:14, boxWidth:14}
-        },
-        tooltip:{
-          backgroundColor:'#0a1020',
-          borderColor:'#d4af37', borderWidth:1,
-          titleFont:{family:'Cinzel'},
-          bodyFont:{family:'Sarabun'}
-        }
+        legend:{position:'bottom',
+          labels:{color:'rgba(244,233,200,.85)',font:{family:'Sarabun',size:11,weight:'600'},padding:12,boxWidth:12}},
+        tooltip:{backgroundColor:'#0a1020',borderColor:'#d4af37',borderWidth:1,
+                 titleFont:{family:'Sarabun'},bodyFont:{family:'Sarabun'}}
       }
     }
   });
 }
 
-/* ---------- TAB EVENTS ---------- */
 document.getElementById('tabs').addEventListener('click', e=>{
   const btn = e.target.closest('.tab');
   if(!btn) return;
@@ -938,7 +865,6 @@ document.getElementById('tabs').addEventListener('click', e=>{
   renderAll();
 });
 
-/* ---------- BOOT ---------- */
 loadData();
 </script>
 </body>
