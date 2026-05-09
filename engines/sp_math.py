@@ -5,7 +5,7 @@ import glob
 # =====================================================================
 # ⚙️ Configuration - SP Math (V3 - Split Position)
 # =====================================================================
-DATA_DIR = "../data/"
+DATA_DIR = "data"
 
 def analyze_math_split(draws):
     """
