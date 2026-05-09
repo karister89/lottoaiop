@@ -23,6 +23,7 @@
     },
     "markets": {
         "NIKKEI": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     1,
@@ -93,6 +94,7 @@
             }
         },
         "FTSE": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     0,
@@ -163,6 +165,7 @@
             }
         },
         "HANGSENG": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     5,
@@ -233,6 +236,7 @@
             }
         },
         "DAX": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     2,
@@ -303,6 +307,7 @@
             }
         },
         "SENSEX": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     3,
@@ -373,6 +378,7 @@
             }
         },
         "TPE": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     1,
@@ -443,6 +449,7 @@
             }
         },
         "DJI": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     2,
@@ -513,6 +520,7 @@
             }
         },
         "SHE": {
+            "last_date": "8/5/2026",
             "front": {
                 "pair": [
                     4,
