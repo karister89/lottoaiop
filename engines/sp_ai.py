@@ -3,7 +3,7 @@ import os
 import glob
 import pandas as pd
 
-DATA_DIR = "../data/"
+DATA_DIR = "data"
 
 def analyze_pattern_split(draws):
     """
