@@ -6,7 +6,7 @@ import math
 # =====================================================================
 # ⚙️ Configuration - SP Stat (V3 - Split Position)
 # =====================================================================
-DATA_DIR = "../data/"
+DATA_DIR = "data"
 
 def analyze_statistics_split(draws):
     """
