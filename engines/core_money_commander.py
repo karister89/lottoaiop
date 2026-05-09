@@ -2,17 +2,17 @@ import json
 import os
 
 # =====================================================================
-# ⚙️ Configuration - Core Money Commander (V3 Split - 4 Phases Edition)
+# ⚙️ Configuration - Core Money Commander (V3 Dashboard Edition)
 # =====================================================================
 DATA_DIR = "data"
 OPTIMIZED_FILE = os.path.join(DATA_DIR, "optimized_pairs.json")
 FINAL_OUT = os.path.join(DATA_DIR, "final_synergy.json")
 
-PAYOUT_RATE = 100.0  # เรทจ่าย (บาท)
-COST_PER_POS = 20.0 # ทุนแยกฝั่งละ 20 บาท (รูดหน้า 2 เลข / รูดหลัง 2 เลข)
+PAYOUT_RATE = 100.0  
+COST_PER_POS = 20.0 
 
 def calculate_period_stats_split(draws, pair, position, days):
-    """ฟังก์ชันคำนวณกำไร-ขาดทุนย้อนหลังแยกสมรภูมิแบบระบุจำนวนวัน"""
+    """ฟังก์ชันคำนวณกำไร-ขาดทุนย้อนหลังแยกช่วงเวลา 30/60/90 วัน"""
     subset = draws[:days]
     if not subset or not pair: 
         return {"profit": 0, "win_rate": 0, "wins": 0, "invested": 0}
@@ -20,16 +20,13 @@ def calculate_period_stats_split(draws, pair, position, days):
     wins, profit, invested = 0, 0, 0
     p0, p1 = str(pair[0]), str(pair[1])
     
-    # วนลูปเช็คผลรางวัลย้อนหลังตามจำนวนวันที่กำหนด
     for row in subset:
         num = str(row.get('twoTop', '')).zfill(2)
         if not num.isdigit(): continue
             
         invested += COST_PER_POS
-        # แยกเป้าหมายตามตำแหน่ง: หลักสิบ (num[0]) หรือ หลักหน่วย (num[1])
         target = num[0] if position == 'front' else num[1]
         
-        # ตรวจสอบว่ารูด 2 เลขเข้าเป้าไหม
         if p0 == target or p1 == target:
             wins += 1
             profit += (PAYOUT_RATE - COST_PER_POS)
@@ -45,28 +42,27 @@ def calculate_period_stats_split(draws, pair, position, days):
 
 def main():
     print("\n" + "="*75)
-    print("💰 [Core Money V3] สรุปบัญชีแยกสมรภูมิ (15/30/60/100 วัน)...")
+    print("💰 [Core Money V3] กำลังสรุปบัญชีสำหรับ Dashboard (30/60/90 วัน)...")
     print("="*75)
     
     if not os.path.exists(OPTIMIZED_FILE):
-        print("❌ Error: ไม่พบไฟล์ optimized_pairs.json จากขั้นตอน Optimizer!")
+        print("❌ Error: ไม่พบไฟล์ optimized_pairs.json")
         return
         
     with open(OPTIMIZED_FILE, 'r', encoding='utf-8') as f: 
         opt_data = json.load(f).get("markets", {})
     
-    # เตรียมโครงสร้าง Dashboard (สรุปพอร์ตรวมตามแกนเวลาของพี่นพพล)
+    # ปรับช่วงเวลาเป็น 30d, 60d, 90d ตามที่ต้องการ
     final_dashboard = {
         "portfolio": {
-            "15d": {"profit": 0, "invested": 0, "wins": 0},
             "30d": {"profit": 0, "invested": 0, "wins": 0},
             "60d": {"profit": 0, "invested": 0, "wins": 0},
-            "100d": {"profit": 0, "invested": 0, "wins": 0}
+            "90d": {"profit": 0, "invested": 0, "wins": 0}
         },
         "markets": {}
     }
 
-    phases = ["15d", "30d", "60d", "100d"]
+    phases = ["30d", "60d", "90d"]
 
     for market_name, data in opt_data.items():
         raw_file = os.path.join(DATA_DIR, f"raw_{market_name}.json")
@@ -75,52 +71,28 @@ def main():
         with open(raw_file, 'r', encoding='utf-8') as f: 
             draws = json.load(f)
 
-        # 🔻🔻🔻 ส่วนที่เพิ่มใหม่: ดึงวันที่จากข้อมูลดิบงวดล่าสุด (index 0) 🔻🔻🔻
-        latest_date = ""
-        if draws and len(draws) > 0:
-            # ปกติข้อมูลวันที่มักจะใช้ key ว่า 'date' (ถ้าของพี่ใช้คำอื่น เช่น 'Date' ตัวใหญ่ ให้แก้ตรงนี้นะครับ)
-            latest_date = draws[0].get('date', '')
+        latest_date = draws[0].get('date', '') if draws else ""
 
-        # เพิ่ม latest_date เข้าไปในโครงสร้างของตลาดนี้
-        market_result = {
-            "last_date": latest_date, 
-            "front": {}, 
-            "back": {}
-        }
-        # 🔺🔺🔺 จบส่วนที่เพิ่มใหม่ 🔺🔺🔺
+        market_result = {"last_date": latest_date, "front": {}, "back": {}}
 
-        # 🎯 สมรภูมิฝั่งหน้า (Front / หลักสิบ)
+        # คำนวณฝั่งหน้า
         if data.get("front"):
             f_pair = data["front"]["pair"]
             f_bet = data["front"]["bet_size"]
             f_stats = { p: calculate_period_stats_split(draws, f_pair, 'front', int(p[:-1])) for p in phases }
-            
-            market_result["front"] = {
-                "pair": f_pair,
-                "bet_size": f_bet,
-                "status": data["front"]["status"],
-                "history": f_stats
-            }
-            # รวมเข้า Portfolio (เฉพาะฝั่งที่บอทสั่งลุย Bet > 0)
+            market_result["front"] = {"pair": f_pair, "bet_size": f_bet, "status": data["front"]["status"], "history": f_stats}
             if f_bet > 0:
                 for p in phases:
                     final_dashboard["portfolio"][p]["profit"] += f_stats[p]["profit"]
                     final_dashboard["portfolio"][p]["invested"] += f_stats[p]["invested"]
                     final_dashboard["portfolio"][p]["wins"] += f_stats[p]["wins"]
 
-        # 🎯 สมรภูมิฝั่งหลัง (Back / หลักหน่วย)
+        # คำนวณฝั่งหลัง
         if data.get("back"):
             b_pair = data["back"]["pair"]
             b_bet = data["back"]["bet_size"]
             b_stats = { p: calculate_period_stats_split(draws, b_pair, 'back', int(p[:-1])) for p in phases }
-            
-            market_result["back"] = {
-                "pair": b_pair,
-                "bet_size": b_bet,
-                "status": data["back"]["status"],
-                "history": b_stats
-            }
-            # รวมเข้า Portfolio (เฉพาะฝั่งที่บอทสั่งลุย Bet > 0)
+            market_result["back"] = {"pair": b_pair, "bet_size": b_bet, "status": data["back"]["status"], "history": b_stats}
             if b_bet > 0:
                 for p in phases:
                     final_dashboard["portfolio"][p]["profit"] += b_stats[p]["profit"]
@@ -128,20 +100,8 @@ def main():
                     final_dashboard["portfolio"][p]["wins"] += b_stats[p]["wins"]
 
         final_dashboard["markets"][market_name] = market_result
-        
-        # ปริ้นท์สรุปสั้นๆ ใน Console ให้พี่ดู
-        f_p = market_result.get('front', {}).get('history', {}).get('15d', {}).get('profit', 0)
-        b_p = market_result.get('back', {}).get('history', {}).get('15d', {}).get('profit', 0)
-        print(f"📊 {market_name.upper():<12} | วันที่: {latest_date:<10} | กำไร(15วัน) -> หน้า: {f_p:+.0f} ฿ | หลัง: {b_p:+.0f} ฿")
 
-    # บันทึกข้อมูลสุทธิ เพื่อรอการแสดงผลบน index.html
     with open(FINAL_OUT, 'w', encoding='utf-8') as f:
         json.dump(final_dashboard, f, ensure_ascii=False, indent=4)
         
-    print("\n" + "="*75)
-    print(f"✅ [Core Money] สรุปบัญชีสำเร็จ! (15/30/60/100 วัน)")
-    print(f"📈 พอร์ตรวม 15 วันล่าสุด: {final_dashboard['portfolio']['15d']['profit']:+.0f} ฿")
-    print("="*75 + "\n")
-
-if __name__ == "__main__":
-    main()
+    print(f"✅ บันทึกข้อมูลสำเร็จ! พร้อมแสดงผลกำรวมสะสม 90 วัน")
