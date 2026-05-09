@@ -303,7 +303,18 @@ h1.title{
   font-size:.78rem; opacity:.65; letter-spacing:.04em;
   font-style:italic; text-transform:none; font-weight:400;
 }
-.chart-wrap{ position:relative; height:280px; }
+.chart-wrap{
+  position:relative;
+  width:100%;
+  height:280px;
+}
+.chart-wrap > canvas{
+  position:absolute !important;
+  inset:0;
+  width:100% !important;
+  height:100% !important;
+  display:block;
+}
 
 /* COLLECTION */
 .section-head{
@@ -586,7 +597,7 @@ h1.title{
 
 .card .footer-row{
   display:flex; justify-content:space-between; align-items:center;
-  margin-top:8px;
+  margin-top:6px;
   font-size:.68rem; color:rgba(244,233,200,.5);
   font-style:italic;
   position:relative; z-index:4;
@@ -595,6 +606,28 @@ h1.title{
   font-family:var(--mono); font-style:normal;
   font-size:.58rem; letter-spacing:.12em;
   color:rgba(212,175,55,.55);
+}
+
+/* NEXT BET — date for next round */
+.card .next-bet{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:8px;
+  padding:6px 10px;
+  border-radius:4px;
+  background:linear-gradient(90deg, rgba(212,175,55,.18), rgba(212,175,55,.06));
+  border:1px solid rgba(212,175,55,.4);
+  position:relative; z-index:4;
+}
+.card .next-bet .nb-tag{
+  font-weight:700; font-size:.6rem; letter-spacing:.18em;
+  color:var(--gold-1);
+  text-transform:uppercase;
+}
+.card .next-bet .nb-date{
+  font-family:var(--mono);
+  font-weight:700; font-size:.78rem;
+  color:#fff7d6;
+  letter-spacing:.04em;
 }
 
 .loading{
@@ -690,16 +723,62 @@ const CHARTS = { profit:null, status:null };
 const fmtMoney = n => (Number(n)||0).toLocaleString('en-US',{maximumFractionDigits:0});
 const fmtPct   = n => (Number(n)||0).toFixed(1) + '%';
 
-/* STATUS / RARITY */
-function statusKey(s){
-  if(!s) return 'red';
-  if(s.includes('GREEN'))  return 'green';
-  if(s.includes('YELLOW')) return 'yellow';
-  return 'red';
+/* MARKET ORDER — TPE, NIKKEI, SHE, HANGSANG, SENSEX, DAX, FTSE, DJI */
+const ORDER_MAP = {
+  'TPE':0, 'TAIWAN':0, 'TWSE':0,
+  'NIKKEI':1, 'NIKKEI225':1, 'JPN':1, 'JP':1,
+  'SHE':2, 'SHENZHEN':2, 'CN':2, 'SHENZ':2,
+  'HANGSANG':3, 'HANGSENG':3, 'HSI':3, 'HK':3, 'HONGKONG':3,
+  'SENSEX':4, 'BSE':4, 'IND':4, 'INDIA':4,
+  'DAX':5, 'GER':5, 'GERMANY':5,
+  'FTSE':6, 'UK':6, 'BRITAIN':6, 'LSE':6,
+  'DJI':7, 'DOW':7, 'DOWJONES':7, 'US':7
+};
+function orderIdx(name){
+  const u = String(name||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(u in ORDER_MAP) return ORDER_MAP[u];
+  // try prefix match
+  for(const k in ORDER_MAP){
+    if(u.startsWith(k) || k.startsWith(u)) return ORDER_MAP[k];
+  }
+  return 999;
 }
-function rarityOf(m){
-  const f = statusKey(m.front?.status);
-  const b = statusKey(m.back?.status);
+function sortedMarketEntries(markets){
+  return Object.entries(markets).sort((a,b)=> orderIdx(a[0]) - orderIdx(b[0]));
+}
+
+/* NEXT BET DATE — last_date + 1 day, skipping Sat/Sun
+   last_date is "d/m/yyyy" (Thai convention) */
+function nextBetDate(lastDate){
+  if(!lastDate) return '—';
+  const parts = String(lastDate).split('/');
+  if(parts.length !== 3) return '—';
+  const d = parseInt(parts[0],10);
+  const m = parseInt(parts[1],10);
+  const y = parseInt(parts[2],10);
+  if(!d||!m||!y) return '—';
+  const dt = new Date(y, m-1, d);
+  if(isNaN(dt.getTime())) return '—';
+  dt.setDate(dt.getDate() + 1);
+  while(dt.getDay()===0 || dt.getDay()===6){
+    dt.setDate(dt.getDate() + 1);
+  }
+  return `${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()}`;
+}
+
+/* STATUS / RARITY — by win_rate thresholds:
+   < 25 = red · < 40 = yellow · >= 40 = green */
+function statusKey(wr){
+  const v = Number(wr) || 0;
+  if(v < 25)  return 'red';
+  if(v < 40)  return 'yellow';
+  return 'green';
+}
+function rarityOf(market, period){
+  const fWR = market.front?.history?.[period]?.win_rate || 0;
+  const bWR = market.back?.history?.[period]?.win_rate  || 0;
+  const f = statusKey(fWR);
+  const b = statusKey(bWR);
   if(f==='green'  && b==='green')  return 'p-sec';
   if((f==='green' && b==='yellow') || (f==='yellow' && b==='green')) return 'p-sr';
   if((f==='green' && b==='red')    || (f==='red'    && b==='green')) return 'sr';
@@ -813,18 +892,20 @@ function renderHero(){
 
 function renderCards(){
   const markets = STATE.data.markets || {};
-  const total = Object.keys(markets).length;
-  const items = Object.entries(markets).map(([name,m],i)=>{
+  const sortedEntries = sortedMarketEntries(markets);
+  const total = sortedEntries.length;
+  const items = sortedEntries.map(([name,m],i)=>{
     const fHist = m.front?.history?.[STATE.period] || {profit:0,win_rate:0,wins:0,invested:0};
     const bHist = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0,wins:0,invested:0};
-    const r = rarityOf(m);
-    const fStatus = statusKey(m.front?.status);
-    const bStatus = statusKey(m.back?.status);
+    const fStatus = statusKey(fHist.win_rate);
+    const bStatus = statusKey(bHist.win_rate);
+    const r = rarityOf(m, STATE.period);
     const fPair = (m.front?.pair||['?','?']).join(' · ');
     const bPair = (m.back?.pair ||['?','?']).join(' · ');
     const fBet = m.front?.bet_size||0;
     const bBet = m.back?.bet_size||0;
     const serial = String(i+1).padStart(3,'0')+'/'+String(total).padStart(3,'0');
+    const next = nextBetDate(m.last_date);
 
     const fProfit = fHist.profit||0;
     const bProfit = bHist.profit||0;
@@ -875,6 +956,11 @@ function renderCards(){
             </div>
           </div>
 
+          <div class="next-bet">
+            <span class="nb-tag">⚡ NEXT BET</span>
+            <span class="nb-date">${next}</span>
+          </div>
+
           <div class="footer-row">
             <span>last · ${m.last_date||'—'}</span>
             <span class="serial">Nº ${serial}</span>
@@ -890,9 +976,10 @@ function renderCards(){
 
 function renderProfitChart(){
   const markets = STATE.data.markets || {};
-  const labels = Object.keys(markets);
-  const fData = labels.map(k=> markets[k].front?.history?.[STATE.period]?.profit||0);
-  const bData = labels.map(k=> markets[k].back?.history?.[STATE.period]?.profit||0);
+  const entries = sortedMarketEntries(markets);
+  const labels = entries.map(([k])=>k);
+  const fData = entries.map(([,m])=> m.front?.history?.[STATE.period]?.profit||0);
+  const bData = entries.map(([,m])=> m.back?.history?.[STATE.period]?.profit||0);
 
   const ctx = document.getElementById('chartProfit');
   if(CHARTS.profit) CHARTS.profit.destroy();
@@ -944,7 +1031,7 @@ function renderProfitChart(){
 function renderStatusChart(){
   const markets = STATE.data.markets || {};
   const counts = {'p-sec':0,'p-sr':0,'sr':0,'r':0,'uc':0,'c':0};
-  Object.values(markets).forEach(m=> counts[rarityOf(m)]++ );
+  Object.values(markets).forEach(m=> counts[rarityOf(m, STATE.period)]++ );
   const labels = Object.keys(counts).map(k=>RARITY_LABEL[k]);
   const data = Object.values(counts);
   const colors = Object.keys(counts).map(k=>RARITY_COLOR[k]);
