@@ -2,19 +2,21 @@ name: Sovereign V3 Daily Operation (Strict Mode)
 
 on:
   schedule:
-    - cron: '15 1 * * *' 
-  workflow_dispatch: 
+    - cron: '15 1 * * *' # รันทุกวันเวลา 01:15 น. (เวลาเดิมเป๊ะ)
+  workflow_dispatch: # กดรันเองได้
 
 jobs:
   run-sovereign-bots:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # สำคัญ: เพื่อให้บอท Push ข้อมูลกลับเข้าเครื่องได้
     
     steps:
       - name: 🛎️ Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # อัปเดตเป็น v4
 
       - name: 🐍 Setup Python 3.10
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # อัปเดตเป็น v5 แก้ Error ที่เคยเจอ
         with:
           python-version: '3.10'
 
@@ -25,55 +27,54 @@ jobs:
 
       - name: 🧹 0. ล้างและเตรียมโฟลเดอร์ data
         run: |
-          rm -rf data/
           mkdir -p data/
           touch data/.gitkeep
           echo "✅ เตรียมโฟลเดอร์ data/ พร้อมรบ!"
 
       - name: 📡 0.5 ดึงข้อมูลดิบชุดใหม่ (Fetch Raw Data)
         env:
-          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }} # เชื่อมต่อกุญแจที่พี่ใส่ใน Secrets
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
         run: |
-          python engines/ql_fetcher.py || { echo "❌ Fetcher พัง! หยุดทำงานทันที"; exit 1; }
+          python engines/ql_fetcher.py || { echo "❌ Fetcher พัง!"; exit 1; }
 
       - name: 🛡️ 1. สร้างไม้บรรทัดความเสี่ยง (Risk Tuner)
         run: |
-          python engines/sp_risk_tuner.py || { echo "❌ Risk Tuner พัง! หยุดทำงานทันที"; exit 1; }
+          python engines/sp_risk_tuner.py || { echo "❌ Risk Tuner พัง!"; exit 1; }
 
-      - name: 🤖 2. รันบอทวิเคราะห์ทั้ง 4 สาย (Analysts)
+      - name: 🤖 2. รันบอทวิเคราะห์ทั้ง 4 สาย
         run: |
-          python engines/sp_market.py && \
-          python engines/sp_stat.py && \
-          python engines/sp_math.py && \
-          python engines/sp_ai.py || { echo "❌ บอทวิเคราะห์พัง! หยุดทำงานทันที"; exit 1; }
+          python engines/sp_market.py
+          python engines/sp_stat.py
+          python engines/sp_math.py
+          python engines/sp_ai.py || { echo "❌ บอทวิเคราะห์พัง!"; exit 1; }
 
-      - name: ⚖️ 3. ประเมินผลงานและให้คะแนนความเก่ง (Weight Eval)
+      - name: ⚖️ 3. ประเมินผลงานและให้คะแนน (Weight Eval)
         run: |
-          python engines/core_weight_eval.py || { echo "❌ Weight Eval พัง! หยุดทำงานทันที"; exit 1; }
+          python engines/core_weight_eval.py || { echo "❌ Weight Eval พัง!"; exit 1; }
 
-      - name: 🗳️ 4. รวบรวมผลโหวตตามน้ำหนัก (Consensus Aggregator)
+      - name: 🗳️ 4. รวบรวมผลโหวต (Consensus Aggregator)
         run: |
-          python engines/core_consensus_aggregator.py || { echo "❌ Aggregator พัง! หยุดทำงานทันที"; exit 1; }
+          python engines/core_consensus_aggregator.py || { echo "❌ Aggregator พัง!"; exit 1; }
 
-      - name: ⚔️ 5. แม่ทัพคัดเลือกคู่เลข หน้า-หลัง (Pair Optimizer)
+      - name: ⚔️ 5. คัดเลือกคู่เลข หน้า-หลัง (Pair Optimizer)
         run: |
-          python engines/core_pair_optimizer.py || { echo "❌ Optimizer พัง! หยุดทำงานทันที"; exit 1; }
+          python engines/core_pair_optimizer.py || { echo "❌ Optimizer พัง!"; exit 1; }
 
-      - name: 💰 6. กุนซือเงินสรุปบัญชีและจัดพอร์ต (Money Commander)
+      - name: 💰 6. สรุปบัญชี Dashboard (Money Commander)
         run: |
-          python engines/core_money_commander.py || { echo "❌ Money Commander พัง! หยุดทำงานทันที"; exit 1; }
+          python engines/core_money_commander.py || { echo "❌ Money Commander พัง!"; exit 1; }
 
-      - name: 💾 7. Commit & Push Data to GitHub
+      - name: 💾 7. Commit & Push Data
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # เช็คความชัวร์ของไฟล์ก่อน Push
-          if ls data/final_synergy.json 1> /dev/null 2>&1; then
+          # ตรวจสอบไฟล์สรุปผลก่อน Commit เพื่อความปลอดภัย
+          if [ -f data/final_synergy.json ]; then
             git add data/*.json
-            git commit -m "🤖 อัปเดต Sovereign V3 (New Data Structure)" || echo "No changes to commit"
+            git commit -m "🤖 Auto-Update Sovereign V3: 15/30/60/90/100 Days Portfolio" || echo "No changes"
             git push
           else
-            echo "❌ CRITICAL: ไม่พบไฟล์ final_synergy.json! ระบบไม่ Push ข้อมูลมั่วแน่นอน"
+            echo "❌ CRITICAL: ไม่พบไฟล์ final_synergy.json! หยุดการ Push ทันที"
             exit 1
           fi
