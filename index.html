@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
@@ -6,6 +7,7 @@
 <title>⚓ Sovereign V3 — Captain's Treasure Vault</title>
 
 <!-- Clean fonts: Sarabun + Mono -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -237,9 +239,44 @@ h1.title{
   -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 0 14px var(--crimson-glow));
 }
+
+/* SPLIT ROWS — Front / Back values */
+.hero-card .split-row{
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:6px 0;
+  border-bottom:1px dashed rgba(212,175,55,.12);
+}
+.hero-card .split-row:last-of-type{ border-bottom:none; }
+.hero-card .split-row .side{
+  font-weight:600; font-size:.7rem; letter-spacing:.16em;
+  color:rgba(244,233,200,.55);
+  text-transform:uppercase;
+}
+.hero-card .split-row .num{
+  font-weight:800; font-size:clamp(1.15rem, 2.2vw, 1.5rem);
+  line-height:1;
+  background:linear-gradient(180deg,#fff7d6,var(--gold-1) 50%,var(--gold-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero-card .split-row .num.up{
+  background:linear-gradient(180deg,var(--st-green-1),var(--st-green-2) 50%,var(--st-green-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero-card .split-row .num.down{
+  background:linear-gradient(180deg,var(--st-red-1),var(--st-red-2) 50%,var(--st-red-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+
 .hero-card .sub{
-  margin-top:8px; font-size:.82rem;
+  margin-top:10px; padding-top:8px;
+  border-top:1px solid rgba(212,175,55,.18);
+  font-size:.78rem;
   color:rgba(244,233,200,.55); font-style:italic;
+  display:flex; justify-content:space-between;
+}
+.hero-card .sub b{
+  font-style:normal; font-weight:700;
+  color:var(--gold-1);
 }
 
 /* ANALYTICS */
@@ -454,23 +491,44 @@ h1.title{
 }
 .pair-numbers{
   font-weight:800;
-  font-size:clamp(2rem, 4.6vw, 2.6rem);
+  font-size:clamp(1.9rem, 4.4vw, 2.5rem);
   line-height:1; letter-spacing:.12em;
 }
 
-/* PER-STATUS COLOR (pair numbers + label) */
+/* BET PILL — placed right under numbers inside each pair section */
+.pair-bet{
+  display:inline-block;
+  margin-top:6px;
+  font-weight:700; font-size:.62rem; letter-spacing:.1em;
+  padding:3px 10px; border-radius:3px;
+  border:1px solid; text-transform:uppercase;
+}
+
+/* PER-STATUS COLOR (label + numbers + bet pill) */
 .pair-section[data-status="green"] .pair-label{ color:rgba(110,231,183,.9);}
 .pair-section[data-status="green"] .pair-numbers{
   background:linear-gradient(180deg, var(--st-green-1), var(--st-green-2) 50%, var(--st-green-3));
   -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 14px var(--emerald-glow));
 }
+.pair-section[data-status="green"] .pair-bet{
+  background:rgba(34,197,94,.14);
+  border-color:rgba(110,231,183,.6);
+  color:var(--st-green-2);
+}
+
 .pair-section[data-status="yellow"] .pair-label{ color:rgba(251,191,36,.9);}
 .pair-section[data-status="yellow"] .pair-numbers{
   background:linear-gradient(180deg, var(--st-yellow-1), var(--st-yellow-2) 50%, var(--st-yellow-3));
   -webkit-background-clip:text; background-clip:text; color:transparent;
   filter:drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 14px var(--amber-glow));
 }
+.pair-section[data-status="yellow"] .pair-bet{
+  background:rgba(251,191,36,.14);
+  border-color:rgba(251,191,36,.6);
+  color:var(--st-yellow-2);
+}
+
 .pair-section[data-status="red"] .pair-label{ color:rgba(252,165,165,.75);}
 .pair-section[data-status="red"] .pair-numbers{
   background:linear-gradient(180deg, var(--st-red-1), var(--st-red-2) 50%, var(--st-red-3));
@@ -478,59 +536,53 @@ h1.title{
   opacity:.7;
   filter:drop-shadow(0 2px 0 rgba(0,0,0,.6));
 }
-
-/* STATS */
-.card .stats{
-  display:grid; grid-template-columns:1fr 1fr; gap:6px;
-  padding:8px 4px 4px;
-  border-top:1px solid rgba(212,175,55,.25);
-  position:relative; z-index:4;
-}
-.card .stat{
-  text-align:center; padding:5px 2px;
-  background:rgba(0,0,0,.35); border-radius:4px;
-}
-.card .stat .k{
-  font-weight:600; font-size:.58rem; letter-spacing:.15em;
-  color:rgba(244,233,200,.55); text-transform:uppercase;
-}
-.card .stat .v{
-  font-weight:700; font-size:1rem;
-  margin-top:2px; color:var(--gold-1);
-}
-.card .stat .v.up   { color:var(--st-green-2);}
-.card .stat .v.down { color:var(--st-red-2);}
-
-/* META — bet pills per side */
-.card .meta{
-  display:flex; gap:6px; margin-top:8px;
-  position:relative; z-index:4;
-}
-.bet-pill{
-  flex:1; text-align:center;
-  font-weight:700; font-size:.66rem; letter-spacing:.08em;
-  padding:5px 6px; border-radius:3px;
-  border:1px solid; text-transform:uppercase;
-}
-.bet-pill .side-tag{
-  display:inline-block; font-size:.92em;
-  margin-right:4px; opacity:.7; font-weight:800;
-}
-.bet-pill[data-status="green"]{
-  background:rgba(34,197,94,.12);
-  border-color:rgba(110,231,183,.6);
-  color:var(--st-green-2);
-}
-.bet-pill[data-status="yellow"]{
-  background:rgba(251,191,36,.12);
-  border-color:rgba(251,191,36,.6);
-  color:var(--st-yellow-2);
-}
-.bet-pill[data-status="red"]{
+.pair-section[data-status="red"] .pair-bet{
   background:rgba(220,38,38,.10);
   border-color:rgba(252,165,165,.45);
   color:var(--st-red-2);
 }
+
+/* STATS — split per side (Front / Back) */
+.card .stats-split{
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  padding:8px 0 4px;
+  border-top:1px solid rgba(212,175,55,.25);
+  position:relative; z-index:4;
+}
+.stat-col{
+  padding:7px 6px;
+  background:rgba(0,0,0,.35); border-radius:5px;
+  border:1px solid transparent;
+}
+.stat-col[data-status="green"] { border-color:rgba(110,231,183,.25);}
+.stat-col[data-status="yellow"]{ border-color:rgba(251,191,36,.25);}
+.stat-col[data-status="red"]   { border-color:rgba(252,165,165,.18);}
+
+.stat-col .col-head{
+  text-align:center;
+  font-weight:700; font-size:.6rem; letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:4px; padding-bottom:3px;
+  border-bottom:1px dashed rgba(212,175,55,.15);
+}
+.stat-col[data-status="green"]  .col-head{ color:var(--st-green-2);}
+.stat-col[data-status="yellow"] .col-head{ color:var(--st-yellow-2);}
+.stat-col[data-status="red"]    .col-head{ color:var(--st-red-2);}
+
+.stat-col .row{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:.7rem; padding:2px 0;
+}
+.stat-col .row .k{
+  color:rgba(244,233,200,.55);
+  font-weight:500;
+}
+.stat-col .row .v{
+  font-weight:700;
+  color:var(--gold-1);
+}
+.stat-col .row .v.up   { color:var(--st-green-2);}
+.stat-col .row .v.down { color:var(--st-red-2);}
 
 .card .footer-row{
   display:flex; justify-content:space-between; align-items:center;
@@ -564,6 +616,7 @@ footer .anchor{
   color:var(--gold-1); letter-spacing:.2em;
 }
 </style>
+
 </head>
 <body>
 
@@ -682,17 +735,62 @@ function renderAll(){
 }
 
 function renderHero(){
-  const p = STATE.data.portfolio[STATE.period] || {profit:0,invested:0,wins:0};
-  const roi = p.invested>0 ? (p.profit/p.invested*100) : 0;
-  const draws = p.invested>0 ? (p.invested/20) : 0;
-  const wr = draws>0 ? (p.wins/draws*100) : 0;
-  const cls = n => n>0?'profit-plus':n<0?'profit-minus':'';
+  // Compute F/B totals across all markets for the current period
+  const period = STATE.period;
+  const markets = STATE.data.markets || {};
+  const acc = {
+    f: {profit:0, invested:0, wins:0},
+    b: {profit:0, invested:0, wins:0}
+  };
+  Object.values(markets).forEach(m=>{
+    const fH = m.front?.history?.[period] || {};
+    const bH = m.back?.history?.[period]  || {};
+    acc.f.profit   += fH.profit||0;
+    acc.f.invested += fH.invested||0;
+    acc.f.wins     += fH.wins||0;
+    acc.b.profit   += bH.profit||0;
+    acc.b.invested += bH.invested||0;
+    acc.b.wins     += bH.wins||0;
+  });
+  const fDraws = acc.f.invested>0 ? acc.f.invested/20 : 0;
+  const bDraws = acc.b.invested>0 ? acc.b.invested/20 : 0;
+  const fWR = fDraws>0 ? acc.f.wins/fDraws*100 : 0;
+  const bWR = bDraws>0 ? acc.b.wins/bDraws*100 : 0;
+  const fROI = acc.f.invested>0 ? acc.f.profit/acc.f.invested*100 : 0;
+  const bROI = acc.b.invested>0 ? acc.b.profit/acc.b.invested*100 : 0;
+
+  const cls = n => n>0?'up':n<0?'down':'';
+  const sign = n => n>=0 ? '+' : '';
 
   const cards = [
-    {lbl:'Net Profit',       val:fmtMoney(p.profit)+' ฿',  sub:'Period · '+STATE.period.toUpperCase(), cls:cls(p.profit)},
-    {lbl:'Capital Deployed', val:fmtMoney(p.invested)+' ฿', sub:'Total invested', cls:''},
-    {lbl:'Win Rate',         val:fmtPct(wr),                sub:p.wins+' wins / '+Math.round(draws)+' positions', cls:''},
-    {lbl:'ROI',              val:roi.toFixed(2)+'%',        sub:'Return on capital', cls:cls(roi)}
+    {
+      lbl:'Net Profit',
+      fVal: sign(acc.f.profit)+fmtMoney(acc.f.profit)+' ฿',
+      bVal: sign(acc.b.profit)+fmtMoney(acc.b.profit)+' ฿',
+      fCls: cls(acc.f.profit), bCls: cls(acc.b.profit),
+      sub: 'Total · '+fmtMoney(acc.f.profit+acc.b.profit)+' ฿'
+    },
+    {
+      lbl:'Capital Deployed',
+      fVal: fmtMoney(acc.f.invested)+' ฿',
+      bVal: fmtMoney(acc.b.invested)+' ฿',
+      fCls:'', bCls:'',
+      sub: 'Total · '+fmtMoney(acc.f.invested+acc.b.invested)+' ฿'
+    },
+    {
+      lbl:'Win Rate',
+      fVal: fmtPct(fWR),
+      bVal: fmtPct(bWR),
+      fCls:'', bCls:'',
+      sub: '<span>'+acc.f.wins+'F · '+acc.b.wins+'B wins</span><b>'+STATE.period.toUpperCase()+'</b>'
+    },
+    {
+      lbl:'ROI',
+      fVal: fROI.toFixed(2)+'%',
+      bVal: bROI.toFixed(2)+'%',
+      fCls: cls(fROI), bCls: cls(bROI),
+      sub: 'Return on capital'
+    }
   ];
 
   document.getElementById('hero').innerHTML = cards.map(c=>`
@@ -700,7 +798,14 @@ function renderHero(){
       <span class="corner tl"></span><span class="corner tr"></span>
       <span class="corner bl"></span><span class="corner br"></span>
       <div class="lbl">${c.lbl}</div>
-      <div class="val ${c.cls}">${c.val}</div>
+      <div class="split-row">
+        <span class="side">⚔ Front</span>
+        <span class="num ${c.fCls}">${c.fVal}</span>
+      </div>
+      <div class="split-row">
+        <span class="side">⚓ Back</span>
+        <span class="num ${c.bCls}">${c.bVal}</span>
+      </div>
       <div class="sub">${c.sub}</div>
     </div>
   `).join('');
@@ -710,10 +815,8 @@ function renderCards(){
   const markets = STATE.data.markets || {};
   const total = Object.keys(markets).length;
   const items = Object.entries(markets).map(([name,m],i)=>{
-    const fHist = m.front?.history?.[STATE.period] || {profit:0,win_rate:0};
-    const bHist = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0};
-    const totalProfit = (fHist.profit||0)+(bHist.profit||0);
-    const avgWR = ((fHist.win_rate||0)+(bHist.win_rate||0))/2;
+    const fHist = m.front?.history?.[STATE.period] || {profit:0,win_rate:0,wins:0,invested:0};
+    const bHist = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0,wins:0,invested:0};
     const r = rarityOf(m);
     const fStatus = statusKey(m.front?.status);
     const bStatus = statusKey(m.back?.status);
@@ -722,6 +825,12 @@ function renderCards(){
     const fBet = m.front?.bet_size||0;
     const bBet = m.back?.bet_size||0;
     const serial = String(i+1).padStart(3,'0')+'/'+String(total).padStart(3,'0');
+
+    const fProfit = fHist.profit||0;
+    const bProfit = bHist.profit||0;
+    const fROI = (fHist.invested||0)>0 ? (fProfit/fHist.invested*100) : 0;
+    const bROI = (bHist.invested||0)>0 ? (bProfit/bHist.invested*100) : 0;
+    const profCls = v => v>0?'up':v<0?'down':'';
 
     return `
       <div class="card" data-rarity="${r}" onclick="location.href='detail.html?m=${encodeURIComponent(name)}'">
@@ -736,33 +845,34 @@ function renderCards(){
             <div class="pair-section" data-status="${fStatus}">
               <div class="pair-label">⚔ Front Pair</div>
               <div class="pair-numbers">${fPair}</div>
+              <div class="pair-bet">${fBet>0 ? 'BET '+fBet+'%' : 'SKIP'}</div>
             </div>
             <div class="pair-section" data-status="${bStatus}">
               <div class="pair-label">⚓ Back Pair</div>
               <div class="pair-numbers">${bPair}</div>
+              <div class="pair-bet">${bBet>0 ? 'BET '+bBet+'%' : 'SKIP'}</div>
             </div>
           </div>
 
-          <div class="stats">
-            <div class="stat">
-              <div class="k">Net Profit</div>
-              <div class="v ${totalProfit>0?'up':totalProfit<0?'down':''}">
-                ${totalProfit>=0?'+':''}${fmtMoney(totalProfit)}
-              </div>
+          <div class="stats-split">
+            <div class="stat-col" data-status="${fStatus}">
+              <div class="col-head">⚔ Front</div>
+              <div class="row"><span class="k">Profit</span>
+                <span class="v ${profCls(fProfit)}">${fProfit>=0?'+':''}${fmtMoney(fProfit)}</span></div>
+              <div class="row"><span class="k">Win Rate</span>
+                <span class="v">${fmtPct(fHist.win_rate||0)}</span></div>
+              <div class="row"><span class="k">ROI</span>
+                <span class="v ${profCls(fROI)}">${fROI.toFixed(1)}%</span></div>
             </div>
-            <div class="stat">
-              <div class="k">Avg Win Rate</div>
-              <div class="v">${fmtPct(avgWR)}</div>
+            <div class="stat-col" data-status="${bStatus}">
+              <div class="col-head">⚓ Back</div>
+              <div class="row"><span class="k">Profit</span>
+                <span class="v ${profCls(bProfit)}">${bProfit>=0?'+':''}${fmtMoney(bProfit)}</span></div>
+              <div class="row"><span class="k">Win Rate</span>
+                <span class="v">${fmtPct(bHist.win_rate||0)}</span></div>
+              <div class="row"><span class="k">ROI</span>
+                <span class="v ${profCls(bROI)}">${bROI.toFixed(1)}%</span></div>
             </div>
-          </div>
-
-          <div class="meta">
-            <span class="bet-pill" data-status="${fStatus}">
-              <span class="side-tag">F</span>${fBet>0 ? 'BET '+fBet+'%' : 'SKIP'}
-            </span>
-            <span class="bet-pill" data-status="${bStatus}">
-              <span class="side-tag">B</span>${bBet>0 ? 'BET '+bBet+'%' : 'SKIP'}
-            </span>
           </div>
 
           <div class="footer-row">
@@ -781,39 +891,43 @@ function renderCards(){
 function renderProfitChart(){
   const markets = STATE.data.markets || {};
   const labels = Object.keys(markets);
-  const data = labels.map(k=>{
-    const m = markets[k];
-    const f = m.front?.history?.[STATE.period]?.profit||0;
-    const b = m.back?.history?.[STATE.period]?.profit||0;
-    return f+b;
-  });
+  const fData = labels.map(k=> markets[k].front?.history?.[STATE.period]?.profit||0);
+  const bData = labels.map(k=> markets[k].back?.history?.[STATE.period]?.profit||0);
 
   const ctx = document.getElementById('chartProfit');
-  const grdPos = ctx.getContext('2d').createLinearGradient(0,0,0,260);
-  grdPos.addColorStop(0,'rgba(248,233,161,.95)');
-  grdPos.addColorStop(1,'rgba(184,148,30,.55)');
-  const grdNeg = ctx.getContext('2d').createLinearGradient(0,0,0,260);
-  grdNeg.addColorStop(0,'rgba(252,165,165,.85)');
-  grdNeg.addColorStop(1,'rgba(127,29,29,.55)');
-
   if(CHARTS.profit) CHARTS.profit.destroy();
   CHARTS.profit = new Chart(ctx,{
     type:'bar',
-    data:{labels, datasets:[{
-      label:'Net Profit', data,
-      backgroundColor: data.map(v=>v>=0?grdPos:grdNeg),
-      borderColor: data.map(v=>v>=0?'#f8e9a1':'#fca5a5'),
-      borderWidth:1, borderRadius:4
-    }]},
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'⚔ Front',
+          data: fData,
+          backgroundColor: fData.map(v=>v>=0?'rgba(248,233,161,.9)':'rgba(252,165,165,.85)'),
+          borderColor: fData.map(v=>v>=0?'#f8e9a1':'#fca5a5'),
+          borderWidth:1, borderRadius:4
+        },
+        {
+          label:'⚓ Back',
+          data: bData,
+          backgroundColor: bData.map(v=>v>=0?'rgba(212,175,55,.65)':'rgba(220,38,38,.55)'),
+          borderColor: bData.map(v=>v>=0?'#d4af37':'#dc2626'),
+          borderWidth:1, borderRadius:4
+        }
+      ]
+    },
     options:{
       responsive:true, maintainAspectRatio:false,
       plugins:{
-        legend:{display:false},
+        legend:{
+          labels:{color:'rgba(244,233,200,.85)',font:{family:'Sarabun',size:11,weight:'600'},boxWidth:14,padding:12}
+        },
         tooltip:{
           backgroundColor:'#0a1020', borderColor:'#d4af37', borderWidth:1,
           titleFont:{family:'Sarabun',weight:'700'},
           bodyFont:{family:'Sarabun'},
-          callbacks:{ label:c=>' '+fmtMoney(c.parsed.y)+' ฿' }
+          callbacks:{ label: c => ' '+c.dataset.label+': '+fmtMoney(c.parsed.y)+' ฿' }
         }
       },
       scales:{
@@ -867,5 +981,6 @@ document.getElementById('tabs').addEventListener('click', e=>{
 
 loadData();
 </script>
+
 </body>
 </html>
