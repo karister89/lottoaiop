@@ -1,22 +1,22 @@
 {
     "portfolio": {
         "15d": {
-            "profit": 2310.0,
+            "profit": 3100.0,
             "invested": 4800.0,
             "wins": 79
         },
         "30d": {
-            "profit": 3450.0,
+            "profit": 4900.0,
             "invested": 9600.0,
             "wins": 145
         },
         "60d": {
-            "profit": 1950.0,
+            "profit": 4300.0,
             "invested": 19200.0,
             "wins": 235
         },
         "100d": {
-            "profit": 1390.0,
+            "profit": 5100.0,
             "invested": 32000.0,
             "wins": 371
         }
@@ -33,25 +33,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 150.0,
+                        "profit": 200.0,
                         "win_rate": 33.33,
                         "wins": 5,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 120.0,
+                        "profit": 200.0,
                         "win_rate": 26.67,
                         "wins": 8,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": -120.0,
+                        "profit": 0.0,
                         "win_rate": 20.0,
                         "wins": 12,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 250.0,
+                        "profit": 500.0,
                         "win_rate": 25.0,
                         "wins": 25,
                         "invested": 2000.0
@@ -67,25 +67,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 60.0,
+                        "profit": 100.0,
                         "win_rate": 26.67,
                         "wins": 4,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 120.0,
+                        "profit": 200.0,
                         "win_rate": 26.67,
                         "wins": 8,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": -30.0,
+                        "profit": 100.0,
                         "win_rate": 21.67,
                         "wins": 13,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": -20.0,
+                        "profit": 200.0,
                         "win_rate": 22.0,
                         "wins": 22,
                         "invested": 2000.0
@@ -104,25 +104,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 330.0,
+                        "profit": 400.0,
                         "win_rate": 46.67,
                         "wins": 7,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 300.0,
+                        "profit": 400.0,
                         "win_rate": 33.33,
                         "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 150.0,
+                        "profit": 300.0,
                         "win_rate": 25.0,
                         "wins": 15,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 340.0,
+                        "profit": 600.0,
                         "win_rate": 26.0,
                         "wins": 26,
                         "invested": 2000.0
@@ -138,25 +138,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 240.0,
+                        "profit": 300.0,
                         "win_rate": 40.0,
                         "wins": 6,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 300.0,
+                        "profit": 400.0,
                         "win_rate": 33.33,
                         "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 420.0,
+                        "profit": 600.0,
                         "win_rate": 30.0,
                         "wins": 18,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 340.0,
+                        "profit": 600.0,
                         "win_rate": 26.0,
                         "wins": 26,
                         "invested": 2000.0
@@ -175,25 +175,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 60.0,
+                        "profit": 100.0,
                         "win_rate": 26.67,
                         "wins": 4,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 120.0,
+                        "profit": 200.0,
                         "win_rate": 26.67,
                         "wins": 8,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 150.0,
+                        "profit": 300.0,
                         "win_rate": 25.0,
                         "wins": 15,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 520.0,
+                        "profit": 800.0,
                         "win_rate": 28.0,
                         "wins": 28,
                         "invested": 2000.0
@@ -209,25 +209,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 60.0,
+                        "profit": 100.0,
                         "win_rate": 26.67,
                         "wins": 4,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 210.0,
+                        "profit": 300.0,
                         "win_rate": 30.0,
                         "wins": 9,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 150.0,
+                        "profit": 300.0,
                         "win_rate": 25.0,
                         "wins": 15,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 70.0,
+                        "profit": 300.0,
                         "win_rate": 23.0,
                         "wins": 23,
                         "invested": 2000.0
@@ -246,25 +246,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 150.0,
+                        "profit": 200.0,
                         "win_rate": 33.33,
                         "wins": 5,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 210.0,
+                        "profit": 300.0,
                         "win_rate": 30.0,
                         "wins": 9,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 510.0,
+                        "profit": 700.0,
                         "win_rate": 31.67,
                         "wins": 19,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 250.0,
+                        "profit": 500.0,
                         "win_rate": 25.0,
                         "wins": 25,
                         "invested": 2000.0
@@ -280,25 +280,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 60.0,
+                        "profit": 100.0,
                         "win_rate": 26.67,
                         "wins": 4,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 210.0,
+                        "profit": 300.0,
                         "win_rate": 30.0,
                         "wins": 9,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": -30.0,
+                        "profit": 100.0,
                         "win_rate": 21.67,
                         "wins": 13,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": -290.0,
+                        "profit": -100.0,
                         "win_rate": 19.0,
                         "wins": 19,
                         "invested": 2000.0
@@ -317,25 +317,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 150.0,
+                        "profit": 200.0,
                         "win_rate": 33.33,
                         "wins": 5,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 210.0,
+                        "profit": 300.0,
                         "win_rate": 30.0,
                         "wins": 9,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": -210.0,
+                        "profit": -100.0,
                         "win_rate": 18.33,
                         "wins": 11,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": -20.0,
+                        "profit": 200.0,
                         "win_rate": 22.0,
                         "wins": 22,
                         "invested": 2000.0
@@ -351,25 +351,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 240.0,
+                        "profit": 300.0,
                         "win_rate": 40.0,
                         "wins": 6,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 210.0,
+                        "profit": 300.0,
                         "win_rate": 30.0,
                         "wins": 9,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 330.0,
+                        "profit": 500.0,
                         "win_rate": 28.33,
                         "wins": 17,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": -20.0,
+                        "profit": 200.0,
                         "win_rate": 22.0,
                         "wins": 22,
                         "invested": 2000.0
@@ -388,25 +388,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 150.0,
+                        "profit": 200.0,
                         "win_rate": 33.33,
                         "wins": 5,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 390.0,
+                        "profit": 500.0,
                         "win_rate": 36.67,
                         "wins": 11,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 150.0,
+                        "profit": 300.0,
                         "win_rate": 25.0,
                         "wins": 15,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": -110.0,
+                        "profit": 100.0,
                         "win_rate": 21.0,
                         "wins": 21,
                         "invested": 2000.0
@@ -422,25 +422,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 60.0,
+                        "profit": 100.0,
                         "win_rate": 26.67,
                         "wins": 4,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 210.0,
+                        "profit": 300.0,
                         "win_rate": 30.0,
                         "wins": 9,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": -30.0,
+                        "profit": 100.0,
                         "win_rate": 21.67,
                         "wins": 13,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": -110.0,
+                        "profit": 100.0,
                         "win_rate": 21.0,
                         "wins": 21,
                         "invested": 2000.0
@@ -459,25 +459,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 150.0,
+                        "profit": 200.0,
                         "win_rate": 33.33,
                         "wins": 5,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 120.0,
+                        "profit": 200.0,
                         "win_rate": 26.67,
                         "wins": 8,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 240.0,
+                        "profit": 400.0,
                         "win_rate": 26.67,
                         "wins": 16,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 250.0,
+                        "profit": 500.0,
                         "win_rate": 25.0,
                         "wins": 25,
                         "invested": 2000.0
@@ -493,25 +493,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": -30.0,
+                        "profit": 0.0,
                         "win_rate": 20.0,
                         "wins": 3,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 120.0,
+                        "profit": 200.0,
                         "win_rate": 26.67,
                         "wins": 8,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 150.0,
+                        "profit": 300.0,
                         "win_rate": 25.0,
                         "wins": 15,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 70.0,
+                        "profit": 300.0,
                         "win_rate": 23.0,
                         "wins": 23,
                         "invested": 2000.0
@@ -530,25 +530,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 240.0,
+                        "profit": 300.0,
                         "win_rate": 40.0,
                         "wins": 6,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 300.0,
+                        "profit": 400.0,
                         "win_rate": 33.33,
                         "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 240.0,
+                        "profit": 400.0,
                         "win_rate": 26.67,
                         "wins": 16,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": 160.0,
+                        "profit": 400.0,
                         "win_rate": 24.0,
                         "wins": 24,
                         "invested": 2000.0
@@ -564,25 +564,25 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "15d": {
-                        "profit": 240.0,
+                        "profit": 300.0,
                         "win_rate": 40.0,
                         "wins": 6,
                         "invested": 300.0
                     },
                     "30d": {
-                        "profit": 300.0,
+                        "profit": 400.0,
                         "win_rate": 33.33,
                         "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": -120.0,
+                        "profit": 0.0,
                         "win_rate": 20.0,
                         "wins": 12,
                         "invested": 1200.0
                     },
                     "100d": {
-                        "profit": -290.0,
+                        "profit": -100.0,
                         "win_rate": 19.0,
                         "wins": 19,
                         "invested": 2000.0
