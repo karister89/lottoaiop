@@ -10,8 +10,8 @@ import sp_market, sp_stat, sp_math, sp_ai
 # =====================================================================
 # ⚙️ Configuration - Core Weight (V3 Split Position - 4 Phases Edition)
 # =====================================================================
-DATA_DIR = "/data/"
-WEIGHTS_OUT = "/data/dynamic_weights.json"
+DATA_DIR = "data"
+WEIGHTS_OUT = os.path.join(DATA_DIR, "dynamic_weights.json")
 
 def calculate_split_weights(draws, market_name):
     max_window = 100
