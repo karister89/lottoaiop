@@ -22,12 +22,11 @@
         <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-bold transition">← กลับหน้าหลัก</a>
         <div class="text-right">
             <h1 id="market-name" class="text-4xl font-black text-white uppercase tracking-tighter">LOADING...</h1>
-            <p id="market-status" class="text-xs font-bold text-slate-400">ANALYZING 100-DAY DATA</p>
+            <p class="text-xs font-bold text-slate-400">ANALYZING 100-DAY DATA</p>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
         <div class="lg:col-span-1 space-y-6">
             <div class="glass-card p-6 border-t-4 border-t-indigo-500">
                 <h2 class="text-lg font-bold mb-4">🎯 เลขเด่นปัจจุบัน (Sniper)</h2>
@@ -42,22 +41,12 @@
                     </div>
                 </div>
             </div>
-
             <div class="glass-card p-6">
                 <h2 class="text-lg font-bold mb-4">📊 สถิติรวม 100 วัน</h2>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                        <span class="text-slate-400 text-sm">กำไรสุทธิ</span>
-                        <span id="stat-profit" class="font-bold text-xl">--</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                        <span class="text-slate-400 text-sm">ความแม่นยำ</span>
-                        <span id="stat-wr" class="font-bold text-xl text-blue-400">--</span>
-                    </div>
-                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                        <span class="text-slate-400 text-sm">ชนะ / ทั้งหมด</span>
-                        <span id="stat-count" class="font-bold text-slate-200">--</span>
-                    </div>
+                <div class="space-y-4 text-sm">
+                    <div class="flex justify-between border-b border-white/5 pb-2"><span>กำไรสุทธิ</span><span id="stat-profit" class="font-bold">--</span></div>
+                    <div class="flex justify-between border-b border-white/5 pb-2"><span>ความแม่นยำ</span><span id="stat-wr" class="font-bold text-blue-400">--</span></div>
+                    <div class="flex justify-between border-b border-white/5 pb-2"><span>ชนะ / ทั้งหมด</span><span id="stat-count" class="font-bold text-slate-200">--</span></div>
                 </div>
             </div>
         </div>
@@ -65,18 +54,13 @@
         <div class="lg:col-span-2 space-y-6">
             <div class="glass-card p-6">
                 <h2 class="text-lg font-bold mb-4">📈 กราฟกำไรสะสม (Cumulative Profit)</h2>
-                <canvas id="profitChart" height="150"></canvas>
-            </div>
-            <div class="glass-card p-6">
-                <h2 class="text-lg font-bold mb-4">📉 แนวโน้มโอกาสชนะ (Win-Rate Trend)</h2>
-                <canvas id="wrChart" height="100"></canvas>
+                <canvas id="profitChart" height="180"></canvas>
             </div>
         </div>
 
         <div class="lg:col-span-3 glass-card overflow-hidden">
             <div class="p-6 border-b border-white/5 flex justify-between items-center">
                 <h2 class="text-lg font-bold">📜 บันทึกสมรภูมิย้อนหลัง 100 งวด</h2>
-                <span class="text-[10px] text-slate-500 uppercase">เรียงจากงวดล่าสุด</span>
             </div>
             <div class="overflow-x-auto max-h-[500px]">
                 <table class="w-full text-left">
@@ -84,13 +68,12 @@
                         <tr class="text-[11px] text-slate-400 uppercase tracking-widest">
                             <th class="p-4">วันที่</th>
                             <th class="p-4">ผลหวย</th>
-                            <th class="p-4">คู่เลข</th>
-                            <th class="p-4 text-center">สถานะ</th>
-                            <th class="p-4 text-right">กำไรต่อรอบ</th>
+                            <th class="p-4 text-center">หน้า</th>
+                            <th class="p-4 text-center">หลัง</th>
+                            <th class="p-4 text-right">กำไรสุทธิ</th>
                         </tr>
                     </thead>
-                    <tbody id="log-table">
-                        </tbody>
+                    <tbody id="log-table"></tbody>
                 </table>
             </div>
         </div>
@@ -98,150 +81,76 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const marketName = urlParams.get('m') || 'NIKKEI';
+        const marketName = urlParams.get('m')?.toUpperCase() || 'NIKKEI';
         const PAYOUT = 100;
-        const COST = 40; // รูดหน้า 20 + หลัง 20 = 40
+        const COST = 40;
 
         async function loadDetail() {
             try {
-                // 1. ดึงข้อมูล Summary และเลขเด่นปัจจุบัน
                 const resSyn = await fetch('data/final_synergy.json');
                 const synData = await resSyn.json();
-                const mInfo = synData.markets[marketName.toUpperCase()];
-                
-                if (!mInfo) throw new Error("ไม่พบข้อมูลตลาด");
+                const mInfo = synData.markets[marketName];
+                if (!mInfo) throw new Error("ไม่พบข้อมูล");
 
                 document.getElementById('market-name').innerText = marketName;
                 document.getElementById('f-pair').innerText = mInfo.front.pair.join(',');
                 document.getElementById('b-pair').innerText = mInfo.back.pair.join(',');
 
-                // 2. ดึงข้อมูลดิบย้อนหลัง 100 วัน
                 const resRaw = await fetch(`data/raw_${marketName.toLowerCase()}.json`);
                 const rawData = await resRaw.json();
-                const history = rawData.slice(0, 100).reverse(); // เอามา 100 วัน และกลับด้านเพื่อวาดกราฟจากอดีตไปปัจจุบัน
+                const history = rawData.slice(0, 100).reverse();
 
                 let currentProfit = 0;
                 let wins = 0;
                 let profitData = [];
-                let wrData = [];
                 let labels = [];
-
                 const tableBody = document.getElementById('log-table');
-                tableBody.innerHTML = '';
 
-                // ประมวลผลข้อมูล (จำลองการแทง 100 วันด้วยเลขปัจจุบัน)
                 history.forEach((row, index) => {
                     const draw = String(row.twoTop).padStart(2, '0');
-                    const frontResult = draw[0];
-                    const backResult = draw[1];
                     const fp = mInfo.front.pair.map(String);
                     const bp = mInfo.back.pair.map(String);
+                    
+                    const fHit = fp.includes(draw[0]);
+                    const bHit = bp.includes(draw[1]);
+                    const hit = fHit || bHit;
+                    if(hit) wins++;
 
-                    let hit = false;
                     let roundProfit = -COST;
-
-                    if (fp.includes(frontResult) || bp.includes(backResult)) {
-                        wins++;
-                        hit = true;
-                        // คิดกำไร: ถ้าถูกทั้งหน้าและหลังจะได้เบิ้ล แต่บอทเราคิดแยกสมรภูมิ
-                        let winCount = 0;
-                        if(fp.includes(frontResult)) winCount++;
-                        if(bp.includes(backResult)) winCount++;
-                        roundProfit = (winCount * PAYOUT) - COST;
-                    }
+                    if(fHit) roundProfit += PAYOUT;
+                    if(bHit) roundProfit += PAYOUT;
 
                     currentProfit += roundProfit;
-                    const currentWR = ((wins / (index + 1)) * 100).toFixed(1);
-
                     profitData.push(currentProfit);
-                    wrData.push(currentWR);
                     labels.push(row.date);
 
-                    // สร้างแถวตาราง (แสดงผลแบบเรียงลงคือเอาล่าสุดไว้บน)
                     const tr = document.createElement('tr');
                     tr.className = `border-b border-white/5 text-sm ${hit ? 'win-row' : 'miss-row'}`;
                     tr.innerHTML = `
                         <td class="p-4 text-slate-400">${row.date}</td>
-                        <td class="p-4 font-mono font-bold text-white">${draw}</td>
-                        <td class="p-4 text-xs text-slate-300">หน้า:[${fp}] หลัง:[${bp}]</td>
-                        <td class="p-4 text-center">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${hit ? 'bg-green-500 text-white' : 'bg-slate-700 text-slate-400'}">
-                                ${hit ? 'WIN' : 'MISS'}
-                            </span>
-                        </td>
-                        <td class="p-4 text-right font-bold ${roundProfit > 0 ? 'text-green-400' : 'text-red-400'}">
-                            ${roundProfit > 0 ? '+' : ''}${roundProfit}
-                        </td>
+                        <td class="p-4 font-mono font-bold">${draw}</td>
+                        <td class="p-4 text-center">${fHit ? '✅' : '❌'}</td>
+                        <td class="p-4 text-center">${bHit ? '✅' : '❌'}</td>
+                        <td class="p-4 text-right font-bold ${roundProfit > 0 ? 'text-green-400' : 'text-red-400'}">${roundProfit > 0 ? '+' : ''}${roundProfit} ฿</td>
                     `;
-                    tableBody.prepend(tr); // เอาล่าสุดขึ้นบน
+                    tableBody.prepend(tr);
                 });
 
-                // อัปเดต Summary ด้านซ้าย
                 document.getElementById('stat-profit').innerText = currentProfit.toLocaleString() + " ฿";
-                document.getElementById('stat-profit').className = `text-xl font-bold ${currentProfit >= 0 ? 'text-green-400' : 'text-red-400'}`;
+                document.getElementById('stat-profit').className = `font-bold text-xl ${currentProfit >= 0 ? 'text-green-400' : 'text-red-400'}`;
                 document.getElementById('stat-wr').innerText = ((wins / history.length) * 100).toFixed(1) + "%";
                 document.getElementById('stat-count').innerText = `${wins} / ${history.length} งวด`;
 
-                // วาดกราฟ
-                renderCharts(labels, profitData, wrData);
-
-            } catch (e) {
-                console.error(e);
-                document.body.innerHTML = `<div class="p-20 text-center text-red-500">❌ Error: ${e.message}</div>`;
-            }
-        }
-
-        function renderCharts(labels, profitData, wrData) {
-            // กราฟกำไร
-            new Chart(document.getElementById('profitChart'), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'กำไรสะสม (บาท)',
-                        data: profitData,
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
-                        x: { display: false }
+                new Chart(document.getElementById('profitChart'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{ label: 'Profit', data: profitData, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.3, pointRadius: 0 }]
                     },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // กราฟวินเรท
-            new Chart(document.getElementById('wrChart'), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Win-Rate (%)',
-                        data: wrData,
-                        borderColor: '#3b82f6',
-                        borderDash: [5, 5],
-                        tension: 0.4,
-                        pointRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { min: 0, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
-                        x: { display: false }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
+                    options: { responsive: true, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { display: false } }, plugins: { legend: { display: false } } }
+                });
+            } catch (e) { console.error(e); }
         }
-
         loadDetail();
     </script>
 </body>
