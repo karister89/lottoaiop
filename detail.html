@@ -1,33 +1,128 @@
-// ฟังก์ชัน smartFetch สำหรับดึงข้อมูลรายตลาดที่ยืดหยุ่นขึ้น
-async function smartFetchRaw(marketName) {
-    const variants = [
-        `data/raw_${marketName.toUpperCase()}.json`,
-        `data/raw_${marketName.toLowerCase()}.json`
-    ];
-    
-    for (let path of variants) {
-        try {
-            const res = await fetch(path);
-            if (res.ok) return await res.json();
-        } catch (e) { continue; }
-    }
-    throw new Error("ไม่พบไฟล์ข้อมูลดิบสำหรับตลาด " + marketName);
-}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Details - Sovereign V3</title>
+    <style>
+        :root { --primary: #2563eb; --success: #22c55e; --danger: #ef4444; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .back-btn { margin-bottom: 20px; cursor: pointer; color: var(--primary); text-decoration: none; display: inline-block; }
+        
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        
+        /* Stats Grid */
+        .detail-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .stat-box { padding: 15px; border-radius: 12px; background: #f1f5f9; text-align: center; }
+        .stat-box .label { font-size: 0.8rem; color: #64748b; display: block; }
+        .stat-box .value { font-size: 1.3rem; font-weight: bold; margin-top: 5px; }
+        .value.plus { color: var(--success); }
+        .value.minus { color: var(--danger); }
 
-// เพิ่มส่วนการแสดง Win-Rate แยก 30/60/90 วันในหน้ารายละเอียด
-function renderMarketDetail(period) {
-    const stats = marketData.history[period];
-    const html = `
-        <div class="detail-stats-grid">
-            <div class="stat-box">
-                <span class="label">Net Profit (${period})</span>
-                <span class="value ${stats.profit >= 0 ? 'plus' : 'minus'}">${stats.profit} ฿</span>
-            </div>
-            <div class="stat-box">
-                <span class="label">Win-Rate</span>
-                <span class="value">${stats.win_rate}%</span>
-            </div>
+        /* Tabs */
+        .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.85rem; }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        /* Pair Display */
+        .pair-card { background: #eff6ff; padding: 20px; border-radius: 12px; text-align: center; border: 2px solid #dbeafe; }
+        .pair-card h3 { margin: 0; color: #1e40af; }
+        .numbers { font-size: 2rem; letter-spacing: 5px; color: var(--primary); margin: 10px 0; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">⬅️ กลับหน้าหลัก</a>
+
+    <div class="container">
+        <h1 id="market-title">กำลังโหลด...</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn" onclick="switchPeriod('15d')">15 วัน</button>
+            <button class="tab-btn active" onclick="switchPeriod('30d')">30 วัน</button>
+            <button class="tab-btn" onclick="switchPeriod('60d')">60 วัน</button>
+            <button class="tab-btn" onclick="switchPeriod('90d')">90 วัน</button>
+            <button class="tab-btn" onclick="switchPeriod('100d')">100 วัน</button>
         </div>
-    `;
-    document.getElementById('stats-display').innerHTML = html;
-}
+
+        <div class="pair-card">
+            <h3>ชุดตัวเลขที่แนะนำ</h3>
+            <div id="pair-numbers" class="numbers">-- , --</div>
+            <div id="bet-status">สถานะ: --</div>
+        </div>
+
+        <div id="stats-display" class="detail-stats-grid">
+            </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const marketName = urlParams.get('m');
+        let fullData = {};
+        let currentMarket = {};
+
+        async function initDetail() {
+            try {
+                const res = await fetch('data/final_synergy.json');
+                fullData = await res.json();
+                currentMarket = fullData.markets[marketName];
+                
+                document.getElementById('market-title').innerText = marketName.toUpperCase();
+                document.getElementById('pair-numbers').innerText = 
+                    `หน้า: ${currentMarket.front.pair} | หลัง: ${currentMarket.back.pair}`;
+                document.getElementById('bet-status').innerText = 
+                    `สถานะลงทุน: ${currentMarket.front.status}`;
+
+                switchPeriod('30d');
+            } catch (e) {
+                console.error("Error:", e);
+            }
+        }
+
+        function switchPeriod(period) {
+            // อัปเดตปุ่ม Active
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.includes(period.replace('d','')));
+            });
+
+            renderMarketDetail(period);
+        }
+
+        // โค้ดที่พี่ส่งมา: ฟังก์ชันแสดง Win-Rate และ Profit
+        function renderMarketDetail(period) {
+            const fStats = currentMarket.front.history[period];
+            const bStats = currentMarket.back.history[period];
+            
+            const totalProfit = fStats.profit + bStats.profit;
+            const avgWinRate = ((fStats.win_rate + bStats.win_rate) / 2).toFixed(2);
+
+            const html = `
+                <div class="stat-box">
+                    <span class="label">Net Profit (${period})</span>
+                    <span class="value ${totalProfit >= 0 ? 'plus' : 'minus'}">${totalProfit.toLocaleString()} ฿</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">Win-Rate เฉลี่ย</span>
+                    <span class="value">${avgWinRate}%</span>
+                </div>
+            `;
+            document.getElementById('stats-display').innerHTML = html;
+        }
+
+        // โค้ดที่พี่ส่งมา: smartFetch สำหรับดึงข้อมูลดิบ (เผื่อใช้ทำกราฟในอนาคต)
+        async function smartFetchRaw(marketName) {
+            const variants = [
+                `data/raw_${marketName.toUpperCase()}.json`,
+                `data/raw_${marketName.toLowerCase()}.json`
+            ];
+            for (let path of variants) {
+                try {
+                    const res = await fetch(path);
+                    if (res.ok) return await res.json();
+                } catch (e) { continue; }
+            }
+            throw new Error("ไม่พบไฟล์ข้อมูลดิบสำหรับตลาด " + marketName);
+        }
+
+        initDetail();
+    </script>
