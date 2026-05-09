@@ -1,3 +1,204 @@
 {
-    "markets": {}
+    "markets": {
+        "NIKKEI": {
+            "front": {
+                "pair": [
+                    1,
+                    2
+                ],
+                "win_rate": 26.666666666666668,
+                "profit": 120,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.781
+            },
+            "back": {
+                "pair": [
+                    6,
+                    7
+                ],
+                "win_rate": 26.666666666666668,
+                "profit": 120,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.743
+            },
+            "last_update": "Sovereign-V3-Weights"
+        },
+        "FTSE": {
+            "front": {
+                "pair": [
+                    0,
+                    7
+                ],
+                "win_rate": 33.33333333333333,
+                "profit": 300,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.558
+            },
+            "back": {
+                "pair": [
+                    1,
+                    9
+                ],
+                "win_rate": 33.33333333333333,
+                "profit": 300,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.752
+            },
+            "last_update": "Sovereign-V3-Weights"
+        },
+        "HANGSENG": {
+            "front": {
+                "pair": [
+                    5,
+                    7
+                ],
+                "win_rate": 26.666666666666668,
+                "profit": 120,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.498
+            },
+            "back": {
+                "pair": [
+                    3,
+                    4
+                ],
+                "win_rate": 30.0,
+                "profit": 210,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.78
+            },
+            "last_update": "Sovereign-V3-Weights"
+        },
+        "DAX": {
+            "front": {
+                "pair": [
+                    2,
+                    9
+                ],
+                "win_rate": 30.0,
+                "profit": 210,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.541
+            },
+            "back": {
+                "pair": [
+                    7,
+                    8
+                ],
+                "win_rate": 30.0,
+                "profit": 210,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.529
+            },
+            "last_update": "Sovereign-V3-Weights"
+        },
+        "SENSEX": {
+            "front": {
+                "pair": [
+                    3,
+                    4
+                ],
+                "win_rate": 30.0,
+                "profit": 210,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.48
+            },
+            "back": {
+                "pair": [
+                    0,
+                    2
+                ],
+                "win_rate": 30.0,
+                "profit": 210,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.71
+            },
+            "last_update": "Sovereign-V3-Weights"
+        },
+        "TPE": {
+            "front": {
+                "pair": [
+                    1,
+                    6
+                ],
+                "win_rate": 36.666666666666664,
+                "profit": 390,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.775
+            },
+            "back": {
+                "pair": [
+                    3,
+                    9
+                ],
+                "win_rate": 30.0,
+                "profit": 210,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.784
+            },
+            "last_update": "Sovereign-V3-Weights"
+        },
+        "DJI": {
+            "front": {
+                "pair": [
+                    2,
+                    9
+                ],
+                "win_rate": 26.666666666666668,
+                "profit": 120,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.678
+            },
+            "back": {
+                "pair": [
+                    4,
+                    7
+                ],
+                "win_rate": 26.666666666666668,
+                "profit": 120,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.309
+            },
+            "last_update": "Sovereign-V3-Weights"
+        },
+        "SHE": {
+            "front": {
+                "pair": [
+                    4,
+                    8
+                ],
+                "win_rate": 33.33333333333333,
+                "profit": 300,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.749
+            },
+            "back": {
+                "pair": [
+                    5,
+                    6
+                ],
+                "win_rate": 33.33333333333333,
+                "profit": 300,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.798
+            },
+            "last_update": "Sovereign-V3-Weights"
+        }
+    }
 }
