@@ -37,33 +37,53 @@
             </div>
             <div class="card p-4 border-l-4 border-purple-500">
                 <p class="text-slate-400 text-xs">LAST SYNC</p>
-                <h2 id="last-sync" class="text-sm font-bold mt-2 text-slate-300">--:--</h2>
+                <h2 id="last-sync" class="text-[10px] font-bold mt-2 text-slate-300 leading-tight">--/--/-- --:--</h2>
             </div>
         </div>
     </div>
 
     <div id="market-list" class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
-        </div>
+    </div>
 
     <script>
         const marketOrder = ["TPE", "NIKKEI", "SHE", "HANGSENG", "SENSEX", "DAX", "FTSE", "DJI"];
 
-        // 🔻 ฟังก์ชันใหม่: คำนวณวันงวดถัดไป "อิงจากวันที่ล่าสุดของตลาดนั้นๆ" 🔻
-        function getNextWorkingDate(lastDateStr) {
-            // ถ้าไม่มีข้อมูลวันที่ส่งมาจากบอท ให้แสดงข้อความแจ้งเตือน
-            if (!lastDateStr) return "รอข้อมูลวันที่";
-
-            let d = new Date(lastDateStr);
-            if (isNaN(d)) return "รูปแบบวันไม่ถูกต้อง";
-
-            d.setDate(d.getDate() + 1); // บวกไป 1 วันจากผลล่าสุดของหุ้น
-            if (d.getDay() === 6) d.setDate(d.getDate() + 2); // ถ้าบวกแล้วเป็นเสาร์ ให้เด้งไปจันทร์ (+2)
-            if (d.getDay() === 0) d.setDate(d.getDate() + 1); // ถ้าบวกแล้วเป็นอาทิตย์ ให้เด้งไปจันทร์ (+1)
-            
-            return d.toLocaleDateString('th-TH', {day:'numeric', month:'short', year:'2-digit'});
+        // แปลงสีจากสถานะเป็น Class ของ Tailwind
+        function getColorClass(status) {
+            if (!status) return "text-white";
+            const s = status.toUpperCase();
+            if (s.includes("GREEN")) return "text-green-400";
+            if (s.includes("YELLOW")) return "text-yellow-400";
+            if (s.includes("RED")) return "text-red-400";
+            return "text-white";
         }
 
-        // ฟังก์ชันสร้างตารางสถิติย้อนหลัง
+        // ฟังก์ชันคำนวณหาวันเปิดตลาดถัดไป (d/m/y)
+        function getNextWorkingDate(lastDateStr) {
+            if (!lastDateStr) return "รอข้อมูล";
+
+            // รองรับรูปแบบ d/m/y จาก Sheets หรือ y-m-d จาก Python
+            let parts = lastDateStr.split(/[-/]/);
+            let d;
+            if (parts[0].length === 4) { // yyyy-mm-dd
+                d = new Date(parts[0], parts[1]-1, parts[2]);
+            } else { // dd/mm/yyyy
+                d = new Date(parts[2], parts[1]-1, parts[0]);
+            }
+
+            if (isNaN(d)) return lastDateStr;
+
+            d.setDate(d.getDate() + 1); 
+            if (d.getDay() === 6) d.setDate(d.getDate() + 2); 
+            if (d.getDay() === 0) d.setDate(d.getDate() + 1); 
+            
+            // ส่งกลับเป็น d/m/y
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
         function generateStatTable(history) {
             let rows = "";
             ["15d", "30d", "60d", "100d"].forEach(period => {
@@ -80,12 +100,7 @@
                     `;
                 }
             });
-            return `
-                <table class="stat-table">
-                    <thead><tr><th>ระยะ</th><th>กำไร</th><th>โอกาส</th></tr></thead>
-                    <tbody>${rows}</tbody>
-                </table>
-            `;
+            return `<table class="stat-table"><thead><tr><th>ระยะ</th><th>กำไร</th><th>โอกาส</th></tr></thead><tbody>${rows}</tbody></table>`;
         }
 
         async function initDashboard() {
@@ -97,12 +112,11 @@
                 const container = document.getElementById('market-list');
                 container.innerHTML = '';
                 
-                // ข้อมูลภาพรวมจาก JSON
                 if(data.portfolio && data.portfolio["30d"]) {
                     document.getElementById('total-profit').innerText = data.portfolio["30d"].profit.toLocaleString() + " ฿";
                     document.getElementById('total-invested').innerText = data.portfolio["30d"].invested.toLocaleString() + " ฿";
                     let totalWins = data.portfolio["30d"].wins;
-                    let avgWinRate = (totalWins / (8 * 2 * 30) * 100).toFixed(1); 
+                    let avgWinRate = (totalWins / (marketOrder.length * 2 * 30) * 100).toFixed(1); 
                     document.getElementById('total-winrate').innerText = avgWinRate + "%";
                 }
                 
@@ -110,7 +124,6 @@
                     const m = data.markets[mKey];
                     if (!m) return;
 
-                    // 🔻 ส่งวันที่ล่าวสุดของตลาดนี้ (m.last_date) เข้าไปบวก 1 วัน 🔻
                     const nextDate = getNextWorkingDate(m.last_date);
 
                     const marketHTML = `
@@ -123,46 +136,52 @@
                             </div>
                             
                             <div class="grid grid-cols-2 p-3 gap-3">
-                                
-                                <div class="side-panel border-t-2 border-t-yellow-500">
+                                <div class="side-panel border-t-2 border-t-slate-700">
                                     <div class="flex justify-between items-start mb-2">
                                         <div>
-                                            <p class="text-[10px] text-slate-400 font-bold">รูดหน้า (FRONT)</p>
-                                            <p class="text-3xl font-black text-yellow-400">${m.front.pair[0]},${m.front.pair[1]}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">รูดหน้า</p>
+                                            <p class="text-3xl font-black ${getColorClass(m.front.status)}">
+                                                ${m.front.pair[0]},${m.front.pair[1]}
+                                            </p>
                                         </div>
                                         <div class="text-right">
-                                            <p class="text-[9px] text-slate-500">ลงทุน</p>
-                                            <p class="text-sm font-bold ${m.front.bet_size > 0 ? 'text-white' : 'text-slate-500'}">${m.front.bet_size}%</p>
+                                            <p class="text-[9px] text-slate-500">ลงเงิน</p>
+                                            <p class="text-sm font-bold text-white">${m.front.bet_size}%</p>
                                         </div>
                                     </div>
                                     ${generateStatTable(m.front.history)}
                                 </div>
 
-                                <div class="side-panel border-t-2 border-t-emerald-500">
+                                <div class="side-panel border-t-2 border-t-slate-700">
                                     <div class="flex justify-between items-start mb-2">
                                         <div>
-                                            <p class="text-[10px] text-slate-400 font-bold">รูดหลัง (BACK)</p>
-                                            <p class="text-3xl font-black text-emerald-400">${m.back.pair[0]},${m.back.pair[1]}</p>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">รูดหลัง</p>
+                                            <p class="text-3xl font-black ${getColorClass(m.back.status)}">
+                                                ${m.back.pair[0]},${m.back.pair[1]}
+                                            </p>
                                         </div>
                                         <div class="text-right">
-                                            <p class="text-[9px] text-slate-500">ลงทุน</p>
-                                            <p class="text-sm font-bold ${m.back.bet_size > 0 ? 'text-white' : 'text-slate-500'}">${m.back.bet_size}%</p>
+                                            <p class="text-[9px] text-slate-500">ลงเงิน</p>
+                                            <p class="text-sm font-bold text-white">${m.back.bet_size}%</p>
                                         </div>
                                     </div>
                                     ${generateStatTable(m.back.history)}
                                 </div>
-
                             </div>
                         </div>
                     `;
                     container.innerHTML += marketHTML;
                 });
 
-                document.getElementById('last-sync').innerText = new Date().toLocaleTimeString('th-TH');
+                // แสดงผล Last Sync แบบ วัน/เดือน/ปี เวลา:นาที:วินาที
+                const now = new Date();
+                const dSync = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+                const tSync = now.toLocaleTimeString('th-TH', { hour12: false });
+                document.getElementById('last-sync').innerText = dSync + " " + tSync;
 
             } catch (err) {
-                console.error("Data fetch error:", err);
-                document.getElementById('market-list').innerHTML = `<div class="col-span-full text-center p-4 text-red-500">โหลดข้อมูลไม่สำเร็จ: ตรวจสอบไฟล์ final_synergy.json</div>`;
+                console.error(err);
+                document.getElementById('market-list').innerHTML = `<div class="col-span-full text-center p-4 text-red-500">Error: ไม่พบข้อมูลหรือไฟล์พัง</div>`;
             }
         }
 
