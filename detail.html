@@ -1,192 +1,33 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovereign V3 - Analysis Center</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #020617; color: #f1f5f9; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; }
-        .win-row { background: rgba(34, 197, 94, 0.1); }
-        .miss-row { background: rgba(239, 68, 68, 0.05); }
-    </style>
-</head>
-<body class="p-4 md:p-8">
+// ฟังก์ชัน smartFetch สำหรับดึงข้อมูลรายตลาดที่ยืดหยุ่นขึ้น
+async function smartFetchRaw(marketName) {
+    const variants = [
+        `data/raw_${marketName.toUpperCase()}.json`,
+        `data/raw_${marketName.toLowerCase()}.json`
+    ];
+    
+    for (let path of variants) {
+        try {
+            const res = await fetch(path);
+            if (res.ok) return await res.json();
+        } catch (e) { continue; }
+    }
+    throw new Error("ไม่พบไฟล์ข้อมูลดิบสำหรับตลาด " + marketName);
+}
 
-    <div class="max-w-7xl mx-auto flex justify-between items-center mb-8">
-        <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-bold transition">← กลับหน้าหลัก</a>
-        <div class="text-right">
-            <h1 id="market-display-name" class="text-4xl font-black text-white uppercase tracking-tighter">กำลังโหลด...</h1>
-            <p id="load-status" class="text-xs font-bold text-blue-400">ระบบกำลังค้นหาไฟล์ raw_TPE.json</p>
-        </div>
-    </div>
-
-    <div id="main-content" class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 opacity-0 transition-opacity duration-500">
-        <div class="lg:col-span-1 space-y-6">
-            <div class="glass-card p-6 border-t-4 border-t-indigo-500 text-center">
-                <h2 class="text-lg font-bold mb-4 text-slate-300">🎯 ชุดเลขที่บอทเลือก</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-black/40 p-3 rounded-xl">
-                        <p class="text-[10px] text-slate-400 mb-1 uppercase font-bold">รูดหน้า</p>
-                        <p id="f-pair" class="text-3xl font-black text-yellow-400">--</p>
-                    </div>
-                    <div class="bg-black/40 p-3 rounded-xl">
-                        <p class="text-[10px] text-slate-400 mb-1 uppercase font-bold">รูดหลัง</p>
-                        <p id="b-pair" class="text-3xl font-black text-emerald-400">--</p>
-                    </div>
-                </div>
+// เพิ่มส่วนการแสดง Win-Rate แยก 30/60/90 วันในหน้ารายละเอียด
+function renderMarketDetail(period) {
+    const stats = marketData.history[period];
+    const html = `
+        <div class="detail-stats-grid">
+            <div class="stat-box">
+                <span class="label">Net Profit (${period})</span>
+                <span class="value ${stats.profit >= 0 ? 'plus' : 'minus'}">${stats.profit} ฿</span>
             </div>
-            <div class="glass-card p-6">
-                <h2 class="text-lg font-bold mb-4">📊 สรุปผล 100 งวด</h2>
-                <div class="space-y-4 text-sm">
-                    <div class="flex justify-between border-b border-white/5 pb-2"><span>กำไรสะสม</span><span id="stat-profit" class="font-bold">--</span></div>
-                    <div class="flex justify-between border-b border-white/5 pb-2"><span>ความแม่นยำ</span><span id="stat-wr" class="font-bold text-blue-400">--</span></div>
-                    <div class="flex justify-between border-b border-white/5 pb-2"><span>เข้าเป้า</span><span id="stat-count" class="font-bold">--</span></div>
-                </div>
+            <div class="stat-box">
+                <span class="label">Win-Rate</span>
+                <span class="value">${stats.win_rate}%</span>
             </div>
         </div>
-
-        <div class="lg:col-span-2">
-            <div class="glass-card p-6 h-full">
-                <h2 class="text-lg font-bold mb-4 text-indigo-300">📈 กราฟกำไรสะสม (Performance)</h2>
-                <canvas id="profitChart"></canvas>
-            </div>
-        </div>
-
-        <div class="lg:col-span-3 glass-card overflow-hidden">
-            <div class="overflow-x-auto max-h-[600px]">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-900/80 sticky top-0 backdrop-blur-md">
-                        <tr class="text-[11px] text-slate-400 uppercase tracking-widest">
-                            <th class="p-4">วันที่</th><th class="p-4">ผล</th><th class="p-4 text-center">หน้า</th><th class="p-4 text-center">หลัง</th><th class="p-4 text-right">กำไรสุทธิ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="log-table"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const marketParam = urlParams.get('m') || 'TPE';
-        const PAYOUT = 100;
-        const COST = 40;
-
-        // ฟังก์ชันพิเศษ: ลองดึงไฟล์ทุกรูปแบบที่เป็นไปได้ (Case Insensitive Fetch)
-        async function smartFetchRaw(market) {
-            const paths = [
-                `data/raw_${market.toUpperCase()}.json`, // ลอง TPE.json ก่อน
-                `data/raw_${market.toLowerCase()}.json`, // ลอง tpe.json
-                `data/raw_${market}.json`               // ลองตามที่ส่งมา
-            ];
-
-            for (let path of paths) {
-                try {
-                    const res = await fetch(path);
-                    if (res.ok) return await res.json();
-                } catch (e) {}
-            }
-            throw new Error(`หาไฟล์ raw_${market}.json ไม่พบทั้งตัวเล็กและตัวใหญ่`);
-        }
-
-        async function loadDetail() {
-            const statusEl = document.getElementById('load-status');
-            try {
-                // 1. ดึงข้อมูลสรุป
-                const resSyn = await fetch('data/final_synergy.json');
-                const synData = await resSyn.json();
-                const mKey = marketParam.toUpperCase();
-                const mInfo = synData.markets[mKey] || synData.markets[marketParam.toLowerCase()];
-                
-                if (!mInfo) throw new Error(`ไม่พบตลาด ${mKey} ในไฟล์ synergy`);
-
-                document.getElementById('market-display-name').innerText = mKey;
-                document.getElementById('f-pair').innerText = mInfo.front.pair.join(',');
-                document.getElementById('b-pair').innerText = mInfo.back.pair.join(',');
-
-                // 2. ดึงข้อมูลดิบด้วยระบบ Smart Fetch
-                const rawData = await smartFetchRaw(marketParam);
-
-                const history = rawData.slice(0, 100).reverse();
-                let currentProfit = 0;
-                let wins = 0;
-                let profitData = [];
-                let labels = [];
-                const tableBody = document.getElementById('log-table');
-
-                history.forEach((row) => {
-                    const draw = String(row.twoTop || row.TwoTop || "00").padStart(2, '0');
-                    const fHit = mInfo.front.pair.map(String).includes(draw[0]);
-                    const bHit = mInfo.back.pair.map(String).includes(draw[1]);
-                    const isWin = fHit || bHit;
-
-                    if(isWin) wins++;
-                    let roundProfit = -COST;
-                    if(fHit) roundProfit += PAYOUT;
-                    if(bHit) roundProfit += PAYOUT;
-
-                    currentProfit += roundProfit;
-                    profitData.push(currentProfit);
-                    labels.push(row.date || row.Date || "");
-
-                    const tr = document.createElement('tr');
-                    tr.className = `border-b border-white/5 text-sm ${isWin ? 'win-row' : 'miss-row'}`;
-                    tr.innerHTML = `
-                        <td class="p-4 text-slate-400 text-xs">${row.date || row.Date}</td>
-                        <td class="p-4 font-mono font-bold">${draw}</td>
-                        <td class="p-4 text-center">${fHit ? '✅' : '❌'}</td>
-                        <td class="p-4 text-center">${bHit ? '✅' : '❌'}</td>
-                        <td class="p-4 text-right font-bold ${roundProfit > 0 ? 'text-green-400' : 'text-red-400'}">${roundProfit > 0 ? '+' : ''}${roundProfit} ฿</td>
-                    `;
-                    tableBody.prepend(tr);
-                });
-
-                document.getElementById('stat-profit').innerText = currentProfit.toLocaleString() + " ฿";
-                document.getElementById('stat-profit').className = `font-bold text-xl ${currentProfit >= 0 ? 'text-green-400' : 'text-red-400'}`;
-                document.getElementById('stat-wr').innerText = ((wins/history.length)*100).toFixed(1) + "%";
-                document.getElementById('stat-count').innerText = `${wins}/${history.length} งวด`;
-
-                renderChart(labels, profitData);
-                document.getElementById('main-content').classList.remove('opacity-0');
-                statusEl.innerText = "วิเคราะห์ข้อมูลสำเร็จ";
-                statusEl.className = "text-xs font-bold text-green-500";
-
-            } catch (e) {
-                statusEl.innerText = "❌ " + e.message;
-                statusEl.className = "text-xs font-bold text-red-500";
-            }
-        }
-
-        function renderChart(labels, data) {
-            new Chart(document.getElementById('profitChart'), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Profit',
-                        data: data,
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        fill: true,
-                        tension: 0.2,
-                        pointRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-                        x: { display: false }
-                    }
-                }
-            });
-        }
-        window.onload = loadDetail;
-    </script>
-</body>
-</html>
+    `;
+    document.getElementById('stats-display').innerHTML = html;
+}
