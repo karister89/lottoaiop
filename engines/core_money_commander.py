@@ -75,7 +75,19 @@ def main():
         with open(raw_file, 'r', encoding='utf-8') as f: 
             draws = json.load(f)
 
-        market_result = {"front": {}, "back": {}}
+        # 🔻🔻🔻 ส่วนที่เพิ่มใหม่: ดึงวันที่จากข้อมูลดิบงวดล่าสุด (index 0) 🔻🔻🔻
+        latest_date = ""
+        if draws and len(draws) > 0:
+            # ปกติข้อมูลวันที่มักจะใช้ key ว่า 'date' (ถ้าของพี่ใช้คำอื่น เช่น 'Date' ตัวใหญ่ ให้แก้ตรงนี้นะครับ)
+            latest_date = draws[0].get('date', '')
+
+        # เพิ่ม latest_date เข้าไปในโครงสร้างของตลาดนี้
+        market_result = {
+            "last_date": latest_date, 
+            "front": {}, 
+            "back": {}
+        }
+        # 🔺🔺🔺 จบส่วนที่เพิ่มใหม่ 🔺🔺🔺
 
         # 🎯 สมรภูมิฝั่งหน้า (Front / หลักสิบ)
         if data.get("front"):
@@ -120,7 +132,7 @@ def main():
         # ปริ้นท์สรุปสั้นๆ ใน Console ให้พี่ดู
         f_p = market_result.get('front', {}).get('history', {}).get('15d', {}).get('profit', 0)
         b_p = market_result.get('back', {}).get('history', {}).get('15d', {}).get('profit', 0)
-        print(f"📊 {market_name.upper():<12} | กำไร(15วัน) -> หน้า: {f_p:+.0f} ฿ | หลัง: {b_p:+.0f} ฿")
+        print(f"📊 {market_name.upper():<12} | วันที่: {latest_date:<10} | กำไร(15วัน) -> หน้า: {f_p:+.0f} ฿ | หลัง: {b_p:+.0f} ฿")
 
     # บันทึกข้อมูลสุทธิ เพื่อรอการแสดงผลบน index.html
     with open(FINAL_OUT, 'w', encoding='utf-8') as f:
