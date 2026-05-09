@@ -7,7 +7,7 @@ from itertools import combinations
 # =====================================================================
 # ⚖️ Configuration - Risk Tuner (Split Front-Back Mode)
 # =====================================================================
-DATA_DIR = "../data/"
+DATA_DIR = "data"
 OUTPUT_FILE = os.path.join(DATA_DIR, "risk_config.json")
 
 def calculate_p80_split(draws, all_pairs, window):
