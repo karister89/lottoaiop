@@ -404,14 +404,6 @@ body::before{
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 
-.kpi-col .status-line{
-  margin-top:10px; padding-top:8px;
-  border-top:1px solid rgba(212,175,55,.1);
-  font-size:.7rem; font-style:italic;
-  color:rgba(244,233,200,.55);
-  text-align:center;
-}
-
 /* PANELS */
 .panel{
   position:relative; padding:20px 22px 16px;
@@ -700,6 +692,18 @@ function statusKey(wr){
   if(v < 40)  return 'yellow';
   return 'green';
 }
+
+/* BET STATUS — for per-side number/pill colors (based on bet_size, NOT win_rate)
+   bet 0     → red    (skip)
+   bet > 0   → yellow (50, 80 = cautious)
+   bet ≥ 100 → green  (full confidence) */
+function betStatusKey(bet){
+  const v = Number(bet) || 0;
+  if(v <= 0)   return 'red';
+  if(v >= 100) return 'green';
+  return 'yellow';
+}
+
 function rarityOf(market, period){
   const fWR = market.front?.history?.[period]?.win_rate || 0;
   const bWR = market.back?.history?.[period]?.win_rate  || 0;
@@ -788,23 +792,23 @@ function renderForPeriod(){
   const fH = m.front?.history?.[STATE.period] || {profit:0,win_rate:0,wins:0,invested:0};
   const bH = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0,wins:0,invested:0};
 
-  // STATUS computed from current period's win_rate
-  const fStatus = statusKey(fH.win_rate);
-  const bStatus = statusKey(bH.win_rate);
-  const r = rarityOf(m, STATE.period);
-
   const fBet = m.front?.bet_size||0;
   const bBet = m.back?.bet_size||0;
+
+  /* Per-side coloring (pair-block, kpi-col, bet pill, etc.) follows bet_size */
+  const fStatus = betStatusKey(fBet);
+  const bStatus = betStatusKey(bBet);
+
+  /* Rarity (card frame) still follows win_rate-based status */
+  const r = rarityOf(m, STATE.period);
 
   // === Update featured card visuals (period-dependent) ===
   document.getElementById('featured').dataset.rarity = r;
   document.getElementById('f-rarity').textContent = RARITY_LABEL[r];
   document.getElementById('f-front-block').dataset.status = fStatus;
   document.getElementById('f-back-block').dataset.status  = bStatus;
-  document.getElementById('f-front-status').textContent = STATUS_LABEL[fStatus] +
-    ' · WR ' + fmtPct(fH.win_rate||0);
-  document.getElementById('f-back-status').textContent  = STATUS_LABEL[bStatus] +
-    ' · WR ' + fmtPct(bH.win_rate||0);
+  document.getElementById('f-front-status').textContent = 'WR ' + fmtPct(fH.win_rate||0);
+  document.getElementById('f-back-status').textContent  = 'WR ' + fmtPct(bH.win_rate||0);
 
   const cls = v => v>0?'up':v<0?'down':'';
   const sign = v => v>=0?'+':'';
@@ -822,6 +826,7 @@ function renderForPeriod(){
   const F = sideStats(fH, fStatus, fBet);
   const B = sideStats(bH, bStatus, bBet);
 
+  /* KPI columns — only 5 metrics (no Allocation, no status-line) */
   const renderCol = (label, S) => `
     <div class="kpi-col" data-status="${S.status}">
       <span class="corner tl"></span><span class="corner br"></span>
@@ -836,9 +841,6 @@ function renderForPeriod(){
         <span class="v">${fmtMoney(S.inv)} ฿</span></div>
       <div class="row"><span class="k">ROI</span>
         <span class="v ${cls(S.roi)}">${S.roi.toFixed(2)}%</span></div>
-      <div class="row"><span class="k">Allocation</span>
-        <span class="v">${S.bet>0 ? S.bet+'%' : 'SKIP'}</span></div>
-      <div class="status-line">${STATUS_LABEL[S.status]}</div>
     </div>
   `;
 
