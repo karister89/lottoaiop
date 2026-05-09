@@ -3,98 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Market Analysis - Sovereign Engine</title>
+    <title>Sovereign V3 - Market Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Prompt', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 1rem; }
+        body { font-family: 'Sarabun', sans-serif; background-color: #020617; color: #f1f5f9; }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; }
+        .win-row { background: rgba(34, 197, 94, 0.1); }
+        .miss-row { background: rgba(239, 68, 68, 0.05); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
-    <div class="max-w-4xl mx-auto">
-        <a href="index.html" class="inline-block mb-6 text-slate-400 hover:text-white transition-colors">← Back to Dashboard</a>
+
+    <div class="max-w-7xl mx-auto flex justify-between items-center mb-8">
+        <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-bold transition">← กลับหน้าหลัก</a>
+        <div class="text-right">
+            <h1 id="market-name" class="text-4xl font-black text-white uppercase tracking-tighter">LOADING...</h1>
+            <p id="market-status" class="text-xs font-bold text-slate-400">ANALYZING 100-DAY DATA</p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <div id="detail-content">
-            <!-- Content will be injected here -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="glass-card p-6 border-t-4 border-t-indigo-500">
+                <h2 class="text-lg font-bold mb-4">🎯 เลขเด่นปัจจุบัน (Sniper)</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center p-3 bg-black/40 rounded-xl border border-white/5">
+                        <p class="text-[10px] text-slate-400 mb-1 uppercase">รูดหน้า</p>
+                        <p id="f-pair" class="text-3xl font-black text-yellow-400">--</p>
+                    </div>
+                    <div class="text-center p-3 bg-black/40 rounded-xl border border-white/5">
+                        <p class="text-[10px] text-slate-400 mb-1 uppercase">รูดหลัง</p>
+                        <p id="b-pair" class="text-3xl font-black text-emerald-400">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-6">
+                <h2 class="text-lg font-bold mb-4">📊 สถิติรวม 100 วัน</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                        <span class="text-slate-400 text-sm">กำไรสุทธิ</span>
+                        <span id="stat-profit" class="font-bold text-xl">--</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                        <span class="text-slate-400 text-sm">ความแม่นยำ</span>
+                        <span id="stat-wr" class="font-bold text-xl text-blue-400">--</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                        <span class="text-slate-400 text-sm">ชนะ / ทั้งหมด</span>
+                        <span id="stat-count" class="font-bold text-slate-200">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass-card p-6">
+                <h2 class="text-lg font-bold mb-4">📈 กราฟกำไรสะสม (Cumulative Profit)</h2>
+                <canvas id="profitChart" height="150"></canvas>
+            </div>
+            <div class="glass-card p-6">
+                <h2 class="text-lg font-bold mb-4">📉 แนวโน้มโอกาสชนะ (Win-Rate Trend)</h2>
+                <canvas id="wrChart" height="100"></canvas>
+            </div>
+        </div>
+
+        <div class="lg:col-span-3 glass-card overflow-hidden">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                <h2 class="text-lg font-bold">📜 บันทึกสมรภูมิย้อนหลัง 100 งวด</h2>
+                <span class="text-[10px] text-slate-500 uppercase">เรียงจากงวดล่าสุด</span>
+            </div>
+            <div class="overflow-x-auto max-h-[500px]">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-900/50 sticky top-0 backdrop-blur-md">
+                        <tr class="text-[11px] text-slate-400 uppercase tracking-widest">
+                            <th class="p-4">วันที่</th>
+                            <th class="p-4">ผลหวย</th>
+                            <th class="p-4">คู่เลข</th>
+                            <th class="p-4 text-center">สถานะ</th>
+                            <th class="p-4 text-right">กำไรต่อรอบ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="log-table">
+                        </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const marketKey = urlParams.get('m');
+        const marketName = urlParams.get('m') || 'NIKKEI';
+        const PAYOUT = 100;
+        const COST = 40; // รูดหน้า 20 + หลัง 20 = 40
 
         async function loadDetail() {
-            if(!marketKey) return;
             try {
-                const res = await fetch('data_dashboard.json');
-                const data = await res.json();
-                const m = data.summary[marketKey];
+                // 1. ดึงข้อมูล Summary และเลขเด่นปัจจุบัน
+                const resSyn = await fetch('data/final_synergy.json');
+                const synData = await resSyn.json();
+                const mInfo = synData.markets[marketName.toUpperCase()];
+                
+                if (!mInfo) throw new Error("ไม่พบข้อมูลตลาด");
 
-                if(!m) return;
+                document.getElementById('market-name').innerText = marketName;
+                document.getElementById('f-pair').innerText = mInfo.front.pair.join(',');
+                document.getElementById('b-pair').innerText = mInfo.back.pair.join(',');
 
-                let html = `
-                    <div class="flex justify-between items-end mb-8">
-                        <h1 class="text-4xl font-bold uppercase">${marketKey}</h1>
-                        <div class="text-right">
-                            <div class="text-sm text-slate-400">Current Signal</div>
-                            <div class="text-2xl font-bold ${m.sigT === 'GREEN' ? 'text-emerald-400' : 'text-yellow-400'}">${m.sigT}</div>
-                        </div>
-                    </div>
+                // 2. ดึงข้อมูลดิบย้อนหลัง 100 วัน
+                const resRaw = await fetch(`data/raw_${marketName.toLowerCase()}.json`);
+                const rawData = await resRaw.json();
+                const history = rawData.slice(0, 100).reverse(); // เอามา 100 วัน และกลับด้านเพื่อวาดกราฟจากอดีตไปปัจจุบัน
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        ${[30, 60, 90].map(d => `
-                            <div class="card p-4 text-center">
-                                <div class="text-xs text-slate-400 mb-1">${d} Days Profit</div>
-                                <div class="text-xl font-bold text-emerald-400">${m.stats[d].profit.toLocaleString()}</div>
-                                <div class="text-xs text-slate-500">WR: ${m.stats[d].winrate}%</div>
-                            </div>
-                        `).join('')}
-                    </div>
+                let currentProfit = 0;
+                let wins = 0;
+                let profitData = [];
+                let wrData = [];
+                let labels = [];
 
-                    <h3 class="text-xl font-semibold mb-4">Last 10 Draws Analysis</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left card overflow-hidden">
-                            <thead class="bg-slate-800 text-slate-400 text-xs uppercase">
-                                <tr>
-                                    <th class="p-4">Date</th>
-                                    <th class="p-4">Signal</th>
-                                    <th class="p-4">Predicted (Top 5)</th>
-                                    <th class="p-4">Result</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-700 text-sm">
-                                ${m.ledger.map(row => {
-                                    // แสดงผลเลขทำนายสูงสุด 5 ตัว
-                                    const predHtml = row.top_digits.slice(0, 5).map((d, i) => `
-                                        <span class="${row.isWinTop && row.winIndex === i ? 'text-emerald-400 font-bold underline' : 'text-slate-400'}">${d}</span>
-                                    `).join(', ');
+                const tableBody = document.getElementById('log-table');
+                tableBody.innerHTML = '';
 
-                                    return `
-                                        <tr class="hover:bg-slate-800/50 transition-colors">
-                                            <td class="p-4 text-slate-300">${row.date}</td>
-                                            <td class="p-4">
-                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-900 ${row.sigT === 'GREEN' ? 'text-emerald-400' : 'text-yellow-400'}">
-                                                    ${row.sigT}
-                                                </span>
-                                            </td>
-                                            <td class="p-4 font-mono">${predHtml}</td>
-                                            <td class="p-4">
-                                                ${row.isWinTop ? '<span class="text-emerald-500 font-bold">WIN</span>' : '<span class="text-slate-600">MISS</span>'}
-                                            </td>
-                                        </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                `;
+                // ประมวลผลข้อมูล (จำลองการแทง 100 วันด้วยเลขปัจจุบัน)
+                history.forEach((row, index) => {
+                    const draw = String(row.twoTop).padStart(2, '0');
+                    const frontResult = draw[0];
+                    const backResult = draw[1];
+                    const fp = mInfo.front.pair.map(String);
+                    const bp = mInfo.back.pair.map(String);
 
-                document.getElementById('detail-content').innerHTML = html;
+                    let hit = false;
+                    let roundProfit = -COST;
+
+                    if (fp.includes(frontResult) || bp.includes(backResult)) {
+                        wins++;
+                        hit = true;
+                        // คิดกำไร: ถ้าถูกทั้งหน้าและหลังจะได้เบิ้ล แต่บอทเราคิดแยกสมรภูมิ
+                        let winCount = 0;
+                        if(fp.includes(frontResult)) winCount++;
+                        if(bp.includes(backResult)) winCount++;
+                        roundProfit = (winCount * PAYOUT) - COST;
+                    }
+
+                    currentProfit += roundProfit;
+                    const currentWR = ((wins / (index + 1)) * 100).toFixed(1);
+
+                    profitData.push(currentProfit);
+                    wrData.push(currentWR);
+                    labels.push(row.date);
+
+                    // สร้างแถวตาราง (แสดงผลแบบเรียงลงคือเอาล่าสุดไว้บน)
+                    const tr = document.createElement('tr');
+                    tr.className = `border-b border-white/5 text-sm ${hit ? 'win-row' : 'miss-row'}`;
+                    tr.innerHTML = `
+                        <td class="p-4 text-slate-400">${row.date}</td>
+                        <td class="p-4 font-mono font-bold text-white">${draw}</td>
+                        <td class="p-4 text-xs text-slate-300">หน้า:[${fp}] หลัง:[${bp}]</td>
+                        <td class="p-4 text-center">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${hit ? 'bg-green-500 text-white' : 'bg-slate-700 text-slate-400'}">
+                                ${hit ? 'WIN' : 'MISS'}
+                            </span>
+                        </td>
+                        <td class="p-4 text-right font-bold ${roundProfit > 0 ? 'text-green-400' : 'text-red-400'}">
+                            ${roundProfit > 0 ? '+' : ''}${roundProfit}
+                        </td>
+                    `;
+                    tableBody.prepend(tr); // เอาล่าสุดขึ้นบน
+                });
+
+                // อัปเดต Summary ด้านซ้าย
+                document.getElementById('stat-profit').innerText = currentProfit.toLocaleString() + " ฿";
+                document.getElementById('stat-profit').className = `text-xl font-bold ${currentProfit >= 0 ? 'text-green-400' : 'text-red-400'}`;
+                document.getElementById('stat-wr').innerText = ((wins / history.length) * 100).toFixed(1) + "%";
+                document.getElementById('stat-count').innerText = `${wins} / ${history.length} งวด`;
+
+                // วาดกราฟ
+                renderCharts(labels, profitData, wrData);
+
             } catch (e) {
                 console.error(e);
+                document.body.innerHTML = `<div class="p-20 text-center text-red-500">❌ Error: ${e.message}</div>`;
             }
         }
+
+        function renderCharts(labels, profitData, wrData) {
+            // กราฟกำไร
+            new Chart(document.getElementById('profitChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'กำไรสะสม (บาท)',
+                        data: profitData,
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                        x: { display: false }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // กราฟวินเรท
+            new Chart(document.getElementById('wrChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Win-Rate (%)',
+                        data: wrData,
+                        borderColor: '#3b82f6',
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { min: 0, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                        x: { display: false }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
         loadDetail();
     </script>
 </body>
