@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sovereign V3 - Next Round & Stats</title>
+    <title>Sovereign V3 - Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -13,28 +13,29 @@
         .stat-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
         .stat-table th { color: #94a3b8; font-weight: normal; padding: 4px; border-bottom: 1px solid #334155; }
         .stat-table td { padding: 6px 4px; text-align: center; }
+        .pair-box { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
-<body class="p-4">
+<body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto mb-8">
-        <h1 class="text-2xl font-bold text-white mb-4">🚀 Sovereign V3 Command Center</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-white mb-4">🚀 Sovereign V3 Command Center</h1>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="card p-4 border-l-4 border-green-500">
-                <p class="text-slate-400 text-[10px]">NET PROFIT (30D)</p>
-                <h2 id="total-profit" class="text-xl font-bold">กำลังคำนวณ...</h2>
+                <p class="text-slate-400 text-xs">NET PROFIT (30D)</p>
+                <h2 id="total-profit" class="text-2xl font-bold">กำลังคำนวณ...</h2>
             </div>
             <div class="card p-4 border-l-4 border-blue-500">
-                <p class="text-slate-400 text-[10px]">AVG WIN-RATE</p>
-                <h2 id="total-winrate" class="text-xl font-bold">0%</h2>
+                <p class="text-slate-400 text-xs">AVG WIN-RATE</p>
+                <h2 id="total-winrate" class="text-2xl font-bold">0%</h2>
             </div>
             <div class="card p-4 border-l-4 border-yellow-500">
-                <p class="text-slate-400 text-[10px]">INVESTED</p>
-                <h2 id="total-invested" class="text-xl font-bold text-slate-300">0 ฿</h2>
+                <p class="text-slate-400 text-xs">INVESTED</p>
+                <h2 id="total-invested" class="text-2xl font-bold text-slate-300">0 ฿</h2>
             </div>
             <div class="card p-4 border-l-4 border-purple-500">
-                <p class="text-slate-400 text-[10px]">LAST UPDATE</p>
-                <h2 id="last-sync" class="text-xs font-bold mt-2">--:--</h2>
+                <p class="text-slate-400 text-xs">LAST SYNC</p>
+                <h2 id="last-sync" class="text-sm font-bold mt-2 text-slate-300">--:--</h2>
             </div>
         </div>
     </div>
@@ -43,51 +44,74 @@
         </div>
 
     <script>
-        const marketOrder = ["tpe", "nikkei", "she", "hangseng", "sensex", "dax", "ftse", "dji"];
+        const marketOrder = ["TPE", "NIKKEI", "SHE", "HANGSENG", "SENSEX", "DAX", "FTSE", "DJI"];
 
-        function getNextDate(lastUpdate) {
-            let d = new Date(lastUpdate);
-            if (isNaN(d)) return "N/A";
-            d.setDate(d.getDate() + 1);
-            if (d.getDay() === 6) d.setDate(d.getDate() + 2);
-            if (d.getDay() === 0) d.setDate(d.getDate() + 1);
-            return d.toLocaleDateString('th-TH', {day:'2-digit', month:'short'});
+        // ฟังก์ชันช่วยหาค่าเฉลี่ยและผลรวมระหว่าง Front และ Back
+        function combineStats(frontStat, backStat) {
+            return {
+                profit: (frontStat?.profit || 0) + (backStat?.profit || 0),
+                wins: (frontStat?.wins || 0) + (backStat?.wins || 0),
+                invested: (frontStat?.invested || 0) + (backStat?.invested || 0),
+                win_rate: (((frontStat?.win_rate || 0) + (backStat?.win_rate || 0)) / 2).toFixed(2)
+            };
         }
 
         async function initDashboard() {
             try {
-                const res = await fetch('data/final_synergy.json');
+                // แก้ให้ชี้ไปที่ไฟล์ JSON ตัวจริงของพี่ (เปลี่ยนชื่อไฟล์ถ้าจำเป็น)
+                const res = await fetch('data/final_synergy.json'); 
+                if (!res.ok) throw new Error("โหลดไฟล์ไม่สำเร็จ");
                 const data = await res.json();
+
                 const container = document.getElementById('market-list');
+                container.innerHTML = '';
                 
-                let sumProfit = 0, sumInvest = 0, sumWins = 0;
+                let sumProfit = data.portfolio["30d"].profit;
+                let sumInvest = data.portfolio["30d"].invested;
+                let sumWins = data.portfolio["30d"].wins;
+                
+                // คำนวณ Winrate รวม (จำนวนครั้งที่ชนะ / (8 ตลาด * 2 สมรภูมิ * 30 วัน))
+                let avgWinrate = (sumWins / (8 * 2 * 30) * 100).toFixed(1);
 
                 marketOrder.forEach(mKey => {
                     const m = data.markets[mKey];
                     if (!m) return;
 
-                    const h = m.history;
-                    sumProfit += h["30d"].profit;
-                    sumInvest += h["30d"].invested;
-                    sumWins += h["30d"].wins;
+                    const fHistory = m.front.history;
+                    const bHistory = m.back.history;
+                    
+                    // รวมสถิติเพื่อโชว์ในตาราง
+                    const stats15 = combineStats(fHistory["15d"], bHistory["15d"]);
+                    const stats30 = combineStats(fHistory["30d"], bHistory["30d"]);
+                    const stats60 = combineStats(fHistory["60d"], bHistory["60d"]);
+                    const stats100 = combineStats(fHistory["100d"], bHistory["100d"]);
 
                     const marketHTML = `
                         <div class="card overflow-hidden">
                             <div class="next-round-bg p-4 border-b border-slate-700">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-lg font-black text-white uppercase">${mKey}</span>
-                                    <span class="text-[10px] bg-blue-500 px-2 py-0.5 rounded text-white">งวด ${getNextDate(m.last_update)}</span>
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-xl font-black text-white">${mKey}</span>
+                                    <span class="text-[10px] bg-indigo-500 px-2 py-0.5 rounded text-white shadow">พร้อมลุย</span>
                                 </div>
-                                <div class="text-center bg-black/30 py-3 rounded-lg border border-white/10">
-                                    <p class="text-[10px] text-slate-400 mb-1">เลขเด่น Sniper 40 ชุด</p>
-                                    <p class="text-3xl font-black text-yellow-400 tracking-tighter">
-                                        ${m.pair[0]} <span class="text-white text-xl">,</span> ${m.pair[1]}
-                                    </p>
+                                
+                                <div class="grid grid-cols-2 gap-2 text-center">
+                                    <div class="pair-box">
+                                        <p class="text-[10px] text-slate-400 mb-1">รูดหน้า (Front)</p>
+                                        <p class="text-2xl font-black text-yellow-400">
+                                            ${m.front.pair[0]},${m.front.pair[1]}
+                                        </p>
+                                    </div>
+                                    <div class="pair-box">
+                                        <p class="text-[10px] text-slate-400 mb-1">รูดหลัง (Back)</p>
+                                        <p class="text-2xl font-black text-emerald-400">
+                                            ${m.back.pair[0]},${m.back.pair[1]}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="p-3">
-                                <p class="text-[10px] text-slate-400 mb-2 font-bold uppercase tracking-wider">📊 สถิติย้อนหลัง 4 ระยะ</p>
+                            <div class="p-3 bg-slate-900/50">
+                                <p class="text-[10px] text-slate-400 mb-2 font-bold uppercase tracking-wider text-center">📊 ผลรวมกำไร (หน้า+หลัง)</p>
                                 <table class="stat-table">
                                     <thead>
                                         <tr>
@@ -97,15 +121,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        ${["15d", "30d", "60d", "100d"].map(range => `
-                                            <tr class="${range === '15d' ? 'bg-white/5' : ''}">
-                                                <td class="text-slate-500">${range.replace('d',' วัน')}</td>
-                                                <td class="font-bold ${h[range].profit >= 0 ? 'text-green-400' : 'text-red-400'}">
-                                                    ${h[range].profit > 0 ? '+' : ''}${h[range].profit}
-                                                </td>
-                                                <td class="text-blue-300 font-semibold">${h[range].win_rate}%</td>
-                                            </tr>
-                                        `).join('')}
+                                        <tr class="bg-white/5">
+                                            <td class="text-slate-400 font-bold">15 วัน</td>
+                                            <td class="font-bold ${stats15.profit >= 0 ? 'text-green-400' : 'text-red-400'}">${stats15.profit > 0 ? '+' : ''}${stats15.profit}</td>
+                                            <td class="text-blue-300 font-semibold">${stats15.win_rate}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-slate-500">30 วัน</td>
+                                            <td class="font-bold ${stats30.profit >= 0 ? 'text-green-400' : 'text-red-400'}">${stats30.profit > 0 ? '+' : ''}${stats30.profit}</td>
+                                            <td class="text-blue-300 font-semibold">${stats30.win_rate}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-slate-500">60 วัน</td>
+                                            <td class="font-bold ${stats60.profit >= 0 ? 'text-green-400' : 'text-red-400'}">${stats60.profit > 0 ? '+' : ''}${stats60.profit}</td>
+                                            <td class="text-blue-300 font-semibold">${stats60.win_rate}%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-slate-500">100 วัน</td>
+                                            <td class="font-bold ${stats100.profit >= 0 ? 'text-green-400' : 'text-red-400'}">${stats100.profit > 0 ? '+' : ''}${stats100.profit}</td>
+                                            <td class="text-blue-300 font-semibold">${stats100.win_rate}%</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -114,15 +149,16 @@
                     container.innerHTML += marketHTML;
                 });
 
-                // อัปเดต Summary ด้านบน
+                // ดึงค่ายอดรวมจาก key "portfolio" มาโชว์
                 document.getElementById('total-profit').innerText = sumProfit.toLocaleString() + " ฿";
                 document.getElementById('total-profit').classList.add(sumProfit >= 0 ? 'text-green-400' : 'text-red-400');
-                document.getElementById('total-winrate').innerText = (sumWins / (marketOrder.length * 30) * 100).toFixed(1) + "%";
                 document.getElementById('total-invested').innerText = sumInvest.toLocaleString() + " ฿";
+                document.getElementById('total-winrate').innerText = avgWinrate + "%";
                 document.getElementById('last-sync').innerText = new Date().toLocaleTimeString('th-TH');
 
             } catch (err) {
                 console.error("Data fetch error:", err);
+                document.getElementById('market-list').innerHTML = `<div class="col-span-full text-center p-4 text-red-500">โหลดข้อมูลไม่สำเร็จ: ตรวจสอบว่ามีไฟล์ final_synergy.json (หรือชื่อไฟล์ที่ตรงกับโค้ด) ในโฟลเดอร์ data หรือไม่</div>`;
             }
         }
 
