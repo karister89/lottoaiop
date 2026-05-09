@@ -1,128 +1,1000 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Market Details - Sovereign V3</title>
-    <style>
-        :root { --primary: #2563eb; --success: #22c55e; --danger: #ef4444; --bg: #f8fafc; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .back-btn { margin-bottom: 20px; cursor: pointer; color: var(--primary); text-decoration: none; display: inline-block; }
-        
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        
-        /* Stats Grid */
-        .detail-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .stat-box { padding: 15px; border-radius: 12px; background: #f1f5f9; text-align: center; }
-        .stat-box .label { font-size: 0.8rem; color: #64748b; display: block; }
-        .stat-box .value { font-size: 1.3rem; font-weight: bold; margin-top: 5px; }
-        .value.plus { color: var(--success); }
-        .value.minus { color: var(--danger); }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>⚓ Sovereign V3 — Card Detail</title>
 
-        /* Tabs */
-        .tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
-        .tab-btn { border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.85rem; }
-        .tab-btn.active { background: var(--primary); color: white; }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Sarabun:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-        /* Pair Display */
-        .pair-card { background: #eff6ff; padding: 20px; border-radius: 12px; text-align: center; border: 2px solid #dbeafe; }
-        .pair-card h3 { margin: 0; color: #1e40af; }
-        .numbers { font-size: 2rem; letter-spacing: 5px; color: var(--primary); margin: 10px 0; font-weight: bold; }
-    </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+:root{
+  --abyss:        #05080f;
+  --deepsea:      #0a1020;
+  --midnight:     #111a2e;
+  --parchment:    #f4e9c8;
+
+  --gold-1:       #f8e9a1;
+  --gold-2:       #d4af37;
+  --gold-3:       #b8941e;
+  --gold-4:       #8b6914;
+
+  --sr-gold:      #ffcd3c;
+  --r-silver:     #c9d1d9;
+  --c-bronze:     #b87333;
+
+  --emerald:      #10b981;
+  --emerald-glow: rgba(16,185,129,.45);
+  --crimson:      #dc2626;
+  --crimson-glow: rgba(220,38,38,.45);
+
+  --display: 'Cinzel Decorative', serif;
+  --serif:   'Cormorant Garamond', serif;
+  --thai:    'Sarabun', sans-serif;
+  --num:     'Cinzel', serif;
+  --mono:    'JetBrains Mono', monospace;
+
+  --foil: linear-gradient(125deg,
+    transparent 0%, transparent 30%,
+    rgba(255,255,255,.08) 38%,
+    rgba(255,200,80,.18) 45%,
+    rgba(255,255,255,.25) 50%,
+    rgba(120,200,255,.18) 55%,
+    rgba(255,255,255,.08) 62%,
+    transparent 70%, transparent 100%);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+
+body{
+  font-family: var(--thai);
+  color: var(--parchment);
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(180,120,40,.08), transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(40,80,160,.10), transparent 55%),
+    linear-gradient(180deg, var(--abyss), var(--deepsea) 50%, var(--abyss));
+  background-attachment: fixed;
+  overflow-x: hidden;
+  position: relative;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.05) 0%, transparent 70%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='.9'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .4  0 0 0 0 .2  0 0 0 .08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: .55; mix-blend-mode: overlay;
+}
+
+.wrap{
+  position: relative; z-index: 1;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 28px clamp(16px, 3vw, 48px) 80px;
+}
+
+/* =========================================================
+   NAV BAR
+   ========================================================= */
+.topnav{
+  display:flex; align-items:center; justify-content:space-between;
+  gap: 16px; flex-wrap:wrap;
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(212,175,55,.2);
+}
+.back{
+  display:inline-flex; align-items:center; gap: 10px;
+  font-family: var(--display);
+  font-size: .82rem;
+  letter-spacing: .15em;
+  color: rgba(244,233,200,.75);
+  text-decoration: none;
+  padding: 10px 20px;
+  border: 1px solid rgba(212,175,55,.35);
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(20,28,48,.7), rgba(10,14,26,.9));
+  text-transform: uppercase;
+  transition: all .35s;
+}
+.back:hover{
+  color: var(--gold-1);
+  border-color: var(--gold-2);
+  transform: translateX(-3px);
+  box-shadow: 0 6px 18px -4px rgba(212,175,55,.25);
+}
+.crumb{
+  font-family: var(--serif); font-style: italic;
+  font-size: .9rem; color: rgba(244,233,200,.55);
+}
+.crumb b{
+  font-style: normal; font-family: var(--display); font-weight:700;
+  color: var(--gold-1); letter-spacing:.1em; margin-left: 4px;
+}
+
+/* =========================================================
+   MAIN LAYOUT — Card Showcase + Sidebar
+   ========================================================= */
+.showcase{
+  display:grid;
+  grid-template-columns: 380px 1fr;
+  gap: 36px;
+  margin-bottom: 36px;
+}
+@media (max-width: 920px){
+  .showcase{ grid-template-columns: 1fr; max-width: 420px; margin-left:auto; margin-right:auto;}
+}
+
+/* =========================================================
+   THE FEATURED CARD
+   ========================================================= */
+.featured{
+  position: relative;
+  aspect-ratio: 5 / 7.2;
+  cursor: pointer;
+  perspective: 1400px;
+  isolation: isolate;
+  border-radius: 16px;
+  transition: transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.featured:hover{ transform: rotateY(-4deg) rotateX(2deg);}
+
+.featured .frame{
+  position:absolute; inset:0; padding:5px; border-radius:16px;
+  background: linear-gradient(135deg,
+    var(--gold-4) 0%, var(--gold-2) 25%, var(--gold-1) 50%,
+    var(--gold-2) 75%, var(--gold-4) 100%);
+  z-index:1;
+}
+.featured[data-rarity="r"] .frame{
+  background: linear-gradient(135deg,#5b6471,#cdd2da 50%,#5b6471);
+}
+.featured[data-rarity="c"] .frame{
+  background: linear-gradient(135deg,#5a3414,var(--c-bronze) 50%,#5a3414);
+}
+
+.featured .inner{
+  position: relative; height:100%;
+  border-radius: 12px;
+  padding: 18px 18px 14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(212,175,55,.22), transparent 60%),
+    linear-gradient(180deg, #1a2342 0%, #0c1224 60%, #060a18 100%);
+  display:flex; flex-direction: column;
+  overflow:hidden;
+  z-index:2;
+}
+.featured[data-rarity="r"] .inner{
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(180,200,220,.22), transparent 60%),
+    linear-gradient(180deg, #20283a 0%, #0c1224 60%, #060a18 100%);
+}
+.featured[data-rarity="c"] .inner{
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(184,115,51,.18), transparent 60%),
+    linear-gradient(180deg, #2a1c12 0%, #1a0f08 60%, #0a0604 100%);
+}
+
+.featured .foil{
+  position:absolute; inset:0; border-radius:12px;
+  background: var(--foil);
+  background-size: 220% 220%;
+  background-position: 100% 0%;
+  mix-blend-mode: screen;
+  opacity:.4;
+  pointer-events:none; z-index:3;
+  animation: shimmer 6s ease-in-out infinite;
+}
+@keyframes shimmer{
+  0%,100%{background-position: 100% 0%;}
+  50%{background-position: 0% 100%;}
+}
+.featured[data-rarity="sr"] .holo{
+  position:absolute; inset:0; border-radius:12px;
+  background: conic-gradient(from 30deg,
+    rgba(255,0,150,.22), rgba(255,200,0,.22), rgba(0,255,150,.22),
+    rgba(0,180,255,.22), rgba(180,0,255,.22), rgba(255,0,150,.22));
+  mix-blend-mode: color-dodge;
+  opacity:.5; pointer-events:none; z-index:3;
+  animation: spin-holo 14s linear infinite;
+}
+@keyframes spin-holo{ to{ filter: hue-rotate(360deg);}}
+
+.featured .header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 4px 4px 10px;
+  border-bottom: 1px solid rgba(212,175,55,.3);
+  position:relative; z-index:4;
+}
+.featured .market-name{
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 1.4rem;
+  letter-spacing: .07em;
+  color: var(--gold-1);
+  text-shadow: 0 0 14px rgba(212,175,55,.5), 0 1px 0 #000;
+}
+.featured[data-rarity="r"] .market-name{ color:#e8edf3;}
+.featured[data-rarity="c"] .market-name{ color:#ffd6a8;}
+.featured .rarity-badge{
+  font-family: var(--display);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  padding: 4px 10px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  background: rgba(0,0,0,.45);
+}
+.featured[data-rarity="sr"] .rarity-badge{ color: var(--sr-gold);}
+.featured[data-rarity="r"]  .rarity-badge{ color: var(--r-silver);}
+.featured[data-rarity="c"]  .rarity-badge{ color: var(--c-bronze);}
+
+.featured .art{
+  flex:1; display:flex; flex-direction:column; justify-content:center;
+  position:relative; z-index:4;
+  padding: 14px 0;
+}
+.pair-block{ text-align:center; padding: 6px 0; }
+.pair-block + .pair-block{ margin-top: 10px; padding-top: 14px;
+  border-top: 1px dashed rgba(212,175,55,.25); }
+.pair-block .lbl{
+  font-family: var(--display);
+  font-size:.66rem; letter-spacing:.28em;
+  color: rgba(244,233,200,.65); text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.pair-block .nums{
+  font-family: var(--num);
+  font-weight:900;
+  font-size: 3rem;
+  line-height: 1;
+  letter-spacing: .15em;
+  background: linear-gradient(180deg, #fff7d6, var(--gold-1) 45%, var(--gold-3));
+  -webkit-background-clip:text; background-clip:text; color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(0,0,0,.6)) drop-shadow(0 0 18px rgba(212,175,55,.35));
+}
+.featured[data-rarity="c"] .pair-block .nums{
+  background: linear-gradient(180deg, #ffd6a8, #b87333 60%, #5a3414);
+  -webkit-background-clip:text; background-clip:text; color: transparent;
+}
+.pair-block .status{
+  margin-top: 6px; font-size:.72rem;
+  font-family: var(--serif); font-style: italic;
+  color: rgba(244,233,200,.6);
+}
+
+.featured .footer{
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  padding: 10px 4px 6px;
+  border-top: 1px solid rgba(212,175,55,.3);
+  position:relative; z-index:4;
+}
+.featured .stat{
+  text-align:center; padding: 6px 4px;
+  background: rgba(0,0,0,.4); border-radius: 4px;
+}
+.featured .stat .k{
+  font-family: var(--display); font-size:.6rem; letter-spacing:.18em;
+  color: rgba(244,233,200,.55); text-transform:uppercase;
+}
+.featured .stat .v{
+  font-family: var(--num); font-weight:700; font-size: 1.1rem;
+  margin-top: 2px; color: var(--gold-1);
+}
+.featured .stat .v.up{ color:#6ee7b7;}
+.featured .stat .v.down{ color:#fca5a5;}
+
+.featured .meta{
+  position: absolute; bottom: 8px; left: 14px; right: 14px;
+  display:flex; justify-content:space-between;
+  font-family: var(--mono);
+  font-size:.6rem;
+  color: rgba(212,175,55,.5);
+  z-index:5;
+}
+
+/* =========================================================
+   SIDEBAR — Period selector + quick stats + status panel
+   ========================================================= */
+.side{
+  display:flex; flex-direction:column; gap:18px;
+}
+
+.tabs{
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.tab{
+  flex:1; min-width:90px;
+  font-family: var(--display);
+  font-weight: 700; letter-spacing: .14em;
+  font-size: .78rem;
+  padding: 11px 14px;
+  border: 1px solid rgba(212,175,55,.35);
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(20,28,48,.7), rgba(10,14,26,.9));
+  color: rgba(244,233,200,.65);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all .35s;
+}
+.tab:hover{ color: var(--gold-1); border-color: var(--gold-2); transform: translateY(-2px);}
+.tab.active{
+  color: var(--abyss);
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-2) 60%, var(--gold-3));
+  border-color: var(--gold-1);
+  box-shadow: 0 0 0 1px var(--gold-4),
+              0 6px 22px -4px rgba(212,175,55,.55),
+              inset 0 1px 0 rgba(255,255,255,.5);
+}
+
+.kpis{
+  display:grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.kpi{
+  position: relative;
+  padding: 14px 16px 16px;
+  background: linear-gradient(180deg, rgba(20,28,48,.85), rgba(10,14,26,.95));
+  border: 1px solid rgba(212,175,55,.25);
+  overflow: hidden;
+}
+.kpi .corner{ position:absolute; width:12px; height:12px; border:1px solid var(--gold-2);}
+.kpi .corner.tl{top:5px;left:5px;border-right:none;border-bottom:none;}
+.kpi .corner.br{bottom:5px;right:5px;border-left:none;border-top:none;}
+.kpi .k{
+  font-family: var(--display); font-size:.62rem; letter-spacing:.2em;
+  color: var(--gold-1); opacity:.8; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.kpi .v{
+  font-family: var(--num); font-weight:900;
+  font-size: 1.5rem; line-height:1.1;
+  background: linear-gradient(180deg,#fff7d6,var(--gold-1) 50%,var(--gold-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.kpi .v.up   { background: linear-gradient(180deg,#d8ffe8,#6ee7b7 50%,#047857);
+               -webkit-background-clip:text; background-clip:text; color:transparent;}
+.kpi .v.down { background: linear-gradient(180deg,#ffe1e1,#fca5a5 50%,#991b1b);
+               -webkit-background-clip:text; background-clip:text; color:transparent;}
+.kpi .s{
+  margin-top:4px; font-size:.72rem;
+  font-family: var(--serif); font-style:italic;
+  color: rgba(244,233,200,.55);
+}
+
+.bet-status{
+  padding: 14px 18px;
+  background: linear-gradient(180deg, rgba(20,28,48,.85), rgba(10,14,26,.95));
+  border: 1px solid rgba(212,175,55,.25);
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+}
+.bet-status .text{
+  font-family: var(--display);
+  font-size: .8rem; letter-spacing:.16em;
+  color: var(--gold-1);
+}
+.bet-status .text small{
+  display:block; font-family:var(--serif); font-style:italic; font-size:.78rem;
+  font-weight:400; letter-spacing:.04em; color: rgba(244,233,200,.6);
+  margin-top: 4px; text-transform:none;
+}
+.bet-status .gauge{
+  font-family: var(--num); font-weight:900;
+  font-size: 1.8rem;
+  background: linear-gradient(180deg,#fff7d6,var(--gold-1) 50%,var(--gold-3));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+.panel{
+  position: relative;
+  padding: 20px 22px 16px;
+  background: linear-gradient(180deg, rgba(20,28,48,.85), rgba(8,12,22,.95));
+  border: 1px solid rgba(212,175,55,.25);
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+.panel-title{
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold-1);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(212,175,55,.18);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.panel-title .ornament{
+  font-family: var(--serif); font-style: italic;
+  font-size:.78rem; letter-spacing:.04em;
+  color: rgba(244,233,200,.6);
+  text-transform:none; font-weight:500;
+}
+.charts-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-bottom: 22px;
+}
+@media (max-width: 880px){ .charts-grid{ grid-template-columns:1fr; }}
+.chart-wrap{ position:relative; height: 280px;}
+
+/* Frequency heatmap — digit cells */
+.heatmap{
+  display:grid; grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  padding: 6px 0 4px;
+}
+.cell{
+  position:relative;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(20,28,48,.7), rgba(10,14,26,.9));
+  border: 1px solid rgba(212,175,55,.2);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  transition: transform .25s;
+}
+.cell:hover{ transform: translateY(-3px); border-color: var(--gold-1);}
+.cell .digit{
+  font-family: var(--num); font-weight: 900;
+  font-size: 1.4rem;
+  background: linear-gradient(180deg,#fff7d6,var(--gold-1) 50%,var(--gold-3));
+  -webkit-background-clip:text; background-clip:text; color: transparent;
+}
+.cell .count{
+  font-family: var(--mono);
+  font-size:.65rem;
+  color: rgba(244,233,200,.5);
+  margin-top: 2px;
+}
+.cell.hot{
+  background: linear-gradient(180deg, rgba(212,175,55,.28), rgba(184,148,30,.12));
+  border-color: var(--gold-1);
+  box-shadow: 0 0 18px rgba(212,175,55,.25), inset 0 0 10px rgba(212,175,55,.15);
+}
+.cell.cold{ opacity:.55;}
+
+/* Recent draws table */
+.draws{
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: .82rem;
+}
+.draws th, .draws td{
+  padding: 9px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(212,175,55,.1);
+}
+.draws th{
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: .68rem;
+  letter-spacing: .15em;
+  color: var(--gold-1);
+  text-transform: uppercase;
+  background: rgba(212,175,55,.05);
+}
+.draws td{ color: rgba(244,233,200,.85);}
+.draws tr:hover td{ background: rgba(212,175,55,.04);}
+.hit{
+  display:inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.hit.win{ background: rgba(16,185,129,.15); color: #6ee7b7; border:1px solid rgba(16,185,129,.4);}
+.hit.miss{ background: rgba(220,38,38,.1); color: #fca5a5; border: 1px solid rgba(220,38,38,.3);}
+
+.scroll-y{ max-height: 360px; overflow-y: auto;}
+.scroll-y::-webkit-scrollbar{ width: 6px;}
+.scroll-y::-webkit-scrollbar-track{ background: rgba(0,0,0,.3);}
+.scroll-y::-webkit-scrollbar-thumb{ background: var(--gold-3); border-radius:3px;}
+
+footer{
+  margin-top: 50px; text-align:center;
+  padding-top: 22px;
+  border-top: 1px solid rgba(212,175,55,.18);
+  font-family: var(--serif); font-style: italic;
+  color: rgba(244,233,200,.4);
+  font-size: .85rem;
+}
+footer .anchor{ font-family: var(--display); color: var(--gold-1); letter-spacing:.2em;}
+
+/* error / loading */
+.err, .loading{
+  text-align:center; padding: 60px 20px;
+  font-family: var(--display); letter-spacing: .25em;
+  color: var(--gold-2);
+}
+.err{ color:#fca5a5;}
+</style>
 </head>
 <body>
 
-    <a href="index.html" class="back-btn">⬅️ กลับหน้าหลัก</a>
+<div class="wrap">
 
-    <div class="container">
-        <h1 id="market-title">กำลังโหลด...</h1>
-        
-        <div class="tabs">
-            <button class="tab-btn" onclick="switchPeriod('15d')">15 วัน</button>
-            <button class="tab-btn active" onclick="switchPeriod('30d')">30 วัน</button>
-            <button class="tab-btn" onclick="switchPeriod('60d')">60 วัน</button>
-            <button class="tab-btn" onclick="switchPeriod('90d')">90 วัน</button>
-            <button class="tab-btn" onclick="switchPeriod('100d')">100 วัน</button>
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <a href="index.html" class="back">⟵ Return to Vault</a>
+    <div class="crumb">
+      Sovereign V3 · <em>Card Detail</em> · <b id="market-crumb">—</b>
+    </div>
+  </div>
+
+  <!-- HERO SHOWCASE -->
+  <section class="showcase">
+
+    <!-- THE FEATURED CARD -->
+    <div class="featured" id="featured" data-rarity="sr">
+      <div class="frame"></div>
+      <div class="inner">
+        <div class="header">
+          <div class="market-name" id="f-name">—</div>
+          <div class="rarity-badge" id="f-rarity">★ —</div>
         </div>
-
-        <div class="pair-card">
-            <h3>ชุดตัวเลขที่แนะนำ</h3>
-            <div id="pair-numbers" class="numbers">-- , --</div>
-            <div id="bet-status">สถานะ: --</div>
+        <div class="art">
+          <div class="pair-block">
+            <div class="lbl">⚔ Front Pair</div>
+            <div class="nums" id="f-front">—</div>
+            <div class="status" id="f-front-status">—</div>
+          </div>
+          <div class="pair-block">
+            <div class="lbl">⚓ Back Pair</div>
+            <div class="nums" id="f-back">—</div>
+            <div class="status" id="f-back-status">—</div>
+          </div>
         </div>
-
-        <div id="stats-display" class="detail-stats-grid">
-            </div>
+        <div class="footer">
+          <div class="stat">
+            <div class="k">Net Profit</div>
+            <div class="v" id="f-profit">—</div>
+          </div>
+          <div class="stat">
+            <div class="k">Win Rate</div>
+            <div class="v" id="f-wr">—</div>
+          </div>
+        </div>
+        <div class="meta">
+          <span id="f-serial">Nº ---</span>
+          <span id="f-date">—</span>
+        </div>
+      </div>
+      <div class="foil"></div>
+      <div class="holo"></div>
     </div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const marketName = urlParams.get('m');
-        let fullData = {};
-        let currentMarket = {};
+    <!-- SIDEBAR -->
+    <aside class="side">
+      <div class="tabs" id="tabs">
+        <button class="tab" data-period="30d">30 Days</button>
+        <button class="tab active" data-period="60d">60 Days</button>
+        <button class="tab" data-period="90d">90 Days</button>
+      </div>
 
-        async function initDetail() {
-            try {
-                const res = await fetch('data/final_synergy.json');
-                fullData = await res.json();
-                currentMarket = fullData.markets[marketName];
-                
-                document.getElementById('market-title').innerText = marketName.toUpperCase();
-                document.getElementById('pair-numbers').innerText = 
-                    `หน้า: ${currentMarket.front.pair} | หลัง: ${currentMarket.back.pair}`;
-                document.getElementById('bet-status').innerText = 
-                    `สถานะลงทุน: ${currentMarket.front.status}`;
+      <div class="kpis" id="kpis">
+        <!-- populated -->
+      </div>
 
-                switchPeriod('30d');
-            } catch (e) {
-                console.error("Error:", e);
-            }
+      <div class="bet-status" id="bet-status">
+        <div class="text">
+          ALLOCATION
+          <small id="bet-explain">Capital deployment recommendation</small>
+        </div>
+        <div class="gauge" id="bet-gauge">—</div>
+      </div>
+
+      <div class="panel" style="margin-bottom:0;">
+        <div class="panel-title">
+          <span>⚖ Front vs Back</span>
+          <span class="ornament">profit comparison</span>
+        </div>
+        <div class="chart-wrap" style="height:200px;"><canvas id="chartFB"></canvas></div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- DEEP ANALYTICS -->
+  <section class="charts-grid">
+    <div class="panel">
+      <div class="panel-title">
+        <span>📈 Win-Rate Trend</span>
+        <span class="ornament">across periods</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartWR"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">
+        <span>💰 Profit Trend</span>
+        <span class="ornament">across periods</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartProfit"></canvas></div>
+    </div>
+  </section>
+
+  <!-- DIGIT FREQUENCY -->
+  <div class="panel">
+    <div class="panel-title">
+      <span>🔥 Digit Frequency Heatmap</span>
+      <span class="ornament">last 90 draws · 0–9 occurrence</span>
+    </div>
+    <div class="heatmap" id="heatmap-front">
+      <div class="loading" style="grid-column:1/-1;">Loading raw oracles…</div>
+    </div>
+    <div style="margin-top:10px; font-family:var(--serif); font-style:italic; font-size:.85rem; color:rgba(244,233,200,.55); text-align:center;">
+      หน้า · Front digits (positional analysis on first digit)
+    </div>
+    <br/>
+    <div class="heatmap" id="heatmap-back"></div>
+    <div style="margin-top:10px; font-family:var(--serif); font-style:italic; font-size:.85rem; color:rgba(244,233,200,.55); text-align:center;">
+      หลัง · Back digits (positional analysis on second digit)
+    </div>
+  </div>
+
+  <!-- RECENT DRAWS -->
+  <div class="panel">
+    <div class="panel-title">
+      <span>📜 Recent Battle Log</span>
+      <span class="ornament" id="draw-count">last draws</span>
+    </div>
+    <div class="scroll-y">
+      <table class="draws" id="draws">
+        <thead>
+          <tr>
+            <th>วันที่</th>
+            <th>เปิด</th>
+            <th>Diff</th>
+            <th>2 ตัวบน</th>
+            <th>หน้า</th>
+            <th>หลัง</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <span class="anchor">⚓ SOVEREIGN V3 ⚓</span><br/>
+    <em>"All numbers tell a story. The wise listen."</em>
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   SOVEREIGN V3 — DETAIL VIEW
+   ============================================================ */
+const STATE = { period:'60d', market:null, raw:[], synergy:null };
+const CHARTS = { wr:null, profit:null, fb:null };
+
+const params = new URLSearchParams(location.search);
+const MARKET_NAME = params.get('m');
+
+const fmtMoney = n => (Number(n)||0).toLocaleString('en-US',{maximumFractionDigits:0});
+const fmtPct   = n => (Number(n)||0).toFixed(1)+'%';
+
+function rarityOf(m){
+  const fG=(m.front?.status||'').includes('GREEN'),
+        bG=(m.back?.status ||'').includes('GREEN'),
+        fR=(m.front?.status||'').includes('RED'),
+        bR=(m.back?.status ||'').includes('RED');
+  if(fG&&bG) return 'sr';
+  if(fR&&bR) return 'c';
+  return 'r';
+}
+const RARITY_LABEL={ sr:'★★★ SR', r:'★★ R', c:'★ C' };
+
+/* ---------- LOAD ---------- */
+async function loadAll(){
+  if(!MARKET_NAME){
+    document.body.innerHTML = '<div class="err" style="padding:80px;">⚠ NO MARKET SPECIFIED</div>';
+    return;
+  }
+  // 1) synergy
+  try{
+    const r = await fetch('data/final_synergy.json',{cache:'no-store'});
+    STATE.synergy = await r.json();
+    STATE.market = STATE.synergy.markets[MARKET_NAME];
+    if(!STATE.market){ throw new Error('Market not found: '+MARKET_NAME); }
+  }catch(e){
+    console.error(e);
+    document.body.innerHTML = `<div class="err" style="padding:80px;">⚠ ${e.message}</div>`;
+    return;
+  }
+  // 2) raw history (try multiple cases)
+  STATE.raw = await fetchRaw(MARKET_NAME);
+  renderAll();
+}
+
+async function fetchRaw(name){
+  const variants = [
+    'data/raw_'+name+'.json',
+    'data/raw_'+name.toUpperCase()+'.json',
+    'data/raw_'+name.toLowerCase()+'.json'
+  ];
+  for(const u of variants){
+    try{ const r = await fetch(u,{cache:'no-store'}); if(r.ok) return await r.json(); }catch(_){}
+  }
+  return [];
+}
+
+/* ---------- RENDER ---------- */
+function renderAll(){
+  const m = STATE.market;
+  const r = rarityOf(m);
+
+  document.getElementById('market-crumb').textContent = MARKET_NAME;
+  document.title = `⚓ ${MARKET_NAME} — Sovereign V3`;
+
+  // Featured card frame
+  const f = document.getElementById('featured');
+  f.dataset.rarity = r;
+  document.getElementById('f-name').textContent = MARKET_NAME;
+  document.getElementById('f-rarity').textContent = RARITY_LABEL[r];
+
+  document.getElementById('f-front').textContent = (m.front?.pair||['?','?']).join(' · ');
+  document.getElementById('f-back').textContent  = (m.back?.pair ||['?','?']).join(' · ');
+  document.getElementById('f-front-status').textContent = m.front?.status || '—';
+  document.getElementById('f-back-status').textContent  = m.back?.status  || '—';
+  document.getElementById('f-date').textContent = m.last_date || '—';
+
+  // serial = index in synergy
+  const idx = Object.keys(STATE.synergy.markets).indexOf(MARKET_NAME)+1;
+  const total = Object.keys(STATE.synergy.markets).length;
+  document.getElementById('f-serial').textContent = `Nº ${String(idx).padStart(3,'0')}/${String(total).padStart(3,'0')}`;
+
+  renderForPeriod();
+  renderCharts();
+  renderHeatmap();
+  renderDrawsTable();
+}
+
+function renderForPeriod(){
+  const m = STATE.market;
+  const fH = m.front?.history?.[STATE.period] || {profit:0,win_rate:0,wins:0,invested:0};
+  const bH = m.back?.history?.[STATE.period]  || {profit:0,win_rate:0,wins:0,invested:0};
+  const total = (fH.profit||0) + (bH.profit||0);
+  const wr = ((fH.win_rate||0)+(bH.win_rate||0))/2;
+  const inv = (fH.invested||0)+(bH.invested||0);
+  const wins = (fH.wins||0)+(bH.wins||0);
+
+  // featured stats
+  const profEl = document.getElementById('f-profit');
+  profEl.textContent = (total>=0?'+':'')+fmtMoney(total);
+  profEl.className = 'v ' + (total>0?'up':total<0?'down':'');
+  document.getElementById('f-wr').textContent = fmtPct(wr);
+
+  // KPIs
+  const cls = v => v>0?'up':v<0?'down':'';
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="k">Net Profit</div>
+      <div class="v ${cls(total)}">${(total>=0?'+':'')}${fmtMoney(total)} ฿</div>
+      <div class="s">${STATE.period.toUpperCase()} window</div>
+    </div>
+    <div class="kpi">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="k">Win Rate</div>
+      <div class="v">${fmtPct(wr)}</div>
+      <div class="s">${wins} hits / ${Math.round(inv/20)} draws</div>
+    </div>
+    <div class="kpi">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="k">Capital</div>
+      <div class="v">${fmtMoney(inv)} ฿</div>
+      <div class="s">deployed</div>
+    </div>
+    <div class="kpi">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="k">ROI</div>
+      <div class="v ${cls(total)}">${inv>0?(total/inv*100).toFixed(2):'0.00'}%</div>
+      <div class="s">return on capital</div>
+    </div>
+  `;
+
+  // bet status
+  const bet = (m.front?.bet_size||0)+(m.back?.bet_size||0);
+  document.getElementById('bet-gauge').textContent = bet>0 ? bet+'%' : 'SKIP';
+  document.getElementById('bet-explain').textContent =
+    bet>0 ? 'Front: '+ (m.front?.bet_size||0) +'% · Back: '+ (m.back?.bet_size||0) +'%'
+          : 'Risk filter active — sit out';
+
+  // FB chart
+  drawFB(fH.profit, bH.profit);
+}
+
+function drawFB(fProfit, bProfit){
+  const ctx = document.getElementById('chartFB');
+  if(CHARTS.fb) CHARTS.fb.destroy();
+  CHARTS.fb = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['Front','Back'],
+      datasets:[{
+        data:[fProfit, bProfit],
+        backgroundColor: [
+          fProfit>=0 ? 'rgba(248,233,161,.85)' : 'rgba(252,165,165,.8)',
+          bProfit>=0 ? 'rgba(212,175,55,.85)'  : 'rgba(220,38,38,.7)'
+        ],
+        borderColor: '#f8e9a1',
+        borderWidth:1,
+        borderRadius:6,
+        barThickness: 50
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{
+          backgroundColor:'#0a1020', borderColor:'#d4af37', borderWidth:1,
+          titleFont:{family:'Cinzel'}, bodyFont:{family:'Sarabun'},
+          callbacks:{ label:c=>' '+fmtMoney(c.parsed.y)+' ฿' }
         }
+      },
+      scales:{
+        x:{grid:{display:false}, ticks:{color:'rgba(244,233,200,.75)', font:{family:'Cinzel', size:11}}},
+        y:{grid:{color:'rgba(212,175,55,.07)'}, ticks:{color:'rgba(244,233,200,.6)', font:{family:'Cinzel', size:10}, callback:v=>fmtMoney(v)}}
+      }
+    }
+  });
+}
 
-        function switchPeriod(period) {
-            // อัปเดตปุ่ม Active
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText.includes(period.replace('d','')));
-            });
+/* ---------- CHARTS: TREND ACROSS PERIODS ---------- */
+function renderCharts(){
+  const m = STATE.market;
+  const periods = ['30d','60d','90d'];
+  const fProfits = periods.map(p => m.front?.history?.[p]?.profit||0);
+  const bProfits = periods.map(p => m.back?.history?.[p]?.profit||0);
+  const fWR      = periods.map(p => m.front?.history?.[p]?.win_rate||0);
+  const bWR      = periods.map(p => m.back?.history?.[p]?.win_rate||0);
 
-            renderMarketDetail(period);
-        }
+  // Win-Rate
+  const ctxW = document.getElementById('chartWR');
+  if(CHARTS.wr) CHARTS.wr.destroy();
+  CHARTS.wr = new Chart(ctxW,{
+    type:'line',
+    data:{
+      labels: periods.map(p=>p.toUpperCase()),
+      datasets:[
+        { label:'Front', data: fWR, borderColor:'#f8e9a1', backgroundColor:'rgba(248,233,161,.1)',
+          tension:.35, fill:true, pointBackgroundColor:'#fff7d6', pointBorderColor:'#b8941e', pointRadius:5},
+        { label:'Back', data: bWR, borderColor:'#c9d1d9', backgroundColor:'rgba(201,209,217,.08)',
+          tension:.35, fill:true, pointBackgroundColor:'#fff', pointBorderColor:'#8b95a3', pointRadius:5,
+          borderDash:[5,4]}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'rgba(244,233,200,.85)', font:{family:'Cinzel', size:11}, boxWidth:14, padding:14}},
+        tooltip:{backgroundColor:'#0a1020', borderColor:'#d4af37', borderWidth:1,
+                 titleFont:{family:'Cinzel'}, bodyFont:{family:'Sarabun'},
+                 callbacks:{ label: c => ' '+c.dataset.label+': '+fmtPct(c.parsed.y) }}
+      },
+      scales:{
+        x:{grid:{color:'rgba(212,175,55,.07)'}, ticks:{color:'rgba(244,233,200,.7)', font:{family:'Cinzel', size:10}}},
+        y:{grid:{color:'rgba(212,175,55,.07)'}, ticks:{color:'rgba(244,233,200,.6)', font:{family:'Cinzel', size:10}, callback:v=>v+'%'}, beginAtZero:true}
+      }
+    }
+  });
 
-        // โค้ดที่พี่ส่งมา: ฟังก์ชันแสดง Win-Rate และ Profit
-        function renderMarketDetail(period) {
-            const fStats = currentMarket.front.history[period];
-            const bStats = currentMarket.back.history[period];
-            
-            const totalProfit = fStats.profit + bStats.profit;
-            const avgWinRate = ((fStats.win_rate + bStats.win_rate) / 2).toFixed(2);
+  // Profit
+  const ctxP = document.getElementById('chartProfit');
+  if(CHARTS.profit) CHARTS.profit.destroy();
+  CHARTS.profit = new Chart(ctxP,{
+    type:'bar',
+    data:{
+      labels: periods.map(p=>p.toUpperCase()),
+      datasets:[
+        { label:'Front', data: fProfits, backgroundColor:'rgba(248,233,161,.85)', borderColor:'#f8e9a1', borderWidth:1, borderRadius:4},
+        { label:'Back',  data: bProfits, backgroundColor:'rgba(212,175,55,.55)', borderColor:'#d4af37', borderWidth:1, borderRadius:4}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'rgba(244,233,200,.85)', font:{family:'Cinzel', size:11}, boxWidth:14, padding:14}},
+        tooltip:{backgroundColor:'#0a1020', borderColor:'#d4af37', borderWidth:1,
+                 titleFont:{family:'Cinzel'}, bodyFont:{family:'Sarabun'},
+                 callbacks:{ label: c => ' '+c.dataset.label+': '+fmtMoney(c.parsed.y)+' ฿' }}
+      },
+      scales:{
+        x:{grid:{color:'rgba(212,175,55,.07)'}, ticks:{color:'rgba(244,233,200,.7)', font:{family:'Cinzel', size:10}}},
+        y:{grid:{color:'rgba(212,175,55,.07)'}, ticks:{color:'rgba(244,233,200,.6)', font:{family:'Cinzel', size:10}, callback:v=>fmtMoney(v)}}
+      }
+    }
+  });
+}
 
-            const html = `
-                <div class="stat-box">
-                    <span class="label">Net Profit (${period})</span>
-                    <span class="value ${totalProfit >= 0 ? 'plus' : 'minus'}">${totalProfit.toLocaleString()} ฿</span>
-                </div>
-                <div class="stat-box">
-                    <span class="label">Win-Rate เฉลี่ย</span>
-                    <span class="value">${avgWinRate}%</span>
-                </div>
-            `;
-            document.getElementById('stats-display').innerHTML = html;
-        }
+/* ---------- DIGIT FREQUENCY HEATMAP ---------- */
+function renderHeatmap(){
+  const draws = STATE.raw.slice(0, 90);
+  const front = Array(10).fill(0);
+  const back  = Array(10).fill(0);
 
-        // โค้ดที่พี่ส่งมา: smartFetch สำหรับดึงข้อมูลดิบ (เผื่อใช้ทำกราฟในอนาคต)
-        async function smartFetchRaw(marketName) {
-            const variants = [
-                `data/raw_${marketName.toUpperCase()}.json`,
-                `data/raw_${marketName.toLowerCase()}.json`
-            ];
-            for (let path of variants) {
-                try {
-                    const res = await fetch(path);
-                    if (res.ok) return await res.json();
-                } catch (e) { continue; }
-            }
-            throw new Error("ไม่พบไฟล์ข้อมูลดิบสำหรับตลาด " + marketName);
-        }
+  draws.forEach(d=>{
+    const t = String(d.twoTop||'').padStart(2,'0');
+    if(t.length>=2 && /^\d{2}$/.test(t)){
+      front[+t[0]]++;
+      back[+t[1]]++;
+    }
+  });
 
-        initDetail();
-    </script>
+  const buildHeat = (counts, pair) => {
+    if(counts.every(c=>c===0))
+      return '<div class="loading" style="grid-column:1/-1; padding:18px; font-size:.78rem;">No raw data file</div>';
+    const max = Math.max(...counts);
+    const min = Math.min(...counts);
+    return counts.map((c,i)=>{
+      const isHot = c >= max * 0.85 && max>0;
+      const isCold = c <= min * 1.2 && c < max*.5;
+      const isPair = pair && pair.includes(i);
+      const cls = (isHot?'hot ':'') + (isCold?'cold ':'');
+      return `<div class="cell ${cls}" title="${c} hits">
+                <div class="digit">${i}</div>
+                <div class="count">${c}${isPair?' ⭐':''}</div>
+              </div>`;
+    }).join('');
+  };
+
+  document.getElementById('heatmap-front').innerHTML = buildHeat(front, STATE.market.front?.pair);
+  document.getElementById('heatmap-back').innerHTML  = buildHeat(back,  STATE.market.back?.pair);
+}
+
+/* ---------- DRAWS TABLE ---------- */
+function renderDrawsTable(){
+  const tbody = document.querySelector('#draws tbody');
+  const draws = STATE.raw.slice(0, 60);
+  if(!draws.length){
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:#fca5a5;">— ไม่พบข้อมูล raw —</td></tr>';
+    return;
+  }
+  document.getElementById('draw-count').textContent = `last ${draws.length} draws`;
+  const fPair = (STATE.market.front?.pair||[]).map(String);
+  const bPair = (STATE.market.back?.pair ||[]).map(String);
+
+  tbody.innerHTML = draws.map(d=>{
+    const t = String(d.twoTop||'').padStart(2,'0');
+    const fd = t[0], bd = t[1];
+    const fHit = fPair.includes(fd);
+    const bHit = bPair.includes(bd);
+    return `
+      <tr>
+        <td>${d.date||'—'}</td>
+        <td>${d.open||'—'}</td>
+        <td>${d.diff||'—'}</td>
+        <td style="font-weight:700; color:var(--gold-1);">${t}</td>
+        <td><span class="hit ${fHit?'win':'miss'}">${fd} ${fHit?'✓':'✗'}</span></td>
+        <td><span class="hit ${bHit?'win':'miss'}">${bd} ${bHit?'✓':'✗'}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+/* ---------- TABS ---------- */
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab');
+  if(!btn) return;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  STATE.period = btn.dataset.period;
+  renderForPeriod();
+  renderCharts();
+});
+
+/* ---------- BOOT ---------- */
+loadAll();
+</script>
+</body>
+</html>
