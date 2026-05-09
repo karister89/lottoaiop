@@ -1,4 +1,4 @@
-name: Sovereign V3 Daily Operation
+name: Sovereign V3 Daily Operation (Strict Mode)
 
 on:
   schedule:
@@ -21,7 +21,7 @@ jobs:
       - name: 📦 Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy pandas gspread oauth2client
+          pip install numpy pandas gspread oauth2client || { echo "❌ Install failed"; exit 1; }
 
       - name: 🧹 0. ล้างและเตรียมโฟลเดอร์ data
         run: |
@@ -31,41 +31,49 @@ jobs:
           echo "✅ เตรียมโฟลเดอร์ data/ พร้อมรบ!"
 
       - name: 📡 0.5 ดึงข้อมูลดิบชุดใหม่ (Fetch Raw Data)
-        run: python engines/ql_fetcher.py 
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }} # เชื่อมต่อกุญแจที่พี่ใส่ใน Secrets
+        run: |
+          python engines/ql_fetcher.py || { echo "❌ Fetcher พัง! หยุดทำงานทันที"; exit 1; }
 
       - name: 🛡️ 1. สร้างไม้บรรทัดความเสี่ยง (Risk Tuner)
-        run: python engines/sp_risk_tuner.py
+        run: |
+          python engines/sp_risk_tuner.py || { echo "❌ Risk Tuner พัง! หยุดทำงานทันที"; exit 1; }
 
       - name: 🤖 2. รันบอทวิเคราะห์ทั้ง 4 สาย (Analysts)
         run: |
-          python engines/sp_market.py
-          python engines/sp_stat.py
-          python engines/sp_math.py
-          python engines/sp_ai.py
+          python engines/sp_market.py && \
+          python engines/sp_stat.py && \
+          python engines/sp_math.py && \
+          python engines/sp_ai.py || { echo "❌ บอทวิเคราะห์พัง! หยุดทำงานทันที"; exit 1; }
 
       - name: ⚖️ 3. ประเมินผลงานและให้คะแนนความเก่ง (Weight Eval)
-        run: python engines/core_weight_eval.py
+        run: |
+          python engines/core_weight_eval.py || { echo "❌ Weight Eval พัง! หยุดทำงานทันที"; exit 1; }
 
       - name: 🗳️ 4. รวบรวมผลโหวตตามน้ำหนัก (Consensus Aggregator)
-        run: python engines/core_consensus_aggregator.py
+        run: |
+          python engines/core_consensus_aggregator.py || { echo "❌ Aggregator พัง! หยุดทำงานทันที"; exit 1; }
 
       - name: ⚔️ 5. แม่ทัพคัดเลือกคู่เลข หน้า-หลัง (Pair Optimizer)
-        run: python engines/core_pair_optimizer.py
+        run: |
+          python engines/core_pair_optimizer.py || { echo "❌ Optimizer พัง! หยุดทำงานทันที"; exit 1; }
 
       - name: 💰 6. กุนซือเงินสรุปบัญชีและจัดพอร์ต (Money Commander)
-        run: python engines/core_money_commander.py
+        run: |
+          python engines/core_money_commander.py || { echo "❌ Money Commander พัง! หยุดทำงานทันที"; exit 1; }
 
       - name: 💾 7. Commit & Push Data to GitHub
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # เช็คว่ามีไฟล์ .json เกิดขึ้นจริงไหมก่อนจะดันขึ้น GitHub
-          if ls data/*.json 1> /dev/null 2>&1; then
+          # เช็คความชัวร์ของไฟล์ก่อน Push
+          if ls data/final_synergy.json 1> /dev/null 2>&1; then
             git add data/*.json
-            git commit -m "🤖 อัปเดต Sovereign V3 (New Data Structure)"
+            git commit -m "🤖 อัปเดต Sovereign V3 (New Data Structure)" || echo "No changes to commit"
             git push
           else
-            echo "❌ Error: บอทรันจบแต่ไม่มีไฟล์ .json ถูกสร้างขึ้น! ตรวจสอบ Path ในโค้ด Python ด่วน"
+            echo "❌ CRITICAL: ไม่พบไฟล์ final_synergy.json! ระบบไม่ Push ข้อมูลมั่วแน่นอน"
             exit 1
           fi
