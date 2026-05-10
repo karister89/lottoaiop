@@ -1,64 +1,64 @@
 name: Uniformity Test (Standalone Diagnostic)
 
 on:
-  workflow_dispatch:   # รันเองด้วยมือเท่านั้น
+  workflow_dispatch:
 
 jobs:
   uniformity-check:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # สำหรับ commit uniformity_report.json
+      contents: write
 
     steps:
-      - name: 🛎️ Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 🐍 Setup Python 3.10
+      - name: Setup Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: 📦 Install Dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install numpy gspread oauth2client google-auth
 
-      - name: 🧹 เตรียมโฟลเดอร์ data
+      - name: Prepare data folder
         run: |
           mkdir -p data/
           touch data/.gitkeep
 
-      - name: 📡 ดึงข้อมูลดิบจาก Google Sheets
+      - name: Fetch Raw Data from Google Sheets
         env:
           GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
         run: |
-          python engines/ql_fetcher.py || { echo "❌ Fetcher พัง!"; exit 1; }
+          python engines/ql_fetcher.py || { echo "Fetcher failed"; exit 1; }
 
-      - name: 🔬 รัน Chi-Square Uniformity Test
+      - name: Run Chi-Square Uniformity Test
         run: |
-          python engines/diagnostic_uniformity.py || { echo "❌ Diagnostic พัง!"; exit 1; }
+          python engines/diagnostic_uniformity.py || { echo "Diagnostic failed"; exit 1; }
 
-      - name: 📋 แสดงผลย่อ
+      - name: Show Summary
         run: |
-          echo "===== สรุปผล Uniformity Test ====="
+          echo "===== Uniformity Test Summary ====="
           if [ -f data/uniformity_report.json ]; then
-            python -c "
+            python << 'EOF'
           import json
           r = json.load(open('data/uniformity_report.json'))
           for m, d in r['markets'].items():
-              print(f\"\n📊 {m.upper()} ({d['n_draws']} งวด)\")
-              print(f\"   หน้า: p={d['front']['p_value']}  {d['front']['verdict']}\")
-              print(f\"   หลัง: p={d['back']['p_value']}  {d['back']['verdict']}\")
-          "
+              print(f"\n{m.upper()} ({d['n_draws']} draws)")
+              print(f"  Front: p={d['front']['p_value']}  {d['front']['verdict']}")
+              print(f"  Back:  p={d['back']['p_value']}  {d['back']['verdict']}")
+          EOF
           else
-            echo "❌ ไม่พบ uniformity_report.json"
+            echo "uniformity_report.json not found"
             exit 1
           fi
 
-      - name: 💾 Commit & Push uniformity_report.json
+      - name: Commit and Push report
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add data/uniformity_report.json data/raw_*.json || true
-          git commit -m "🔬 Uniformity diagnostic | $(date -u +'%Y-%m-%d %H:%M')" || echo "No changes"
+          git commit -m "Uniformity diagnostic | $(date -u +'%Y-%m-%d %H:%M')" || echo "No changes"
           git push || echo "Nothing to push"
