@@ -1,0 +1,325 @@
+{
+  "description": "Chi-square goodness-of-fit vs uniform U(0,9). H0: digits are uniform random.",
+  "markets": {
+    "NIKKEI": {
+      "market": "NIKKEI",
+      "n_draws": 1000,
+      "front": {
+        "counts": [
+          91,
+          102,
+          95,
+          96,
+          103,
+          101,
+          110,
+          96,
+          110,
+          96
+        ],
+        "expected_per_digit": 100.0,
+        "chi2": 3.68,
+        "p_value": 0.931,
+        "verdict": "Effectively uniform (no edge expected)"
+      },
+      "back": {
+        "counts": [
+          107,
+          87,
+          94,
+          99,
+          88,
+          92,
+          102,
+          124,
+          109,
+          98
+        ],
+        "expected_per_digit": 100.0,
+        "chi2": 11.28,
+        "p_value": 0.2564,
+        "verdict": "Effectively uniform (no edge expected)"
+      }
+    },
+    "FTSE": {
+      "market": "FTSE",
+      "n_draws": 1032,
+      "front": {
+        "counts": [
+          99,
+          98,
+          107,
+          113,
+          95,
+          98,
+          107,
+          120,
+          96,
+          99
+        ],
+        "expected_per_digit": 103.2,
+        "chi2": 5.97,
+        "p_value": 0.7448,
+        "verdict": "Effectively uniform (no edge expected)"
+      },
+      "back": {
+        "counts": [
+          82,
+          118,
+          89,
+          114,
+          111,
+          109,
+          92,
+          97,
+          104,
+          116
+        ],
+        "expected_per_digit": 103.2,
+        "chi2": 13.66,
+        "p_value": 0.1342,
+        "verdict": "Borderline uniform"
+      }
+    },
+    "HANGSENG": {
+      "market": "HANGSENG",
+      "n_draws": 1003,
+      "front": {
+        "counts": [
+          95,
+          115,
+          91,
+          108,
+          96,
+          100,
+          93,
+          85,
+          96,
+          124
+        ],
+        "expected_per_digit": 100.3,
+        "chi2": 12.72,
+        "p_value": 0.1748,
+        "verdict": "Borderline uniform"
+      },
+      "back": {
+        "counts": [
+          78,
+          117,
+          104,
+          96,
+          107,
+          89,
+          106,
+          106,
+          111,
+          89
+        ],
+        "expected_per_digit": 100.3,
+        "chi2": 12.84,
+        "p_value": 0.1691,
+        "verdict": "Borderline uniform"
+      }
+    },
+    "DAX": {
+      "market": "DAX",
+      "n_draws": 1042,
+      "front": {
+        "counts": [
+          107,
+          96,
+          108,
+          107,
+          113,
+          100,
+          112,
+          77,
+          103,
+          119
+        ],
+        "expected_per_digit": 104.2,
+        "chi2": 11.65,
+        "p_value": 0.2332,
+        "verdict": "Effectively uniform (no edge expected)"
+      },
+      "back": {
+        "counts": [
+          99,
+          98,
+          107,
+          126,
+          94,
+          97,
+          109,
+          102,
+          95,
+          115
+        ],
+        "expected_per_digit": 104.2,
+        "chi2": 8.96,
+        "p_value": 0.4413,
+        "verdict": "Effectively uniform (no edge expected)"
+      }
+    },
+    "SENSEX": {
+      "market": "SENSEX",
+      "n_draws": 1005,
+      "front": {
+        "counts": [
+          96,
+          118,
+          96,
+          101,
+          96,
+          84,
+          106,
+          103,
+          88,
+          117
+        ],
+        "expected_per_digit": 100.5,
+        "chi2": 10.99,
+        "p_value": 0.2758,
+        "verdict": "Effectively uniform (no edge expected)"
+      },
+      "back": {
+        "counts": [
+          113,
+          113,
+          85,
+          90,
+          106,
+          105,
+          88,
+          85,
+          110,
+          110
+        ],
+        "expected_per_digit": 100.5,
+        "chi2": 12.84,
+        "p_value": 0.1691,
+        "verdict": "Borderline uniform"
+      }
+    },
+    "TPE": {
+      "market": "TPE",
+      "n_draws": 993,
+      "front": {
+        "counts": [
+          103,
+          87,
+          97,
+          94,
+          96,
+          120,
+          100,
+          114,
+          86,
+          96
+        ],
+        "expected_per_digit": 99.3,
+        "chi2": 10.49,
+        "p_value": 0.3115,
+        "verdict": "Effectively uniform (no edge expected)"
+      },
+      "back": {
+        "counts": [
+          110,
+          94,
+          105,
+          125,
+          96,
+          97,
+          89,
+          95,
+          94,
+          88
+        ],
+        "expected_per_digit": 99.3,
+        "chi2": 11.4,
+        "p_value": 0.2486,
+        "verdict": "Effectively uniform (no edge expected)"
+      }
+    },
+    "DJI": {
+      "market": "DJI",
+      "n_draws": 1028,
+      "front": {
+        "counts": [
+          103,
+          97,
+          107,
+          96,
+          109,
+          106,
+          96,
+          106,
+          95,
+          113
+        ],
+        "expected_per_digit": 102.8,
+        "chi2": 3.58,
+        "p_value": 0.9368,
+        "verdict": "Effectively uniform (no edge expected)"
+      },
+      "back": {
+        "counts": [
+          105,
+          96,
+          106,
+          103,
+          106,
+          74,
+          110,
+          109,
+          106,
+          113
+        ],
+        "expected_per_digit": 102.8,
+        "chi2": 10.75,
+        "p_value": 0.2924,
+        "verdict": "Effectively uniform (no edge expected)"
+      }
+    },
+    "SHE": {
+      "market": "SHE",
+      "n_draws": 990,
+      "front": {
+        "counts": [
+          116,
+          97,
+          93,
+          86,
+          103,
+          114,
+          93,
+          115,
+          89,
+          84
+        ],
+        "expected_per_digit": 99.0,
+        "chi2": 13.7,
+        "p_value": 0.1328,
+        "verdict": "Borderline uniform"
+      },
+      "back": {
+        "counts": [
+          96,
+          87,
+          116,
+          109,
+          91,
+          99,
+          103,
+          103,
+          90,
+          96
+        ],
+        "expected_per_digit": 99.0,
+        "chi2": 7.35,
+        "p_value": 0.6015,
+        "verdict": "Effectively uniform (no edge expected)"
+      }
+    }
+  }
+}
