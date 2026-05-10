@@ -1,0 +1,2200 @@
+{
+  "n_tests": 124,
+  "alpha": 0.05,
+  "bonferroni_alpha": 0.0004032258064516129,
+  "n_significant": 0,
+  "findings_sorted_by_p": [
+    {
+      "market": "TPE",
+      "test": "T4_open_to_back",
+      "chi2": 117.2,
+      "df": 81,
+      "p_value": 0.005321,
+      "cramers_v": 0.1145,
+      "n": 993,
+      "best_conditional": {
+        "row": 9,
+        "col": 1,
+        "observed": 17,
+        "expected": 8.9,
+        "lift_pct": 91.05,
+        "conditional_prob_pct": 18.09
+      },
+      "bonferroni_p": 0.659832,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 18.09,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 8.09,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "FTSE",
+      "test": "T2_markov_front",
+      "chi2": 116.2,
+      "df": 81,
+      "p_value": 0.006342,
+      "cramers_v": 0.1119,
+      "n": 1031,
+      "best_conditional": {
+        "row": 8,
+        "col": 4,
+        "observed": 18,
+        "expected": 8.85,
+        "lift_pct": 103.49,
+        "conditional_prob_pct": 18.75
+      },
+      "bonferroni_p": 0.786458,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 18.75,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 8.75,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "TPE_vs_SHE",
+      "test": "T11_cross_market_back",
+      "chi2": 108.84,
+      "df": 81,
+      "p_value": 0.021257,
+      "cramers_v": 0.1105,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T4_open_to_back",
+      "chi2": 106.91,
+      "df": 81,
+      "p_value": 0.028541,
+      "cramers_v": 0.1095,
+      "n": 990,
+      "best_conditional": {
+        "row": 3,
+        "col": 3,
+        "observed": 23,
+        "expected": 12.44,
+        "lift_pct": 84.87,
+        "conditional_prob_pct": 20.35
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 20.35,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 10.35,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "HANGSENG_vs_SHE",
+      "test": "T11_cross_market_back",
+      "chi2": 104.55,
+      "df": 81,
+      "p_value": 0.040245,
+      "cramers_v": 0.1083,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 17.57,
+      "df": 9,
+      "p_value": 0.04035,
+      "n": 1003,
+      "top_value": 5,
+      "top_count": 126,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 101.12,
+      "df": 81,
+      "p_value": 0.064517,
+      "cramers_v": 0.1068,
+      "n": 985,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 15.7,
+      "df": 9,
+      "p_value": 0.073042,
+      "n": 1028,
+      "top_value": 6,
+      "top_count": 127,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SENSEX",
+      "test": "T3_markov_back",
+      "chi2": 97.61,
+      "df": 81,
+      "p_value": 0.100832,
+      "cramers_v": 0.1039,
+      "n": 1004,
+      "best_conditional": {
+        "row": 9,
+        "col": 5,
+        "observed": 20,
+        "expected": 11.5,
+        "lift_pct": 73.85,
+        "conditional_prob_pct": 18.18
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 18.18,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 8.18,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 14.41,
+      "df": 9,
+      "p_value": 0.107722,
+      "n": 1005,
+      "top_value": 6,
+      "top_count": 116,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG_vs_DAX",
+      "test": "T11_cross_market_back",
+      "chi2": 96.55,
+      "df": 81,
+      "p_value": 0.11436,
+      "cramers_v": 0.1034,
+      "n": 1003,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T1_joint_uniformity",
+      "chi2": 115.86,
+      "df": 99,
+      "p_value": 0.118357,
+      "n": 990,
+      "top_cell": "70",
+      "top_count": 19,
+      "expected": 9.9,
+      "top_lift_pct": 91.92,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "TPE",
+      "test": "T1_joint_uniformity",
+      "chi2": 115.46,
+      "df": 99,
+      "p_value": 0.123502,
+      "n": 993,
+      "top_cell": "63",
+      "top_count": 21,
+      "expected": 9.93,
+      "top_lift_pct": 111.48,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SENSEX",
+      "test": "T1_joint_uniformity",
+      "chi2": 114.7,
+      "df": 99,
+      "p_value": 0.133726,
+      "n": 1005,
+      "top_cell": "90",
+      "top_count": 23,
+      "expected": 10.05,
+      "top_lift_pct": 128.86,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T10_front_given_prev_back",
+      "chi2": 94.59,
+      "df": 81,
+      "p_value": 0.143347,
+      "cramers_v": 0.101,
+      "n": 1031,
+      "best_conditional": {
+        "row": 8,
+        "col": 8,
+        "observed": 17,
+        "expected": 9.68,
+        "lift_pct": 75.55,
+        "conditional_prob_pct": 16.35
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 16.35,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 6.35,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "NIKKEI_vs_SENSEX",
+      "test": "T11_cross_market_back",
+      "chi2": 94.2,
+      "df": 81,
+      "p_value": 0.149716,
+      "cramers_v": 0.1023,
+      "n": 1000,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI_vs_FTSE",
+      "test": "T11_cross_market_back",
+      "chi2": 94.16,
+      "df": 81,
+      "p_value": 0.150322,
+      "cramers_v": 0.1023,
+      "n": 1000,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T3_markov_back",
+      "chi2": 93.11,
+      "df": 81,
+      "p_value": 0.16847,
+      "cramers_v": 0.1004,
+      "n": 1027,
+      "best_conditional": {
+        "row": 1,
+        "col": 4,
+        "observed": 20,
+        "expected": 9.91,
+        "lift_pct": 101.85,
+        "conditional_prob_pct": 20.83
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 20.83,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 10.83,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T9_back_given_prev_front",
+      "chi2": 92.92,
+      "df": 81,
+      "p_value": 0.172014,
+      "cramers_v": 0.1014,
+      "n": 1004,
+      "best_conditional": {
+        "row": 2,
+        "col": 9,
+        "observed": 19,
+        "expected": 10.42,
+        "lift_pct": 82.3,
+        "conditional_prob_pct": 19.79
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 19.79,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 9.79,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SHE",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 43.56,
+      "df": 36,
+      "p_value": 0.180483,
+      "cramers_v": 0.1049,
+      "n": 990,
+      "best_conditional": {
+        "row": 0,
+        "col": 5,
+        "observed": 31,
+        "expected": 19.8,
+        "lift_pct": 56.57,
+        "conditional_prob_pct": 15.66
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.66,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.66,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 91.63,
+      "df": 81,
+      "p_value": 0.196631,
+      "cramers_v": 0.1013,
+      "n": 993,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T9_back_given_prev_front",
+      "chi2": 91.22,
+      "df": 81,
+      "p_value": 0.205125,
+      "cramers_v": 0.0993,
+      "n": 1027,
+      "best_conditional": {
+        "row": 3,
+        "col": 5,
+        "observed": 12,
+        "expected": 6.92,
+        "lift_pct": 73.48,
+        "conditional_prob_pct": 12.5
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 12.5,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 2.5,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX_vs_SHE",
+      "test": "T11_cross_market_back",
+      "chi2": 90.6,
+      "df": 81,
+      "p_value": 0.218198,
+      "cramers_v": 0.1008,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 90.57,
+      "df": 81,
+      "p_value": 0.218646,
+      "cramers_v": 0.101,
+      "n": 987,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 90.1,
+      "df": 81,
+      "p_value": 0.229103,
+      "cramers_v": 0.1,
+      "n": 1001,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T9_back_given_prev_front",
+      "chi2": 90.03,
+      "df": 81,
+      "p_value": 0.230539,
+      "cramers_v": 0.0985,
+      "n": 1031,
+      "best_conditional": {
+        "row": 0,
+        "col": 8,
+        "observed": 19,
+        "expected": 9.99,
+        "lift_pct": 90.26,
+        "conditional_prob_pct": 19.19
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 19.19,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 9.19,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 89.93,
+      "df": 81,
+      "p_value": 0.232736,
+      "cramers_v": 0.1,
+      "n": 1000,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "TPE",
+      "test": "T2_markov_front",
+      "chi2": 89.46,
+      "df": 81,
+      "p_value": 0.243516,
+      "cramers_v": 0.1001,
+      "n": 992,
+      "best_conditional": {
+        "row": 0,
+        "col": 1,
+        "observed": 18,
+        "expected": 9.03,
+        "lift_pct": 99.26,
+        "conditional_prob_pct": 17.48
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 17.48,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 7.48,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DAX",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 89.4,
+      "df": 81,
+      "p_value": 0.244781,
+      "cramers_v": 0.0977,
+      "n": 1040,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG_vs_TPE",
+      "test": "T11_cross_market_back",
+      "chi2": 89.39,
+      "df": 81,
+      "p_value": 0.245015,
+      "cramers_v": 0.1,
+      "n": 993,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE_vs_DAX",
+      "test": "T11_cross_market_back",
+      "chi2": 88.28,
+      "df": 81,
+      "p_value": 0.27148,
+      "cramers_v": 0.0975,
+      "n": 1032,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T9_back_given_prev_front",
+      "chi2": 88.1,
+      "df": 81,
+      "p_value": 0.276032,
+      "cramers_v": 0.0995,
+      "n": 989,
+      "best_conditional": {
+        "row": 3,
+        "col": 9,
+        "observed": 19,
+        "expected": 8.35,
+        "lift_pct": 127.6,
+        "conditional_prob_pct": 22.09
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 22.09,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 12.09,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "FTSE",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 87.86,
+      "df": 81,
+      "p_value": 0.281926,
+      "cramers_v": 0.0976,
+      "n": 1025,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 10.86,
+      "df": 9,
+      "p_value": 0.284884,
+      "n": 1000,
+      "top_value": 7,
+      "top_count": 114,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T1_joint_uniformity",
+      "chi2": 106.37,
+      "df": 99,
+      "p_value": 0.28815,
+      "n": 1032,
+      "top_cell": "99",
+      "top_count": 20,
+      "expected": 10.32,
+      "top_lift_pct": 93.8,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T10_front_given_prev_back",
+      "chi2": 87.42,
+      "df": 81,
+      "p_value": 0.293201,
+      "cramers_v": 0.0985,
+      "n": 1002,
+      "best_conditional": {
+        "row": 4,
+        "col": 4,
+        "observed": 18,
+        "expected": 10.25,
+        "lift_pct": 75.58,
+        "conditional_prob_pct": 16.82
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 16.82,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 6.82,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T4_open_to_back",
+      "chi2": 87.35,
+      "df": 81,
+      "p_value": 0.295118,
+      "cramers_v": 0.0983,
+      "n": 1005,
+      "best_conditional": {
+        "row": 3,
+        "col": 5,
+        "observed": 18,
+        "expected": 10.66,
+        "lift_pct": 68.91,
+        "conditional_prob_pct": 17.65
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 17.65,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 7.65,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DAX",
+      "test": "T2_markov_front",
+      "chi2": 87.16,
+      "df": 81,
+      "p_value": 0.299951,
+      "cramers_v": 0.0965,
+      "n": 1041,
+      "best_conditional": {
+        "row": 9,
+        "col": 4,
+        "observed": 23,
+        "expected": 12.92,
+        "lift_pct": 78.05,
+        "conditional_prob_pct": 19.33
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 19.33,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 9.33,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DAX_vs_SHE",
+      "test": "T11_cross_market_back",
+      "chi2": 87.08,
+      "df": 81,
+      "p_value": 0.301971,
+      "cramers_v": 0.0989,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 39.86,
+      "df": 36,
+      "p_value": 0.302204,
+      "cramers_v": 0.0997,
+      "n": 1003,
+      "best_conditional": {
+        "row": 0,
+        "col": 9,
+        "observed": 26,
+        "expected": 17.84,
+        "lift_pct": 45.78,
+        "conditional_prob_pct": 12.94
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 12.94,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 2.94,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "TPE",
+      "test": "T3_markov_back",
+      "chi2": 86.72,
+      "df": 81,
+      "p_value": 0.311416,
+      "cramers_v": 0.0986,
+      "n": 992,
+      "best_conditional": {
+        "row": 8,
+        "col": 5,
+        "observed": 16,
+        "expected": 9.19,
+        "lift_pct": 74.07,
+        "conditional_prob_pct": 17.02
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 17.02,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 7.02,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "NIKKEI_vs_HANGSENG",
+      "test": "T11_cross_market_back",
+      "chi2": 86.64,
+      "df": 81,
+      "p_value": 0.313557,
+      "cramers_v": 0.0981,
+      "n": 1000,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 86.54,
+      "df": 81,
+      "p_value": 0.316304,
+      "cramers_v": 0.0968,
+      "n": 1027,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "TPE",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 86.06,
+      "df": 81,
+      "p_value": 0.329163,
+      "cramers_v": 0.0982,
+      "n": 991,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 85.6,
+      "df": 81,
+      "p_value": 0.341836,
+      "cramers_v": 0.0978,
+      "n": 995,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "TPE_vs_DJI",
+      "test": "T11_cross_market_back",
+      "chi2": 84.96,
+      "df": 81,
+      "p_value": 0.359821,
+      "cramers_v": 0.0975,
+      "n": 993,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T9_back_given_prev_front",
+      "chi2": 84.96,
+      "df": 81,
+      "p_value": 0.35991,
+      "cramers_v": 0.0952,
+      "n": 1041,
+      "best_conditional": {
+        "row": 0,
+        "col": 1,
+        "observed": 18,
+        "expected": 10.07,
+        "lift_pct": 78.7,
+        "conditional_prob_pct": 16.82
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 16.82,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 6.82,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 84.65,
+      "df": 81,
+      "p_value": 0.368965,
+      "cramers_v": 0.0971,
+      "n": 998,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "TPE",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 84.63,
+      "df": 81,
+      "p_value": 0.369508,
+      "cramers_v": 0.0977,
+      "n": 986,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T1_joint_uniformity",
+      "chi2": 102.78,
+      "df": 99,
+      "p_value": 0.377199,
+      "n": 1003,
+      "top_cell": "14",
+      "top_count": 20,
+      "expected": 10.03,
+      "top_lift_pct": 99.4,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 83.99,
+      "df": 81,
+      "p_value": 0.388011,
+      "cramers_v": 0.0954,
+      "n": 1026,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T10_front_given_prev_back",
+      "chi2": 83.93,
+      "df": 81,
+      "p_value": 0.389789,
+      "cramers_v": 0.0953,
+      "n": 1027,
+      "best_conditional": {
+        "row": 5,
+        "col": 5,
+        "observed": 14,
+        "expected": 7.64,
+        "lift_pct": 83.3,
+        "conditional_prob_pct": 18.92
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 18.92,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 8.92,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T3_markov_back",
+      "chi2": 83.9,
+      "df": 81,
+      "p_value": 0.390752,
+      "cramers_v": 0.0965,
+      "n": 1002,
+      "best_conditional": {
+        "row": 2,
+        "col": 2,
+        "observed": 19,
+        "expected": 10.79,
+        "lift_pct": 76.02,
+        "conditional_prob_pct": 18.27
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 18.27,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 8.27,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "FTSE",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 9.41,
+      "df": 9,
+      "p_value": 0.399971,
+      "n": 1032,
+      "top_value": 8,
+      "top_count": 128,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T3_markov_back",
+      "chi2": 83.36,
+      "df": 81,
+      "p_value": 0.406755,
+      "cramers_v": 0.0968,
+      "n": 989,
+      "best_conditional": {
+        "row": 7,
+        "col": 0,
+        "observed": 16,
+        "expected": 9.89,
+        "lift_pct": 61.72,
+        "conditional_prob_pct": 15.53
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.53,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.53,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "FTSE_vs_SHE",
+      "test": "T11_cross_market_back",
+      "chi2": 83.03,
+      "df": 81,
+      "p_value": 0.416493,
+      "cramers_v": 0.0965,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SENSEX",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 83.0,
+      "df": 81,
+      "p_value": 0.417409,
+      "cramers_v": 0.0961,
+      "n": 998,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 9.15,
+      "df": 9,
+      "p_value": 0.423606,
+      "n": 1042,
+      "top_value": 1,
+      "top_count": 117,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T10_front_given_prev_back",
+      "chi2": 82.76,
+      "df": 81,
+      "p_value": 0.424834,
+      "cramers_v": 0.094,
+      "n": 1041,
+      "best_conditional": {
+        "row": 3,
+        "col": 7,
+        "observed": 17,
+        "expected": 9.32,
+        "lift_pct": 82.41,
+        "conditional_prob_pct": 13.49
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 13.49,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 3.49,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 36.91,
+      "df": 36,
+      "p_value": 0.426532,
+      "cramers_v": 0.0958,
+      "n": 1005,
+      "best_conditional": {
+        "row": 4,
+        "col": 6,
+        "observed": 26,
+        "expected": 17.6,
+        "lift_pct": 47.73,
+        "conditional_prob_pct": 12.94
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 12.94,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 2.94,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T4_open_to_back",
+      "chi2": 82.36,
+      "df": 81,
+      "p_value": 0.437022,
+      "cramers_v": 0.0957,
+      "n": 1000,
+      "best_conditional": {
+        "row": 7,
+        "col": 1,
+        "observed": 16,
+        "expected": 9.22,
+        "lift_pct": 73.5,
+        "conditional_prob_pct": 15.09
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.09,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.09,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 82.2,
+      "df": 81,
+      "p_value": 0.4419,
+      "cramers_v": 0.0955,
+      "n": 1002,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 82.01,
+      "df": 81,
+      "p_value": 0.447765,
+      "cramers_v": 0.0945,
+      "n": 1021,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T2_markov_front",
+      "chi2": 81.8,
+      "df": 81,
+      "p_value": 0.45409,
+      "cramers_v": 0.0954,
+      "n": 999,
+      "best_conditional": {
+        "row": 6,
+        "col": 4,
+        "observed": 19,
+        "expected": 11.34,
+        "lift_pct": 67.53,
+        "conditional_prob_pct": 17.27
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 17.27,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 7.27,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DAX_vs_SENSEX",
+      "test": "T11_cross_market_back",
+      "chi2": 81.42,
+      "df": 81,
+      "p_value": 0.46603,
+      "cramers_v": 0.0949,
+      "n": 1005,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "TPE",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 80.49,
+      "df": 81,
+      "p_value": 0.495278,
+      "cramers_v": 0.095,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T4_open_to_back",
+      "chi2": 80.21,
+      "df": 81,
+      "p_value": 0.503885,
+      "cramers_v": 0.0925,
+      "n": 1042,
+      "best_conditional": {
+        "row": 5,
+        "col": 1,
+        "observed": 20,
+        "expected": 12.04,
+        "lift_pct": 66.14,
+        "conditional_prob_pct": 15.62
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.62,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.62,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 80.03,
+      "df": 81,
+      "p_value": 0.509512,
+      "cramers_v": 0.0943,
+      "n": 1000,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SENSEX_vs_TPE",
+      "test": "T11_cross_market_back",
+      "chi2": 79.77,
+      "df": 81,
+      "p_value": 0.517853,
+      "cramers_v": 0.0945,
+      "n": 993,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 79.66,
+      "df": 81,
+      "p_value": 0.521251,
+      "cramers_v": 0.0949,
+      "n": 983,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE_vs_TPE",
+      "test": "T11_cross_market_back",
+      "chi2": 79.58,
+      "df": 81,
+      "p_value": 0.52401,
+      "cramers_v": 0.0944,
+      "n": 993,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI_vs_SHE",
+      "test": "T11_cross_market_back",
+      "chi2": 79.4,
+      "df": 81,
+      "p_value": 0.529467,
+      "cramers_v": 0.0944,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 79.34,
+      "df": 81,
+      "p_value": 0.531393,
+      "cramers_v": 0.0925,
+      "n": 1030,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG_vs_DJI",
+      "test": "T11_cross_market_back",
+      "chi2": 79.25,
+      "df": 81,
+      "p_value": 0.53446,
+      "cramers_v": 0.0937,
+      "n": 1003,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T1_joint_uniformity",
+      "chi2": 96.39,
+      "df": 99,
+      "p_value": 0.555641,
+      "n": 1042,
+      "top_cell": "93",
+      "top_count": 21,
+      "expected": 10.42,
+      "top_lift_pct": 101.54,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 33.94,
+      "df": 36,
+      "p_value": 0.567012,
+      "cramers_v": 0.0907,
+      "n": 1032,
+      "best_conditional": {
+        "row": 3,
+        "col": 6,
+        "observed": 27,
+        "expected": 18.36,
+        "lift_pct": 47.02,
+        "conditional_prob_pct": 13.11
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 13.11,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 3.11,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "TPE",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 7.53,
+      "df": 9,
+      "p_value": 0.582832,
+      "n": 993,
+      "top_value": 9,
+      "top_count": 112,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T1_joint_uniformity",
+      "chi2": 95.4,
+      "df": 99,
+      "p_value": 0.583801,
+      "n": 1000,
+      "top_cell": "47",
+      "top_count": 20,
+      "expected": 10.0,
+      "top_lift_pct": 100.0,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 33.56,
+      "df": 36,
+      "p_value": 0.585311,
+      "cramers_v": 0.0916,
+      "n": 1000,
+      "best_conditional": {
+        "row": 4,
+        "col": 9,
+        "observed": 27,
+        "expected": 19.6,
+        "lift_pct": 37.76,
+        "conditional_prob_pct": 13.5
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 13.5,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 3.5,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T9_back_given_prev_front",
+      "chi2": 77.36,
+      "df": 81,
+      "p_value": 0.593994,
+      "cramers_v": 0.0928,
+      "n": 999,
+      "best_conditional": {
+        "row": 5,
+        "col": 3,
+        "observed": 18,
+        "expected": 10.01,
+        "lift_pct": 79.84,
+        "conditional_prob_pct": 17.82
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 17.82,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 7.82,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DJI",
+      "test": "T1_joint_uniformity",
+      "chi2": 94.76,
+      "df": 99,
+      "p_value": 0.601858,
+      "n": 1028,
+      "top_cell": "59",
+      "top_count": 19,
+      "expected": 10.28,
+      "top_lift_pct": 84.82,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 77.04,
+      "df": 81,
+      "p_value": 0.604122,
+      "cramers_v": 0.0931,
+      "n": 988,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T3_markov_back",
+      "chi2": 76.91,
+      "df": 81,
+      "p_value": 0.608186,
+      "cramers_v": 0.0925,
+      "n": 999,
+      "best_conditional": {
+        "row": 8,
+        "col": 2,
+        "observed": 17,
+        "expected": 10.26,
+        "lift_pct": 65.75,
+        "conditional_prob_pct": 15.6
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.6,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.6,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 76.9,
+      "df": 81,
+      "p_value": 0.608454,
+      "cramers_v": 0.0926,
+      "n": 997,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T3_markov_back",
+      "chi2": 76.7,
+      "df": 81,
+      "p_value": 0.614568,
+      "cramers_v": 0.0905,
+      "n": 1041,
+      "best_conditional": {
+        "row": 6,
+        "col": 4,
+        "observed": 17,
+        "expected": 9.75,
+        "lift_pct": 74.32,
+        "conditional_prob_pct": 15.74
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.74,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.74,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "TPE",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 76.28,
+      "df": 81,
+      "p_value": 0.627823,
+      "cramers_v": 0.0926,
+      "n": 988,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI_vs_SHE",
+      "test": "T11_cross_market_back",
+      "chi2": 76.13,
+      "df": 81,
+      "p_value": 0.632368,
+      "cramers_v": 0.0924,
+      "n": 990,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T9_back_given_prev_front",
+      "chi2": 75.67,
+      "df": 81,
+      "p_value": 0.646618,
+      "cramers_v": 0.0916,
+      "n": 1002,
+      "best_conditional": {
+        "row": 7,
+        "col": 0,
+        "observed": 11,
+        "expected": 6.62,
+        "lift_pct": 66.24,
+        "conditional_prob_pct": 12.94
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 12.94,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 2.94,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DJI",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 75.34,
+      "df": 81,
+      "p_value": 0.656496,
+      "cramers_v": 0.0905,
+      "n": 1023,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI",
+      "test": "T10_front_given_prev_back",
+      "chi2": 75.28,
+      "df": 81,
+      "p_value": 0.658328,
+      "cramers_v": 0.0915,
+      "n": 999,
+      "best_conditional": {
+        "row": 8,
+        "col": 9,
+        "observed": 18,
+        "expected": 10.47,
+        "lift_pct": 71.85,
+        "conditional_prob_pct": 16.51
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 16.51,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 6.51,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T2_markov_front",
+      "chi2": 74.81,
+      "df": 81,
+      "p_value": 0.67256,
+      "cramers_v": 0.091,
+      "n": 1004,
+      "best_conditional": {
+        "row": 3,
+        "col": 5,
+        "observed": 15,
+        "expected": 8.45,
+        "lift_pct": 77.51,
+        "conditional_prob_pct": 14.85
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 14.85,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 4.85,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DAX_vs_DJI",
+      "test": "T11_cross_market_back",
+      "chi2": 74.8,
+      "df": 81,
+      "p_value": 0.672742,
+      "cramers_v": 0.0899,
+      "n": 1028,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI_vs_TPE",
+      "test": "T11_cross_market_back",
+      "chi2": 74.23,
+      "df": 81,
+      "p_value": 0.689649,
+      "cramers_v": 0.0911,
+      "n": 993,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "TPE",
+      "test": "T9_back_given_prev_front",
+      "chi2": 73.85,
+      "df": 81,
+      "p_value": 0.700937,
+      "cramers_v": 0.0909,
+      "n": 992,
+      "best_conditional": {
+        "row": 3,
+        "col": 6,
+        "observed": 14,
+        "expected": 8.43,
+        "lift_pct": 66.01,
+        "conditional_prob_pct": 14.89
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 14.89,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 4.89,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "FTSE_vs_SENSEX",
+      "test": "T11_cross_market_back",
+      "chi2": 72.96,
+      "df": 81,
+      "p_value": 0.726306,
+      "cramers_v": 0.0898,
+      "n": 1005,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 72.68,
+      "df": 81,
+      "p_value": 0.734058,
+      "cramers_v": 0.0883,
+      "n": 1035,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T2_markov_front",
+      "chi2": 72.31,
+      "df": 81,
+      "p_value": 0.744077,
+      "cramers_v": 0.0885,
+      "n": 1027,
+      "best_conditional": {
+        "row": 3,
+        "col": 9,
+        "observed": 17,
+        "expected": 10.56,
+        "lift_pct": 60.94,
+        "conditional_prob_pct": 17.71
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 17.71,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 7.71,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SENSEX",
+      "test": "T8_back_autocorr_lag2",
+      "chi2": 71.79,
+      "df": 81,
+      "p_value": 0.758221,
+      "cramers_v": 0.0892,
+      "n": 1003,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI_vs_DAX",
+      "test": "T11_cross_market_back",
+      "chi2": 70.9,
+      "df": 81,
+      "p_value": 0.781319,
+      "cramers_v": 0.0888,
+      "n": 1000,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "NIKKEI_vs_DJI",
+      "test": "T11_cross_market_back",
+      "chi2": 70.74,
+      "df": 81,
+      "p_value": 0.785407,
+      "cramers_v": 0.0887,
+      "n": 1000,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T2_markov_front",
+      "chi2": 69.67,
+      "df": 81,
+      "p_value": 0.811364,
+      "cramers_v": 0.0879,
+      "n": 1002,
+      "best_conditional": {
+        "row": 7,
+        "col": 6,
+        "observed": 13,
+        "expected": 7.89,
+        "lift_pct": 64.78,
+        "conditional_prob_pct": 15.29
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.29,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.29,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "FTSE_vs_DJI",
+      "test": "T11_cross_market_back",
+      "chi2": 69.53,
+      "df": 81,
+      "p_value": 0.814526,
+      "cramers_v": 0.0867,
+      "n": 1028,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SENSEX_vs_DJI",
+      "test": "T11_cross_market_back",
+      "chi2": 69.35,
+      "df": 81,
+      "p_value": 0.818782,
+      "cramers_v": 0.0876,
+      "n": 1005,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 68.78,
+      "df": 81,
+      "p_value": 0.831569,
+      "cramers_v": 0.0875,
+      "n": 998,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T2_markov_front",
+      "chi2": 68.43,
+      "df": 81,
+      "p_value": 0.839118,
+      "cramers_v": 0.0877,
+      "n": 989,
+      "best_conditional": {
+        "row": 8,
+        "col": 9,
+        "observed": 13,
+        "expected": 7.56,
+        "lift_pct": 71.98,
+        "conditional_prob_pct": 14.61
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 14.61,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 4.61,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DAX",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 68.38,
+      "df": 81,
+      "p_value": 0.840272,
+      "cramers_v": 0.0855,
+      "n": 1039,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX",
+      "test": "T8_back_autocorr_lag5",
+      "chi2": 68.19,
+      "df": 81,
+      "p_value": 0.844368,
+      "cramers_v": 0.0855,
+      "n": 1037,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T3_markov_back",
+      "chi2": 67.47,
+      "df": 81,
+      "p_value": 0.859115,
+      "cramers_v": 0.0853,
+      "n": 1031,
+      "best_conditional": {
+        "row": 5,
+        "col": 0,
+        "observed": 17,
+        "expected": 8.67,
+        "lift_pct": 96.1,
+        "conditional_prob_pct": 15.6
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.6,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.6,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "TPE",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 26.95,
+      "df": 36,
+      "p_value": 0.862674,
+      "cramers_v": 0.0824,
+      "n": 993,
+      "best_conditional": {
+        "row": 2,
+        "col": 3,
+        "observed": 33,
+        "expected": 25.05,
+        "lift_pct": 31.73,
+        "conditional_prob_pct": 16.58
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 16.58,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 6.58,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "HANGSENG_vs_SENSEX",
+      "test": "T11_cross_market_back",
+      "chi2": 65.53,
+      "df": 81,
+      "p_value": 0.894324,
+      "cramers_v": 0.0852,
+      "n": 1003,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DJI",
+      "test": "T4_open_to_back",
+      "chi2": 64.95,
+      "df": 81,
+      "p_value": 0.903705,
+      "cramers_v": 0.0838,
+      "n": 1028,
+      "best_conditional": {
+        "row": 5,
+        "col": 5,
+        "observed": 14,
+        "expected": 8.64,
+        "lift_pct": 62.07,
+        "conditional_prob_pct": 11.67
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 11.67,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 1.67,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": false
+      }
+    },
+    {
+      "market": "DJI",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 64.14,
+      "df": 81,
+      "p_value": 0.915715,
+      "cramers_v": 0.0834,
+      "n": 1025,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "DAX_vs_TPE",
+      "test": "T11_cross_market_back",
+      "chi2": 63.14,
+      "df": 81,
+      "p_value": 0.929025,
+      "cramers_v": 0.0841,
+      "n": 993,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T8_back_autocorr_lag3",
+      "chi2": 62.86,
+      "df": 81,
+      "p_value": 0.932573,
+      "cramers_v": 0.0824,
+      "n": 1029,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SENSEX",
+      "test": "T10_front_given_prev_back",
+      "chi2": 62.12,
+      "df": 81,
+      "p_value": 0.941054,
+      "cramers_v": 0.0829,
+      "n": 1004,
+      "best_conditional": {
+        "row": 7,
+        "col": 6,
+        "observed": 14,
+        "expected": 8.97,
+        "lift_pct": 56.0,
+        "conditional_prob_pct": 16.47
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 16.47,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 6.47,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "FTSE_vs_HANGSENG",
+      "test": "T11_cross_market_back",
+      "chi2": 61.99,
+      "df": 81,
+      "p_value": 0.942457,
+      "cramers_v": 0.0829,
+      "n": 1003,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "FTSE",
+      "test": "T4_open_to_back",
+      "chi2": 61.3,
+      "df": 81,
+      "p_value": 0.949645,
+      "cramers_v": 0.0812,
+      "n": 1032,
+      "best_conditional": {
+        "row": 3,
+        "col": 0,
+        "observed": 15,
+        "expected": 9.3,
+        "lift_pct": 61.35,
+        "conditional_prob_pct": 12.82
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 12.82,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 2.82,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "SHE",
+      "test": "T10_front_given_prev_back",
+      "chi2": 60.92,
+      "df": 81,
+      "p_value": 0.953258,
+      "cramers_v": 0.0827,
+      "n": 989,
+      "best_conditional": {
+        "row": 6,
+        "col": 5,
+        "observed": 18,
+        "expected": 11.87,
+        "lift_pct": 51.61,
+        "conditional_prob_pct": 17.48
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 17.48,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 7.48,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DJI",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 23.06,
+      "df": 36,
+      "p_value": 0.953313,
+      "cramers_v": 0.0749,
+      "n": 1028,
+      "best_conditional": {
+        "row": 2,
+        "col": 6,
+        "observed": 31,
+        "expected": 22.04,
+        "lift_pct": 40.64,
+        "conditional_prob_pct": 15.05
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.05,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.05,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T8_back_autocorr_lag7",
+      "chi2": 60.87,
+      "df": 81,
+      "p_value": 0.953719,
+      "cramers_v": 0.0824,
+      "n": 996,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "SHE",
+      "test": "T7_sum_mod10_uniformity",
+      "chi2": 3.09,
+      "df": 9,
+      "p_value": 0.959956,
+      "n": 990,
+      "top_value": 0,
+      "top_count": 110,
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": null
+    },
+    {
+      "market": "HANGSENG",
+      "test": "T4_open_to_back",
+      "chi2": 58.99,
+      "df": 81,
+      "p_value": 0.968761,
+      "cramers_v": 0.0808,
+      "n": 1003,
+      "best_conditional": {
+        "row": 8,
+        "col": 2,
+        "observed": 18,
+        "expected": 10.99,
+        "lift_pct": 63.77,
+        "conditional_prob_pct": 16.98
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 16.98,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 6.98,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "DAX",
+      "test": "T6_diff_quintile_to_back",
+      "chi2": 20.29,
+      "df": 36,
+      "p_value": 0.983651,
+      "cramers_v": 0.0698,
+      "n": 1042,
+      "best_conditional": {
+        "row": 2,
+        "col": 5,
+        "observed": 25,
+        "expected": 19.36,
+        "lift_pct": 29.11,
+        "conditional_prob_pct": 12.02
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 12.02,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 2.02,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    },
+    {
+      "market": "TPE",
+      "test": "T10_front_given_prev_back",
+      "chi2": 55.33,
+      "df": 81,
+      "p_value": 0.986964,
+      "cramers_v": 0.0787,
+      "n": 992,
+      "best_conditional": {
+        "row": 9,
+        "col": 9,
+        "observed": 14,
+        "expected": 8.43,
+        "lift_pct": 66.12,
+        "conditional_prob_pct": 15.91
+      },
+      "bonferroni_p": 1.0,
+      "significant": false,
+      "exploitability": {
+        "conditional_prob_pct": 15.91,
+        "baseline_pct": 10.0,
+        "lift_over_baseline_pct": 5.91,
+        "required_lift_for_2digit_edge": "cond_prob > 12% (top-2 strategy)",
+        "meaningful_edge": true
+      }
+    }
+  ]
+}
