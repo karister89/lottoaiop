@@ -1,7 +1,9 @@
-# “””
-diagnostic_uniformity.py  (V4 — Reality Check)
+# -*- coding: utf-8 -*-
 
-รันครั้งเดียว/สัปดาห์ — ทดสอบว่าหลักหน่วยและหลักสิบของแต่ละตลาด
+# “””
+diagnostic_uniformity.py  (V4 - Reality Check)
+
+รันครั้งเดียว/สัปดาห์ - ทดสอบว่าหลักหน่วยและหลักสิบของแต่ละตลาด
 “สุ่มจริง” หรือไม่ ด้วย chi-square goodness-of-fit test
 
 หาก p-value > 0.05 ทุกตลาด → digit ใกล้เคียง uniform random
@@ -25,7 +27,7 @@ Chi-square goodness-of-fit test เทียบกับ uniform distribution
 คืน (chi2_stat, df, p_value_approx)
 
 ```
-ใช้ scipy ไม่ได้ (จะเพิ่ม dep) — ใช้ approximation ของ p-value จากตาราง
+ใช้ scipy ไม่ได้ (จะเพิ่ม dep) - ใช้ approximation ของ p-value จากตาราง
 df = 9 (10 categories - 1)
 """
 obs = np.asarray(observed, dtype=float)
