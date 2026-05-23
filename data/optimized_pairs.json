@@ -8,22 +8,22 @@
                 ],
                 "win_rate": 40.0,
                 "profit_30d": 600,
-                "streak": 5,
+                "streak": 6,
                 "bet_size": 0,
                 "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 1.24
+                "score": 1.525
             },
             "back": {
                 "pair": [
                     3,
-                    5
+                    6
                 ],
-                "win_rate": 30.0,
-                "profit_30d": 300,
-                "streak": 2,
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
-                "score": 1.527
+                "win_rate": 33.33333333333333,
+                "profit_30d": 400,
+                "streak": 0,
+                "bet_size": 100,
+                "status": "🟢 GREEN",
+                "score": 1.739
             },
             "last_update": "V3-Streak-Guard"
         },
@@ -33,12 +33,12 @@
                     2,
                     9
                 ],
-                "win_rate": 43.333333333333336,
-                "profit_30d": 700,
-                "streak": 1,
-                "bet_size": 80,
+                "win_rate": 40.0,
+                "profit_30d": 600,
+                "streak": 2,
+                "bet_size": 50,
                 "status": "🟡 YELLOW",
-                "score": 1.57
+                "score": 1.353
             },
             "back": {
                 "pair": [
@@ -47,10 +47,10 @@
                 ],
                 "win_rate": 30.0,
                 "profit_30d": 300,
-                "streak": 0,
-                "bet_size": 50,
+                "streak": 1,
+                "bet_size": 80,
                 "status": "🟡 YELLOW",
-                "score": 0.747
+                "score": 1.0
             },
             "last_update": "V3-Streak-Guard"
         },
@@ -62,22 +62,22 @@
                 ],
                 "win_rate": 33.33333333333333,
                 "profit_30d": 400,
-                "streak": 0,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.553
+                "streak": 1,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.783
             },
             "back": {
                 "pair": [
-                    0,
+                    4,
                     9
                 ],
                 "win_rate": 30.0,
                 "profit_30d": 300,
-                "streak": 4,
-                "bet_size": 0,
-                "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 1.491
+                "streak": 2,
+                "bet_size": 50,
+                "status": "🟡 YELLOW",
+                "score": 2.0
             },
             "last_update": "V3-Streak-Guard"
         },
@@ -166,26 +166,26 @@
             "front": {
                 "pair": [
                     1,
-                    5
+                    7
                 ],
-                "win_rate": 26.666666666666668,
-                "profit_30d": 200,
-                "streak": 3,
-                "bet_size": 0,
-                "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 2.0
+                "win_rate": 30.0,
+                "profit_30d": 300,
+                "streak": 0,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.196
             },
             "back": {
                 "pair": [
                     6,
                     7
                 ],
-                "win_rate": 33.33333333333333,
-                "profit_30d": 400,
-                "streak": 0,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.602
+                "win_rate": 30.0,
+                "profit_30d": 300,
+                "streak": 1,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.603
             },
             "last_update": "V3-Streak-Guard"
         },

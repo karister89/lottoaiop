@@ -4,11 +4,11 @@
             "front": {
                 "p80_steps": {
                     "15d": 28.0,
-                    "30d": 27.33,
+                    "30d": 26.67,
                     "60d": 23.33,
                     "100d": 22.2
                 },
-                "min_winrate": 24.66,
+                "min_winrate": 24.46,
                 "health": "🟢 GREEN"
             },
             "back": {
@@ -25,12 +25,12 @@
         "DAX": {
             "front": {
                 "p80_steps": {
-                    "15d": 33.33,
-                    "30d": 30.0,
+                    "15d": 28.0,
+                    "30d": 26.67,
                     "60d": 26.67,
                     "100d": 23.0
                 },
-                "min_winrate": 27.23,
+                "min_winrate": 25.7,
                 "health": "🟢 GREEN"
             },
             "back": {
@@ -48,11 +48,11 @@
             "front": {
                 "p80_steps": {
                     "15d": 26.67,
-                    "30d": 24.0,
-                    "60d": 23.67,
+                    "30d": 26.67,
+                    "60d": 25.0,
                     "100d": 24.0
                 },
-                "min_winrate": 24.17,
+                "min_winrate": 25.37,
                 "health": "🟡 YELLOW"
             },
             "back": {
@@ -136,22 +136,22 @@
             "front": {
                 "p80_steps": {
                     "15d": 26.67,
-                    "30d": 26.67,
+                    "30d": 24.0,
                     "60d": 23.67,
                     "100d": 23.2
                 },
-                "min_winrate": 24.73,
+                "min_winrate": 23.93,
                 "health": "🟡 YELLOW"
             },
             "back": {
                 "p80_steps": {
-                    "15d": 33.33,
-                    "30d": 24.0,
+                    "15d": 28.0,
+                    "30d": 23.33,
                     "60d": 25.0,
                     "100d": 23.2
                 },
-                "min_winrate": 24.99,
-                "health": "🟢 GREEN"
+                "min_winrate": 24.26,
+                "health": "🟡 YELLOW"
             }
         },
         "HANGSENG": {
