@@ -1,156 +1,24 @@
 {
     "markets": {
-        "FTSE": {
-            "front": {
-                "p80_steps": {
-                    "15d": 28.0,
-                    "30d": 26.67,
-                    "60d": 23.33,
-                    "100d": 22.2
-                },
-                "min_winrate": 24.46,
-                "health": "🟢 GREEN"
-            },
-            "back": {
-                "p80_steps": {
-                    "15d": 28.0,
-                    "30d": 26.67,
-                    "60d": 25.33,
-                    "100d": 25.2
-                },
-                "min_winrate": 25.96,
-                "health": "🟡 YELLOW"
-            }
-        },
-        "DAX": {
-            "front": {
-                "p80_steps": {
-                    "15d": 28.0,
-                    "30d": 26.67,
-                    "60d": 26.67,
-                    "100d": 23.0
-                },
-                "min_winrate": 25.7,
-                "health": "🟢 GREEN"
-            },
-            "back": {
-                "p80_steps": {
-                    "15d": 26.67,
-                    "30d": 23.33,
-                    "60d": 23.33,
-                    "100d": 23.0
-                },
-                "min_winrate": 23.56,
-                "health": "🟡 YELLOW"
-            }
-        },
-        "SENSEX": {
-            "front": {
-                "p80_steps": {
-                    "15d": 26.67,
-                    "30d": 26.67,
-                    "60d": 25.0,
-                    "100d": 24.0
-                },
-                "min_winrate": 25.37,
-                "health": "🟡 YELLOW"
-            },
-            "back": {
-                "p80_steps": {
-                    "15d": 28.0,
-                    "30d": 23.33,
-                    "60d": 25.0,
-                    "100d": 23.2
-                },
-                "min_winrate": 24.26,
-                "health": "🟡 YELLOW"
-            }
-        },
-        "NIKKEI": {
-            "front": {
-                "p80_steps": {
-                    "15d": 26.67,
-                    "30d": 26.67,
-                    "60d": 23.33,
-                    "100d": 23.2
-                },
-                "min_winrate": 24.63,
-                "health": "🟡 YELLOW"
-            },
-            "back": {
-                "p80_steps": {
-                    "15d": 28.0,
-                    "30d": 24.0,
-                    "60d": 25.0,
-                    "100d": 24.0
-                },
-                "min_winrate": 24.7,
-                "health": "🟡 YELLOW"
-            }
-        },
         "SHE": {
             "front": {
                 "p80_steps": {
-                    "15d": 28.0,
-                    "30d": 27.33,
-                    "60d": 25.0,
-                    "100d": 22.2
-                },
-                "min_winrate": 25.16,
-                "health": "🟢 GREEN"
-            },
-            "back": {
-                "p80_steps": {
                     "15d": 26.67,
                     "30d": 26.67,
                     "60d": 25.0,
+                    "100d": 22.2
+                },
+                "min_winrate": 24.83,
+                "health": "🟡 YELLOW"
+            },
+            "back": {
+                "p80_steps": {
+                    "15d": 26.67,
+                    "30d": 23.33,
+                    "60d": 25.0,
                     "100d": 23.0
                 },
-                "min_winrate": 25.07,
-                "health": "🟡 YELLOW"
-            }
-        },
-        "TPE": {
-            "front": {
-                "p80_steps": {
-                    "15d": 26.67,
-                    "30d": 23.33,
-                    "60d": 25.0,
-                    "100d": 24.0
-                },
-                "min_winrate": 24.37,
-                "health": "🟡 YELLOW"
-            },
-            "back": {
-                "p80_steps": {
-                    "15d": 26.67,
-                    "30d": 24.0,
-                    "60d": 23.33,
-                    "100d": 22.6
-                },
-                "min_winrate": 23.65,
-                "health": "🟡 YELLOW"
-            }
-        },
-        "DJI": {
-            "front": {
-                "p80_steps": {
-                    "15d": 26.67,
-                    "30d": 24.0,
-                    "60d": 23.67,
-                    "100d": 23.2
-                },
-                "min_winrate": 23.93,
-                "health": "🟡 YELLOW"
-            },
-            "back": {
-                "p80_steps": {
-                    "15d": 28.0,
-                    "30d": 23.33,
-                    "60d": 25.0,
-                    "100d": 23.2
-                },
-                "min_winrate": 24.26,
+                "min_winrate": 24.07,
                 "health": "🟡 YELLOW"
             }
         },
@@ -167,13 +35,145 @@
             },
             "back": {
                 "p80_steps": {
-                    "15d": 33.33,
-                    "30d": 27.33,
+                    "15d": 28.0,
+                    "30d": 26.67,
                     "60d": 25.0,
                     "100d": 24.0
                 },
-                "min_winrate": 26.23,
+                "min_winrate": 25.5,
+                "health": "🟡 YELLOW"
+            }
+        },
+        "DAX": {
+            "front": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 26.67,
+                    "60d": 25.0,
+                    "100d": 24.2
+                },
+                "min_winrate": 25.56,
+                "health": "🟡 YELLOW"
+            },
+            "back": {
+                "p80_steps": {
+                    "15d": 26.67,
+                    "30d": 26.67,
+                    "60d": 23.33,
+                    "100d": 23.0
+                },
+                "min_winrate": 24.57,
+                "health": "🟡 YELLOW"
+            }
+        },
+        "TPE": {
+            "front": {
+                "p80_steps": {
+                    "15d": 26.67,
+                    "30d": 23.33,
+                    "60d": 25.0,
+                    "100d": 23.2
+                },
+                "min_winrate": 24.13,
+                "health": "🟡 YELLOW"
+            },
+            "back": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 23.33,
+                    "60d": 23.33,
+                    "100d": 23.2
+                },
+                "min_winrate": 23.76,
+                "health": "🟡 YELLOW"
+            }
+        },
+        "DJI": {
+            "front": {
+                "p80_steps": {
+                    "15d": 26.67,
+                    "30d": 23.33,
+                    "60d": 25.0,
+                    "100d": 23.0
+                },
+                "min_winrate": 24.07,
+                "health": "🟡 YELLOW"
+            },
+            "back": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 23.33,
+                    "60d": 25.0,
+                    "100d": 23.0
+                },
+                "min_winrate": 24.2,
                 "health": "🟢 GREEN"
+            }
+        },
+        "NIKKEI": {
+            "front": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 24.0,
+                    "60d": 23.33,
+                    "100d": 23.2
+                },
+                "min_winrate": 23.96,
+                "health": "🟡 YELLOW"
+            },
+            "back": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 23.33,
+                    "60d": 25.0,
+                    "100d": 24.0
+                },
+                "min_winrate": 24.5,
+                "health": "🟡 YELLOW"
+            }
+        },
+        "SENSEX": {
+            "front": {
+                "p80_steps": {
+                    "15d": 26.67,
+                    "30d": 23.33,
+                    "60d": 25.0,
+                    "100d": 23.2
+                },
+                "min_winrate": 24.13,
+                "health": "🟡 YELLOW"
+            },
+            "back": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 26.67,
+                    "60d": 25.0,
+                    "100d": 23.0
+                },
+                "min_winrate": 25.2,
+                "health": "🟢 GREEN"
+            }
+        },
+        "FTSE": {
+            "front": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 30.0,
+                    "60d": 23.33,
+                    "100d": 22.2
+                },
+                "min_winrate": 25.46,
+                "health": "🟢 GREEN"
+            },
+            "back": {
+                "p80_steps": {
+                    "15d": 28.0,
+                    "30d": 26.67,
+                    "60d": 25.33,
+                    "100d": 26.0
+                },
+                "min_winrate": 26.2,
+                "health": "🟡 YELLOW"
             }
         }
     }
