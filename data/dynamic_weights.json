@@ -139,22 +139,22 @@
         "DJI": {
             "weights": {
                 "front": {
-                    "market": 0.2713,
-                    "stat": 0.1995,
-                    "math": 0.2846,
-                    "ai": 0.2446
+                    "market": 0.2706,
+                    "stat": 0.1997,
+                    "math": 0.2849,
+                    "ai": 0.2449
                 },
                 "back": {
-                    "market": 0.2821,
-                    "stat": 0.2466,
-                    "math": 0.1951,
-                    "ai": 0.2762
+                    "market": 0.2828,
+                    "stat": 0.2463,
+                    "math": 0.1949,
+                    "ai": 0.2759
                 }
             },
             "performance": {
                 "market": {
-                    "front": 53.2,
-                    "back": 59.8
+                    "front": 53.0,
+                    "back": 60.0
                 },
                 "stat": {
                     "front": 39.1,
