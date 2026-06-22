@@ -105,22 +105,22 @@
         "FTSE": {
             "weights": {
                 "front": {
-                    "market": 0.2457,
-                    "stat": 0.2558,
-                    "math": 0.2541,
-                    "ai": 0.2445
+                    "market": 0.2449,
+                    "stat": 0.256,
+                    "math": 0.2543,
+                    "ai": 0.2447
                 },
                 "back": {
-                    "market": 0.2194,
-                    "stat": 0.2543,
-                    "math": 0.2619,
-                    "ai": 0.2645
+                    "market": 0.221,
+                    "stat": 0.2538,
+                    "math": 0.2613,
+                    "ai": 0.2639
                 }
             },
             "performance": {
                 "market": {
-                    "front": 47.9,
-                    "back": 42.3
+                    "front": 47.7,
+                    "back": 42.7
                 },
                 "stat": {
                     "front": 49.9,
@@ -139,22 +139,22 @@
         "DJI": {
             "weights": {
                 "front": {
-                    "market": 0.2706,
-                    "stat": 0.1997,
-                    "math": 0.2849,
-                    "ai": 0.2449
+                    "market": 0.2713,
+                    "stat": 0.1995,
+                    "math": 0.2846,
+                    "ai": 0.2446
                 },
                 "back": {
-                    "market": 0.2828,
-                    "stat": 0.2463,
-                    "math": 0.1949,
-                    "ai": 0.2759
+                    "market": 0.2821,
+                    "stat": 0.2466,
+                    "math": 0.1951,
+                    "ai": 0.2762
                 }
             },
             "performance": {
                 "market": {
-                    "front": 53.0,
-                    "back": 60.0
+                    "front": 53.2,
+                    "back": 59.8
                 },
                 "stat": {
                     "front": 39.1,
