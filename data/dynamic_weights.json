@@ -3,272 +3,272 @@
         "SENSEX": {
             "weights": {
                 "front": {
-                    "market": 0.2386,
-                    "stat": 0.2408,
-                    "math": 0.2778,
-                    "ai": 0.2428
+                    "market": 0.239,
+                    "stat": 0.2387,
+                    "math": 0.2841,
+                    "ai": 0.2382
                 },
                 "back": {
-                    "market": 0.2343,
-                    "stat": 0.2416,
-                    "math": 0.2776,
-                    "ai": 0.2465
+                    "market": 0.2325,
+                    "stat": 0.2398,
+                    "math": 0.2737,
+                    "ai": 0.254
                 }
             },
             "performance": {
                 "market": {
-                    "front": 47.0,
-                    "back": 48.2
+                    "front": 45.6,
+                    "back": 47.5
                 },
                 "stat": {
-                    "front": 47.4,
-                    "back": 49.7
+                    "front": 45.6,
+                    "back": 49.0
                 },
                 "math": {
-                    "front": 54.7,
-                    "back": 57.1
+                    "front": 54.2,
+                    "back": 55.9
                 },
                 "ai": {
-                    "front": 47.8,
-                    "back": 50.7
+                    "front": 45.5,
+                    "back": 51.9
                 }
             }
         },
         "SHE": {
             "weights": {
                 "front": {
-                    "market": 0.2207,
-                    "stat": 0.2581,
-                    "math": 0.2408,
-                    "ai": 0.2803
+                    "market": 0.2116,
+                    "stat": 0.2638,
+                    "math": 0.2471,
+                    "ai": 0.2774
                 },
                 "back": {
-                    "market": 0.2522,
-                    "stat": 0.2544,
-                    "math": 0.2599,
-                    "ai": 0.2335
+                    "market": 0.2538,
+                    "stat": 0.2551,
+                    "math": 0.2626,
+                    "ai": 0.2285
                 }
             },
             "performance": {
                 "market": {
-                    "front": 46.4,
-                    "back": 52.1
+                    "front": 43.5,
+                    "back": 51.0
                 },
                 "stat": {
                     "front": 54.2,
-                    "back": 52.6
+                    "back": 51.2
                 },
                 "math": {
-                    "front": 50.6,
-                    "back": 53.7
+                    "front": 50.8,
+                    "back": 52.7
                 },
                 "ai": {
-                    "front": 58.9,
-                    "back": 48.3
+                    "front": 57.0,
+                    "back": 45.9
                 }
             }
         },
         "NIKKEI": {
             "weights": {
                 "front": {
-                    "market": 0.2493,
-                    "stat": 0.2377,
-                    "math": 0.2472,
-                    "ai": 0.2659
+                    "market": 0.2617,
+                    "stat": 0.2333,
+                    "math": 0.228,
+                    "ai": 0.277
                 },
                 "back": {
-                    "market": 0.2617,
-                    "stat": 0.2415,
-                    "math": 0.2536,
-                    "ai": 0.2432
+                    "market": 0.2669,
+                    "stat": 0.2496,
+                    "math": 0.258,
+                    "ai": 0.2255
                 }
             },
             "performance": {
                 "market": {
-                    "front": 44.4,
-                    "back": 47.6
+                    "front": 47.3,
+                    "back": 49.0
                 },
                 "stat": {
-                    "front": 42.4,
-                    "back": 44.0
+                    "front": 42.2,
+                    "back": 45.8
                 },
                 "math": {
-                    "front": 44.1,
-                    "back": 46.2
+                    "front": 41.2,
+                    "back": 47.4
                 },
                 "ai": {
-                    "front": 47.4,
-                    "back": 44.3
+                    "front": 50.1,
+                    "back": 41.4
                 }
             }
         },
         "FTSE": {
             "weights": {
                 "front": {
-                    "market": 0.2332,
-                    "stat": 0.2695,
-                    "math": 0.243,
-                    "ai": 0.2542
+                    "market": 0.2213,
+                    "stat": 0.2833,
+                    "math": 0.2455,
+                    "ai": 0.2499
                 },
                 "back": {
-                    "market": 0.2234,
-                    "stat": 0.2664,
-                    "math": 0.2501,
-                    "ai": 0.2601
+                    "market": 0.2275,
+                    "stat": 0.2549,
+                    "math": 0.2572,
+                    "ai": 0.2604
                 }
             },
             "performance": {
                 "market": {
-                    "front": 44.4,
-                    "back": 44.7
+                    "front": 41.5,
+                    "back": 45.9
                 },
                 "stat": {
-                    "front": 51.3,
-                    "back": 53.3
+                    "front": 53.1,
+                    "back": 51.4
                 },
                 "math": {
-                    "front": 46.2,
-                    "back": 50.0
+                    "front": 46.0,
+                    "back": 51.9
                 },
                 "ai": {
-                    "front": 48.4,
-                    "back": 52.0
+                    "front": 46.9,
+                    "back": 52.5
                 }
             }
         },
         "DJI": {
             "weights": {
                 "front": {
-                    "market": 0.2732,
-                    "stat": 0.1982,
-                    "math": 0.2763,
-                    "ai": 0.2524
+                    "market": 0.2709,
+                    "stat": 0.1955,
+                    "math": 0.2664,
+                    "ai": 0.2673
                 },
                 "back": {
-                    "market": 0.2869,
-                    "stat": 0.2301,
-                    "math": 0.2139,
-                    "ai": 0.2691
+                    "market": 0.2808,
+                    "stat": 0.2239,
+                    "math": 0.2316,
+                    "ai": 0.2637
                 }
             },
             "performance": {
                 "market": {
-                    "front": 53.3,
-                    "back": 58.6
+                    "front": 52.6,
+                    "back": 56.2
                 },
                 "stat": {
-                    "front": 38.6,
-                    "back": 47.0
+                    "front": 37.9,
+                    "back": 44.8
                 },
                 "math": {
-                    "front": 53.9,
-                    "back": 43.7
+                    "front": 51.7,
+                    "back": 46.4
                 },
                 "ai": {
-                    "front": 49.2,
-                    "back": 55.0
+                    "front": 51.9,
+                    "back": 52.8
                 }
             }
         },
         "HANGSENG": {
             "weights": {
                 "front": {
-                    "market": 0.264,
-                    "stat": 0.2305,
-                    "math": 0.2536,
-                    "ai": 0.2519
+                    "market": 0.2615,
+                    "stat": 0.2343,
+                    "math": 0.2537,
+                    "ai": 0.2504
                 },
                 "back": {
-                    "market": 0.2741,
-                    "stat": 0.2179,
-                    "math": 0.2569,
-                    "ai": 0.2511
+                    "market": 0.2764,
+                    "stat": 0.2124,
+                    "math": 0.25,
+                    "ai": 0.2612
                 }
             },
             "performance": {
                 "market": {
-                    "front": 54.3,
+                    "front": 55.3,
                     "back": 52.2
                 },
                 "stat": {
-                    "front": 47.4,
-                    "back": 41.5
+                    "front": 49.5,
+                    "back": 40.1
                 },
                 "math": {
-                    "front": 52.1,
-                    "back": 48.9
+                    "front": 53.6,
+                    "back": 47.2
                 },
                 "ai": {
-                    "front": 51.8,
-                    "back": 47.8
+                    "front": 52.9,
+                    "back": 49.3
                 }
             }
         },
         "TPE": {
             "weights": {
                 "front": {
-                    "market": 0.2132,
-                    "stat": 0.239,
-                    "math": 0.2793,
-                    "ai": 0.2685
+                    "market": 0.2045,
+                    "stat": 0.2348,
+                    "math": 0.2745,
+                    "ai": 0.2862
                 },
                 "back": {
-                    "market": 0.2086,
-                    "stat": 0.3025,
-                    "math": 0.2053,
-                    "ai": 0.2836
+                    "market": 0.2152,
+                    "stat": 0.2992,
+                    "math": 0.1991,
+                    "ai": 0.2865
                 }
             },
             "performance": {
                 "market": {
-                    "front": 43.4,
-                    "back": 41.5
+                    "front": 40.7,
+                    "back": 44.4
                 },
                 "stat": {
-                    "front": 48.6,
-                    "back": 60.2
+                    "front": 46.7,
+                    "back": 61.7
                 },
                 "math": {
-                    "front": 56.8,
-                    "back": 40.8
+                    "front": 54.6,
+                    "back": 41.0
                 },
                 "ai": {
-                    "front": 54.6,
-                    "back": 56.4
+                    "front": 57.0,
+                    "back": 59.1
                 }
             }
         },
         "DAX": {
             "weights": {
                 "front": {
-                    "market": 0.269,
-                    "stat": 0.2559,
-                    "math": 0.222,
-                    "ai": 0.2532
+                    "market": 0.2699,
+                    "stat": 0.2569,
+                    "math": 0.2302,
+                    "ai": 0.2429
                 },
                 "back": {
-                    "market": 0.2407,
+                    "market": 0.2346,
                     "stat": 0.2395,
-                    "math": 0.2421,
-                    "ai": 0.2776
+                    "math": 0.2474,
+                    "ai": 0.2785
                 }
             },
             "performance": {
                 "market": {
-                    "front": 56.6,
-                    "back": 47.0
+                    "front": 57.3,
+                    "back": 44.8
                 },
                 "stat": {
-                    "front": 53.9,
-                    "back": 46.7
+                    "front": 54.6,
+                    "back": 45.7
                 },
                 "math": {
-                    "front": 46.7,
+                    "front": 48.9,
                     "back": 47.2
                 },
                 "ai": {
-                    "front": 53.3,
-                    "back": 54.2
+                    "front": 51.6,
+                    "back": 53.2
                 }
             }
         }
