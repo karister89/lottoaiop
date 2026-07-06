@@ -92,7 +92,7 @@
                 "streak": 1,
                 "bet_size": 80,
                 "status": "🟡 YELLOW",
-                "score": 1.277
+                "score": 1.278
             },
             "back": {
                 "pair": [
@@ -104,7 +104,7 @@
                 "streak": 3,
                 "bet_size": 0,
                 "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 0.955
+                "score": 0.957
             },
             "last_update": "V3-Streak-Guard"
         },
