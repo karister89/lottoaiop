@@ -37,10 +37,10 @@
         "NIKKEI": {
             "weights": {
                 "front": {
-                    "market": 0.2749,
-                    "stat": 0.2942,
-                    "math": 0.1883,
-                    "ai": 0.2427
+                    "market": 0.2778,
+                    "stat": 0.293,
+                    "math": 0.1875,
+                    "ai": 0.2417
                 },
                 "back": {
                     "market": 0.2438,
@@ -51,7 +51,7 @@
             },
             "performance": {
                 "market": {
-                    "front": 48.0,
+                    "front": 48.7,
                     "back": 42.1
                 },
                 "stat": {
