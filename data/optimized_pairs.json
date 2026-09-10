@@ -165,7 +165,7 @@
         "TPE": {
             "front": {
                 "pair": [
-                    4,
+                    6,
                     7
                 ],
                 "win_rate": 43.333333333333336,
@@ -173,19 +173,19 @@
                 "streak": 0,
                 "bet_size": 100,
                 "status": "🟢 GREEN",
-                "score": 1.54
+                "score": 1.548
             },
             "back": {
                 "pair": [
                     2,
                     6
                 ],
-                "win_rate": 36.666666666666664,
-                "profit_30d": 500,
-                "streak": 2,
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
-                "score": 1.761
+                "win_rate": 33.33333333333333,
+                "profit_30d": 400,
+                "streak": 3,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.744
             },
             "last_update": "V3-Streak-Guard"
         },

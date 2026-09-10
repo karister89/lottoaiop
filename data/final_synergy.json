@@ -1,19 +1,19 @@
 {
     "portfolio": {
         "30d": {
-            "profit": 6100.0,
-            "invested": 7800.0,
-            "wins": 139
+            "profit": 5600.0,
+            "invested": 7200.0,
+            "wins": 128
         },
         "60d": {
-            "profit": 5700.0,
-            "invested": 15600.0,
-            "wins": 213
+            "profit": 5600.0,
+            "invested": 14400.0,
+            "wins": 200
         },
         "90d": {
-            "profit": 6800.0,
-            "invested": 23400.0,
-            "wins": 302
+            "profit": 5900.0,
+            "invested": 21600.0,
+            "wins": 275
         }
     },
     "markets": {
@@ -375,7 +375,7 @@
             "last_date": "8/9/2026",
             "front": {
                 "pair": [
-                    4,
+                    6,
                     7
                 ],
                 "bet_size": 100,
@@ -388,15 +388,15 @@
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 500.0,
-                        "win_rate": 28.33,
-                        "wins": 17,
+                        "profit": 800.0,
+                        "win_rate": 33.33,
+                        "wins": 20,
                         "invested": 1200.0
                     },
                     "90d": {
-                        "profit": 700.0,
-                        "win_rate": 27.78,
-                        "wins": 25,
+                        "profit": 500.0,
+                        "win_rate": 25.56,
+                        "wins": 23,
                         "invested": 1800.0
                     }
                 }
@@ -406,13 +406,13 @@
                     2,
                     6
                 ],
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
                 "history": {
                     "30d": {
-                        "profit": 500.0,
-                        "win_rate": 36.67,
-                        "wins": 11,
+                        "profit": 400.0,
+                        "win_rate": 33.33,
+                        "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {

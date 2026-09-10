@@ -207,34 +207,34 @@
         "TPE": {
             "weights": {
                 "front": {
-                    "market": 0.2206,
-                    "stat": 0.2866,
-                    "math": 0.23,
-                    "ai": 0.2628
+                    "market": 0.2169,
+                    "stat": 0.2911,
+                    "math": 0.2261,
+                    "ai": 0.2659
                 },
                 "back": {
-                    "market": 0.2435,
-                    "stat": 0.2605,
-                    "math": 0.2393,
-                    "ai": 0.2567
+                    "market": 0.2363,
+                    "stat": 0.263,
+                    "math": 0.2561,
+                    "ai": 0.2446
                 }
             },
             "performance": {
                 "market": {
                     "front": 43.6,
-                    "back": 48.5
+                    "back": 46.6
                 },
                 "stat": {
-                    "front": 56.7,
+                    "front": 58.6,
                     "back": 51.9
                 },
                 "math": {
                     "front": 45.5,
-                    "back": 47.7
+                    "back": 50.5
                 },
                 "ai": {
-                    "front": 52.0,
-                    "back": 51.1
+                    "front": 53.5,
+                    "back": 48.3
                 }
             }
         },
