@@ -3,10 +3,10 @@
         "NIKKEI": {
             "weights": {
                 "front": {
-                    "market": 0.2638,
-                    "stat": 0.219,
-                    "math": 0.2924,
-                    "ai": 0.2248
+                    "market": 0.2645,
+                    "stat": 0.2188,
+                    "math": 0.2921,
+                    "ai": 0.2246
                 },
                 "back": {
                     "market": 0.2607,
@@ -17,7 +17,7 @@
             },
             "performance": {
                 "market": {
-                    "front": 50.3,
+                    "front": 50.5,
                     "back": 54.8
                 },
                 "stat": {
@@ -139,10 +139,10 @@
         "FTSE": {
             "weights": {
                 "front": {
-                    "market": 0.2219,
-                    "stat": 0.2993,
-                    "math": 0.2402,
-                    "ai": 0.2387
+                    "market": 0.2226,
+                    "stat": 0.299,
+                    "math": 0.24,
+                    "ai": 0.2384
                 },
                 "back": {
                     "market": 0.2211,
@@ -153,7 +153,7 @@
             },
             "performance": {
                 "market": {
-                    "front": 48.1,
+                    "front": 48.3,
                     "back": 51.3
                 },
                 "stat": {
