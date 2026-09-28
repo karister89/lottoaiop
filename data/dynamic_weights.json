@@ -37,10 +37,10 @@
         "FTSE": {
             "weights": {
                 "front": {
-                    "market": 0.2454,
-                    "stat": 0.2891,
-                    "math": 0.235,
-                    "ai": 0.2305
+                    "market": 0.2461,
+                    "stat": 0.2889,
+                    "math": 0.2348,
+                    "ai": 0.2303
                 },
                 "back": {
                     "market": 0.2287,
@@ -51,7 +51,7 @@
             },
             "performance": {
                 "market": {
-                    "front": 56.3,
+                    "front": 56.5,
                     "back": 50.3
                 },
                 "stat": {
