@@ -8,22 +8,22 @@
                 ],
                 "win_rate": 36.666666666666664,
                 "profit_30d": 500,
-                "streak": 2,
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
-                "score": 1.472
+                "streak": 3,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.234
             },
             "back": {
                 "pair": [
                     2,
                     6
                 ],
-                "win_rate": 33.33333333333333,
-                "profit_30d": 400,
-                "streak": 5,
+                "win_rate": 30.0,
+                "profit_30d": 300,
+                "streak": 6,
                 "bet_size": 0,
                 "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 1.236
+                "score": 1.312
             },
             "last_update": "V3-Streak-Guard"
         },
@@ -33,39 +33,39 @@
                     1,
                     2
                 ],
-                "win_rate": 36.666666666666664,
-                "profit_30d": 500,
-                "streak": 3,
+                "win_rate": 33.33333333333333,
+                "profit_30d": 400,
+                "streak": 4,
                 "bet_size": 0,
                 "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 1.764
+                "score": 1.514
             },
             "back": {
                 "pair": [
-                    4,
+                    3,
                     6
                 ],
-                "win_rate": 30.0,
-                "profit_30d": 300,
-                "streak": 1,
-                "bet_size": 80,
-                "status": "🟡 YELLOW",
-                "score": 1.486
+                "win_rate": 26.666666666666668,
+                "profit_30d": 200,
+                "streak": 10,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.349
             },
             "last_update": "V3-Streak-Guard"
         },
         "HANGSENG": {
             "front": {
                 "pair": [
-                    1,
+                    2,
                     7
                 ],
                 "win_rate": 40.0,
                 "profit_30d": 600,
-                "streak": 7,
+                "streak": 3,
                 "bet_size": 0,
                 "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 2.0
+                "score": 1.217
             },
             "back": {
                 "pair": [
@@ -74,10 +74,10 @@
                 ],
                 "win_rate": 33.33333333333333,
                 "profit_30d": 400,
-                "streak": 2,
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
-                "score": 1.198
+                "streak": 3,
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.485
             },
             "last_update": "V3-Streak-Guard"
         },
@@ -89,10 +89,10 @@
                 ],
                 "win_rate": 33.33333333333333,
                 "profit_30d": 400,
-                "streak": 0,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.223
+                "streak": 1,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.258
             },
             "back": {
                 "pair": [
@@ -101,17 +101,17 @@
                 ],
                 "win_rate": 40.0,
                 "profit_30d": 600,
-                "streak": 1,
-                "bet_size": 80,
+                "streak": 2,
+                "bet_size": 50,
                 "status": "🟡 YELLOW",
-                "score": 1.79
+                "score": 1.557
             },
             "last_update": "V3-Streak-Guard"
         },
         "DJI": {
             "front": {
                 "pair": [
-                    6,
+                    2,
                     9
                 ],
                 "win_rate": 40.0,
@@ -119,19 +119,19 @@
                 "streak": 1,
                 "bet_size": 80,
                 "status": "🟡 YELLOW",
-                "score": 1.564
+                "score": 1.55
             },
             "back": {
                 "pair": [
                     0,
-                    9
+                    8
                 ],
-                "win_rate": 33.33333333333333,
-                "profit_30d": 400,
+                "win_rate": 30.0,
+                "profit_30d": 300,
                 "streak": 1,
                 "bet_size": 80,
                 "status": "🟡 YELLOW",
-                "score": 1.507
+                "score": 1.481
             },
             "last_update": "V3-Streak-Guard"
         },
@@ -165,54 +165,54 @@
         "NIKKEI": {
             "front": {
                 "pair": [
-                    3,
+                    7,
                     9
                 ],
                 "win_rate": 40.0,
                 "profit_30d": 600,
                 "streak": 0,
-                "bet_size": 100,
-                "status": "🟢 GREEN",
-                "score": 1.243
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 0.99
             },
             "back": {
                 "pair": [
                     4,
                     6
                 ],
-                "win_rate": 33.33333333333333,
-                "profit_30d": 400,
-                "streak": 1,
-                "bet_size": 80,
+                "win_rate": 30.0,
+                "profit_30d": 300,
+                "streak": 2,
+                "bet_size": 50,
                 "status": "🟡 YELLOW",
-                "score": 1.258
+                "score": 1.255
             },
             "last_update": "V3-Streak-Guard"
         },
         "SENSEX": {
             "front": {
                 "pair": [
-                    2,
-                    5
+                    5,
+                    7
                 ],
                 "win_rate": 36.666666666666664,
                 "profit_30d": 500,
-                "streak": 3,
-                "bet_size": 0,
-                "status": "🔴 RED (Bad Streak/Trend)",
-                "score": 1.06
+                "streak": 0,
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
+                "score": 1.013
             },
             "back": {
                 "pair": [
-                    1,
+                    6,
                     9
                 ],
-                "win_rate": 33.33333333333333,
-                "profit_30d": 400,
-                "streak": 0,
+                "win_rate": 30.0,
+                "profit_30d": 300,
+                "streak": 4,
                 "bet_size": 0,
-                "status": "🔴 RED",
-                "score": 0.238
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "score": 1.533
             },
             "last_update": "V3-Streak-Guard"
         }
