@@ -1,42 +1,42 @@
 {
     "portfolio": {
         "30d": {
-            "profit": 4700.0,
+            "profit": 5100.0,
             "invested": 6000.0,
-            "wins": 107
+            "wins": 111
         },
         "60d": {
-            "profit": 4500.0,
+            "profit": 4800.0,
             "invested": 12000.0,
-            "wins": 165
+            "wins": 168
         },
         "90d": {
-            "profit": 4600.0,
+            "profit": 4100.0,
             "invested": 18000.0,
-            "wins": 226
+            "wins": 221
         }
     },
     "markets": {
         "SHE": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
                     7,
                     9
                 ],
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
+                "bet_size": 100,
+                "status": "🟢 GREEN",
                 "history": {
                     "30d": {
-                        "profit": 500.0,
-                        "win_rate": 36.67,
-                        "wins": 11,
+                        "profit": 600.0,
+                        "win_rate": 40.0,
+                        "wins": 12,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 500.0,
-                        "win_rate": 28.33,
-                        "wins": 17,
+                        "profit": 600.0,
+                        "win_rate": 30.0,
+                        "wins": 18,
                         "invested": 1200.0
                     },
                     "90d": {
@@ -56,9 +56,9 @@
                 "status": "🔴 RED (Bad Streak/Trend)",
                 "history": {
                     "30d": {
-                        "profit": 500.0,
-                        "win_rate": 36.67,
-                        "wins": 11,
+                        "profit": 400.0,
+                        "win_rate": 33.33,
+                        "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
@@ -77,14 +77,14 @@
             }
         },
         "FTSE": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
                     0,
                     3
                 ],
-                "bet_size": 100,
-                "status": "🟢 GREEN",
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
                 "history": {
                     "30d": {
                         "profit": 500.0,
@@ -111,13 +111,13 @@
                     0,
                     3
                 ],
-                "bet_size": 80,
+                "bet_size": 50,
                 "status": "🟡 YELLOW",
                 "history": {
                     "30d": {
-                        "profit": 500.0,
-                        "win_rate": 36.67,
-                        "wins": 11,
+                        "profit": 400.0,
+                        "win_rate": 33.33,
+                        "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
@@ -136,7 +136,7 @@
             }
         },
         "DJI": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
                     5,
@@ -158,20 +158,20 @@
                         "invested": 1200.0
                     },
                     "90d": {
-                        "profit": 600.0,
-                        "win_rate": 26.67,
-                        "wins": 24,
+                        "profit": 500.0,
+                        "win_rate": 25.56,
+                        "wins": 23,
                         "invested": 1800.0
                     }
                 }
             },
             "back": {
                 "pair": [
-                    8,
-                    9
+                    6,
+                    8
                 ],
-                "bet_size": 0,
-                "status": "🔴 RED (Bad Streak/Trend)",
+                "bet_size": 80,
+                "status": "🟡 YELLOW",
                 "history": {
                     "30d": {
                         "profit": 400.0,
@@ -180,9 +180,9 @@
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 500.0,
-                        "win_rate": 28.33,
-                        "wins": 17,
+                        "profit": 400.0,
+                        "win_rate": 26.67,
+                        "wins": 16,
                         "invested": 1200.0
                     },
                     "90d": {
@@ -195,7 +195,7 @@
             }
         },
         "SENSEX": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
                     2,
@@ -229,8 +229,8 @@
                     7,
                     9
                 ],
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
                 "history": {
                     "30d": {
                         "profit": 400.0,
@@ -245,16 +245,16 @@
                         "invested": 1200.0
                     },
                     "90d": {
-                        "profit": 600.0,
-                        "win_rate": 26.67,
-                        "wins": 24,
+                        "profit": 500.0,
+                        "win_rate": 25.56,
+                        "wins": 23,
                         "invested": 1800.0
                     }
                 }
             }
         },
         "HANGSENG": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
                     2,
@@ -264,9 +264,9 @@
                 "status": "🔴 RED (Bad Streak/Trend)",
                 "history": {
                     "30d": {
-                        "profit": 600.0,
-                        "win_rate": 40.0,
-                        "wins": 12,
+                        "profit": 500.0,
+                        "win_rate": 36.67,
+                        "wins": 11,
                         "invested": 600.0
                     },
                     "60d": {
@@ -276,9 +276,9 @@
                         "invested": 1200.0
                     },
                     "90d": {
-                        "profit": 700.0,
-                        "win_rate": 27.78,
-                        "wins": 25,
+                        "profit": 600.0,
+                        "win_rate": 26.67,
+                        "wins": 24,
                         "invested": 1800.0
                     }
                 }
@@ -288,13 +288,13 @@
                     2,
                     7
                 ],
-                "bet_size": 50,
-                "status": "🟡 YELLOW",
+                "bet_size": 100,
+                "status": "🟢 GREEN",
                 "history": {
                     "30d": {
-                        "profit": 300.0,
-                        "win_rate": 30.0,
-                        "wins": 9,
+                        "profit": 400.0,
+                        "win_rate": 33.33,
+                        "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
@@ -304,16 +304,16 @@
                         "invested": 1200.0
                     },
                     "90d": {
-                        "profit": 500.0,
-                        "win_rate": 25.56,
-                        "wins": 23,
+                        "profit": 600.0,
+                        "win_rate": 26.67,
+                        "wins": 24,
                         "invested": 1800.0
                     }
                 }
             }
         },
         "TPE": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
                     4,
@@ -351,63 +351,35 @@
                 "status": "🟡 YELLOW",
                 "history": {
                     "30d": {
-                        "profit": 400.0,
-                        "win_rate": 33.33,
-                        "wins": 10,
+                        "profit": 500.0,
+                        "win_rate": 36.67,
+                        "wins": 11,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 0.0,
-                        "win_rate": 20.0,
-                        "wins": 12,
+                        "profit": 100.0,
+                        "win_rate": 21.67,
+                        "wins": 13,
                         "invested": 1200.0
                     },
                     "90d": {
-                        "profit": -500.0,
-                        "win_rate": 14.44,
-                        "wins": 13,
+                        "profit": -400.0,
+                        "win_rate": 15.56,
+                        "wins": 14,
                         "invested": 1800.0
                     }
                 }
             }
         },
         "NIKKEI": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
-                    2,
-                    9
+                    1,
+                    2
                 ],
-                "bet_size": 0,
-                "status": "🔴 RED (Bad Streak/Trend)",
-                "history": {
-                    "30d": {
-                        "profit": 600.0,
-                        "win_rate": 40.0,
-                        "wins": 12,
-                        "invested": 600.0
-                    },
-                    "60d": {
-                        "profit": 800.0,
-                        "win_rate": 33.33,
-                        "wins": 20,
-                        "invested": 1200.0
-                    },
-                    "90d": {
-                        "profit": 700.0,
-                        "win_rate": 27.78,
-                        "wins": 25,
-                        "invested": 1800.0
-                    }
-                }
-            },
-            "back": {
-                "pair": [
-                    2,
-                    9
-                ],
-                "bet_size": 80,
-                "status": "🟡 YELLOW",
+                "bet_size": 100,
+                "status": "🟢 GREEN",
                 "history": {
                     "30d": {
                         "profit": 500.0,
@@ -416,22 +388,50 @@
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 500.0,
-                        "win_rate": 28.33,
-                        "wins": 17,
+                        "profit": 300.0,
+                        "win_rate": 25.0,
+                        "wins": 15,
                         "invested": 1200.0
                     },
                     "90d": {
-                        "profit": 700.0,
-                        "win_rate": 27.78,
-                        "wins": 25,
+                        "profit": 400.0,
+                        "win_rate": 24.44,
+                        "wins": 22,
+                        "invested": 1800.0
+                    }
+                }
+            },
+            "back": {
+                "pair": [
+                    0,
+                    2
+                ],
+                "bet_size": 0,
+                "status": "🔴 RED (Bad Streak/Trend)",
+                "history": {
+                    "30d": {
+                        "profit": 400.0,
+                        "win_rate": 33.33,
+                        "wins": 10,
+                        "invested": 600.0
+                    },
+                    "60d": {
+                        "profit": 200.0,
+                        "win_rate": 23.33,
+                        "wins": 14,
+                        "invested": 1200.0
+                    },
+                    "90d": {
+                        "profit": 300.0,
+                        "win_rate": 23.33,
+                        "wins": 21,
                         "invested": 1800.0
                     }
                 }
             }
         },
         "DAX": {
-            "last_date": "29/10/2026",
+            "last_date": "30/10/2026",
             "front": {
                 "pair": [
                     2,
@@ -441,15 +441,15 @@
                 "status": "🟢 GREEN",
                 "history": {
                     "30d": {
-                        "profit": 600.0,
-                        "win_rate": 40.0,
-                        "wins": 12,
+                        "profit": 700.0,
+                        "win_rate": 43.33,
+                        "wins": 13,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 500.0,
-                        "win_rate": 28.33,
-                        "wins": 17,
+                        "profit": 600.0,
+                        "win_rate": 30.0,
+                        "wins": 18,
                         "invested": 1200.0
                     },
                     "90d": {
@@ -465,19 +465,19 @@
                     1,
                     2
                 ],
-                "bet_size": 80,
-                "status": "🟡 YELLOW",
+                "bet_size": 100,
+                "status": "🟢 GREEN",
                 "history": {
                     "30d": {
-                        "profit": 300.0,
-                        "win_rate": 30.0,
-                        "wins": 9,
+                        "profit": 400.0,
+                        "win_rate": 33.33,
+                        "wins": 10,
                         "invested": 600.0
                     },
                     "60d": {
-                        "profit": 500.0,
-                        "win_rate": 28.33,
-                        "wins": 17,
+                        "profit": 600.0,
+                        "win_rate": 30.0,
+                        "wins": 18,
                         "invested": 1200.0
                     },
                     "90d": {
